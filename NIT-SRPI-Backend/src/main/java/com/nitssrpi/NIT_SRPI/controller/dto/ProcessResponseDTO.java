@@ -1,0 +1,9 @@
+package com.nitssrpi.NIT_SRPI.controller.dto;
+import com.nitssrpi.NIT_SRPI.model.StatusProcess;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
+
+public record ProcessResponseDTO(Long id, String title, StatusProcess status, boolean isFeatured, LocalDateTime createdAt, Map<String, Object> formData, IpTypesResponseDTO ipType, List<UserSummaryDTO> authors, List<AttachmentResponseDTO> attachments, UserSummaryDTO creator) {
+}
