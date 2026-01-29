@@ -21,9 +21,9 @@ public class UserController {
     private final UserMapper mapper;
 
     @PostMapping
-    public ResponseEntity<Object> salvar(@RequestBody @Valid UserRequestDTO dto) {
+    public ResponseEntity<Object> save(@RequestBody @Valid UserRequestDTO dto) {
         User user = mapper.toEntity(dto);
-        service.salvar(user);
+        service.save(user);
         URI location = generateHeaderLocation(user.getId());
         return ResponseEntity.created(location).build();
     }

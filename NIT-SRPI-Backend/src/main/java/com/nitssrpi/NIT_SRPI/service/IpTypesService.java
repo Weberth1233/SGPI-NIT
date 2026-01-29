@@ -14,7 +14,7 @@ import java.util.UUID;
 public class IpTypesService {
     private final IpTypesRepository repository;
 
-    public IpTypes salvar(IpTypes ipTypes){
+    public IpTypes save(IpTypes ipTypes){
         return repository.save(ipTypes);
     }
 

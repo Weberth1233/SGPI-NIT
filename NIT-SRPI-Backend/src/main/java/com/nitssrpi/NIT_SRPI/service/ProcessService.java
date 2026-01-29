@@ -1,5 +1,6 @@
 package com.nitssrpi.NIT_SRPI.service;
 
+import com.nitssrpi.NIT_SRPI.controller.dto.ProcessStatusCountDTO;
 import com.nitssrpi.NIT_SRPI.model.*;
 import com.nitssrpi.NIT_SRPI.model.Process;
 import com.nitssrpi.NIT_SRPI.repository.IpTypesRepository;
@@ -20,7 +21,7 @@ public class ProcessService {
     private final UserRepository userRepository;
 
     @Transactional
-    public Process salvar(Process process) {
+    public Process save(Process process) {
         // 1. IMPORTANTE: Buscar o tipo de PI completo no banco para ter acesso à lista de documentos (RequiredDocuments)
         IpTypes type = ipTypesRepository.findById(process.getIpType().getId())
                 .orElseThrow(() -> new RuntimeException("Tipo de PI não encontrado!"));
@@ -48,4 +49,9 @@ public class ProcessService {
     public List<Process> getAllProcess() {
         return repository.findAll();
     }
+
+    public List<ProcessStatusCountDTO> countProcessStatus(){
+        return repository.countProcessStatus();
+    }
+
 }

@@ -1,6 +1,7 @@
 package com.nitssrpi.NIT_SRPI.controller;
 import com.nitssrpi.NIT_SRPI.controller.dto.ProcessRequestDTO;
 import com.nitssrpi.NIT_SRPI.controller.dto.ProcessResponseDTO;
+import com.nitssrpi.NIT_SRPI.controller.dto.ProcessStatusCountDTO;
 import com.nitssrpi.NIT_SRPI.controller.mappers.ProcessMapper;
 import com.nitssrpi.NIT_SRPI.model.Process;
 import com.nitssrpi.NIT_SRPI.service.ProcessService;
@@ -21,9 +22,9 @@ public class ProcessController {
     private final ProcessMapper mapper;
 
     @PostMapping
-    public ResponseEntity<Object> salvar(@RequestBody @Valid ProcessRequestDTO dto) {
+    public ResponseEntity<Object> save(@RequestBody @Valid ProcessRequestDTO dto) {
         Process process = mapper.toEntity(dto);
-        service.salvar(process);
+        service.save(process);
         URI location = generateHeaderLocation(process.getId());
         return ResponseEntity.created(location).build();
     }
@@ -33,6 +34,11 @@ public class ProcessController {
         List<Process> result = service.getAllProcess();
         List<ProcessResponseDTO> list = result.stream().map(mapper::toDTO).toList();
         return ResponseEntity.ok(list);
+    }
+
+    @GetMapping("/status/amount")
+    public ResponseEntity<List<ProcessStatusCountDTO>> countStatus(){
+        return ResponseEntity.ok(service.countProcessStatus());
     }
 
     private URI generateHeaderLocation(Long id) {

@@ -12,7 +12,7 @@ public class UserService {
     private final UserRepository repository;
 
     @Transactional
-    public User salvar(User user){
+    public User save(User user){
         if(user.getAddress() != null){
             //Diz para o endereço quem é o dono dele
             user.getAddress().setUser(user);

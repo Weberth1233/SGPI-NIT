@@ -22,9 +22,9 @@ public class IpTypesController implements GenericController{
     private final IpTypesMapper mapper;
 
     @PostMapping
-    public ResponseEntity<Object> salvar(@RequestBody @Valid IpTypesRequestDTO dto) {
+    public ResponseEntity<Object> save(@RequestBody @Valid IpTypesRequestDTO dto) {
         IpTypes ipTypes = mapper.toEntity(dto);
-        service.salvar(ipTypes);
+        service.save(ipTypes);
         URI location = generateHeaderLocation(ipTypes.getId());
         return ResponseEntity.created(location).build();
 
