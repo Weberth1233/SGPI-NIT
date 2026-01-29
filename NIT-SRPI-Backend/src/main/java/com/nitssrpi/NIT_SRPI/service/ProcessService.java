@@ -49,7 +49,7 @@ public class ProcessService {
     public List<Process> getAllProcess() {
         return repository.findAll();
     }
-
+//teset
     public List<ProcessStatusCountDTO> countProcessStatus(){
         return repository.countProcessStatus();
     }
