@@ -27,7 +27,7 @@ public class UserController {
         URI location = generateHeaderLocation(user.getId());
         return ResponseEntity.created(location).build();
     }
-
+//referenciando issue #1
     private URI generateHeaderLocation(Long id) {
         return ServletUriComponentsBuilder.
                 fromCurrentRequest().
