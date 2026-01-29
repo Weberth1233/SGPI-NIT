@@ -51,7 +51,7 @@ public class ProcessService {
         return repository.save(process);
     }
 
-    public Page<Process> searchStatusProcess(String title, StatusProcess statusProcess, Integer page, Integer pageSize){
+    public Page<Process> searchProcess(String title, StatusProcess statusProcess, Integer page, Integer pageSize){
         Specification<Process> specs = Specification.where((root, query, cb) -> cb.conjunction());
         if(title != null){
             specs = specs.and(ProcessSpecs.likeTitle(title));

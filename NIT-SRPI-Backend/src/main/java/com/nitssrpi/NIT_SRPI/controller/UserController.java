@@ -1,13 +1,17 @@
 package com.nitssrpi.NIT_SRPI.controller;
 import com.nitssrpi.NIT_SRPI.controller.dto.IpTypesResponseDTO;
+import com.nitssrpi.NIT_SRPI.controller.dto.ProcessResponseDTO;
 import com.nitssrpi.NIT_SRPI.controller.dto.UserRequestDTO;
 import com.nitssrpi.NIT_SRPI.controller.dto.UserResponseDTO;
 import com.nitssrpi.NIT_SRPI.controller.mappers.UserMapper;
 import com.nitssrpi.NIT_SRPI.model.Address;
+import com.nitssrpi.NIT_SRPI.model.Process;
+import com.nitssrpi.NIT_SRPI.model.StatusProcess;
 import com.nitssrpi.NIT_SRPI.model.User;
 import com.nitssrpi.NIT_SRPI.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -19,7 +23,6 @@ import java.net.URI;
 public class UserController {
     private final UserService service;
     private final UserMapper mapper;
-//    private final AddressMapper mapperAddress;
 
 
     @PostMapping
@@ -70,6 +73,16 @@ public class UserController {
             return ResponseEntity.noContent().build();
         }).orElseGet(() -> ResponseEntity.notFound().build());
 
+    }
+
+    @GetMapping
+    public ResponseEntity<Page> pagedSearch(@RequestParam(value = "user-name", required = false) String userName,
+                                            @RequestParam(value = "full-name", required = false) String fullName,
+                                            @RequestParam(value = "page", defaultValue = "0") Integer page,
+                                            @RequestParam(value = "page-size",  defaultValue = "10") Integer pageSize){
+        Page<User> resultPage = service.searchUsers(userName, fullName, page, pageSize);
+        Page<UserResponseDTO> result = resultPage.map(mapper::toDTO);
+        return ResponseEntity.ok(result);
     }
 
 //referenciando issue #1

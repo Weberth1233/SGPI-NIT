@@ -36,7 +36,7 @@ public class ProcessController {
                                              @RequestParam(value = "status-process", required = false) StatusProcess statusProcess,
                                              @RequestParam(value = "page", defaultValue = "0") Integer page,
                                              @RequestParam(value = "page-size",  defaultValue = "10") Integer pageSize){
-       Page<Process> resultPage = service.searchStatusProcess(title, statusProcess, page, pageSize);
+       Page<Process> resultPage = service.searchProcess(title, statusProcess, page, pageSize);
        Page<ProcessResponseDTO> result = resultPage.map(mapper::toDTO);
        return ResponseEntity.ok(result);
     }
