@@ -4,6 +4,7 @@ import com.nitssrpi.NIT_SRPI.controller.dto.ProcessResponseDTO;
 import com.nitssrpi.NIT_SRPI.controller.dto.ProcessStatusCountDTO;
 import com.nitssrpi.NIT_SRPI.controller.mappers.ProcessMapper;
 import com.nitssrpi.NIT_SRPI.model.Process;
+import com.nitssrpi.NIT_SRPI.model.StatusProcess;
 import com.nitssrpi.NIT_SRPI.service.ProcessService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.util.List;
+import org.springframework.data.domain.Page;
 
 @RestController
 @RequestMapping("process")
@@ -30,10 +32,13 @@ public class ProcessController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProcessResponseDTO>> allProcess(){
-        List<Process> result = service.getAllProcess();
-        List<ProcessResponseDTO> list = result.stream().map(mapper::toDTO).toList();
-        return ResponseEntity.ok(list);
+    public ResponseEntity<Page> pagedSearch( @RequestParam(value = "title", required = false) String title,
+                                             @RequestParam(value = "status-process", required = false) StatusProcess statusProcess,
+                                             @RequestParam(value = "page", defaultValue = "0") Integer page,
+                                             @RequestParam(value = "page-size",  defaultValue = "10") Integer pageSize){
+       Page<Process> resultPage = service.searchStatusProcess(title, statusProcess, page, pageSize);
+       Page<ProcessResponseDTO> result = resultPage.map(mapper::toDTO);
+       return ResponseEntity.ok(result);
     }
 
     @GetMapping("/status/amount")

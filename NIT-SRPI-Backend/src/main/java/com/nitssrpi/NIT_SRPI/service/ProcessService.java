@@ -6,7 +6,12 @@ import com.nitssrpi.NIT_SRPI.model.Process;
 import com.nitssrpi.NIT_SRPI.repository.IpTypesRepository;
 import com.nitssrpi.NIT_SRPI.repository.ProcessRepository;
 import com.nitssrpi.NIT_SRPI.repository.UserRepository;
+import com.nitssrpi.NIT_SRPI.repository.specs.ProcessSpecs;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,10 +51,22 @@ public class ProcessService {
         return repository.save(process);
     }
 
+    public Page<Process> searchStatusProcess(String title, StatusProcess statusProcess, Integer page, Integer pageSize){
+        Specification<Process> specs = Specification.where((root, query, cb) -> cb.conjunction());
+        if(title != null){
+            specs = specs.and(ProcessSpecs.likeTitle(title));
+        }
+        if(statusProcess != null){
+            specs = specs.and(ProcessSpecs.equalStatusProcess(statusProcess));
+        }
+        Pageable pageRequest = PageRequest.of(page, pageSize);
+        return repository.findAll(specs, pageRequest);
+    }
+
     public List<Process> getAllProcess() {
         return repository.findAll();
     }
-//tesetHFDJHFJJ
+
     public List<ProcessStatusCountDTO> countProcessStatus(){
         return repository.countProcessStatus();
     }

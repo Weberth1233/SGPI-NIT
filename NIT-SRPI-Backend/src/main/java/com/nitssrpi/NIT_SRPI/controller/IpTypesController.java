@@ -1,5 +1,4 @@
 package com.nitssrpi.NIT_SRPI.controller;
-
 import com.nitssrpi.NIT_SRPI.controller.dto.IpTypesRequestDTO;
 import com.nitssrpi.NIT_SRPI.controller.dto.IpTypesResponseDTO;
 import com.nitssrpi.NIT_SRPI.controller.mappers.IpTypesMapper;
@@ -9,10 +8,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.net.URI;
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("ip_types")
@@ -27,7 +24,6 @@ public class IpTypesController implements GenericController{
         service.save(ipTypes);
         URI location = generateHeaderLocation(ipTypes.getId());
         return ResponseEntity.created(location).build();
-
     }
 
     @GetMapping
