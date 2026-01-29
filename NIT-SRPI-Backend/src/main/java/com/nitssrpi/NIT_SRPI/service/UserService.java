@@ -30,4 +30,13 @@ public class UserService {
         return repository.findById(id);
     }
 
+    public void update(User user){
+        if(user.getId() == null){
+            throw new IllegalArgumentException("Para atualizar é necessário que o usuário esteja cadastrado!");
+        }
+        if(user.getRole() == null){
+            user.setRole("USER");
+        }
+        repository.save(user);
+    }
 }
