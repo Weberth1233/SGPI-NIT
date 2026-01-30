@@ -6,7 +6,6 @@ import com.nitssrpi.NIT_SRPI.controller.mappers.ProcessMapper;
 import com.nitssrpi.NIT_SRPI.model.Process;
 import com.nitssrpi.NIT_SRPI.model.StatusProcess;
 import com.nitssrpi.NIT_SRPI.service.ProcessService;
-import com.nitssrpi.NIT_SRPI.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -30,9 +29,9 @@ public class ProcessController {
         URI location = generateHeaderLocation(process.getId());
         return ResponseEntity.created(location).build();
     }
-
+    //Essa url vai ser apenas para admin
     @GetMapping
-    public ResponseEntity<Page> pagedSearch( @RequestParam(value = "title", required = false) String title,
+    public ResponseEntity<Page<ProcessResponseDTO>> pagedSearch( @RequestParam(value = "title", required = false) String title,
                                              @RequestParam(value = "status-process", required = false) StatusProcess statusProcess,
                                              @RequestParam(value = "page", defaultValue = "0") Integer page,
                                              @RequestParam(value = "page-size",  defaultValue = "10") Integer pageSize){
@@ -40,7 +39,7 @@ public class ProcessController {
        Page<ProcessResponseDTO> result = resultPage.map(mapper::toDTO);
        return ResponseEntity.ok(result);
     }
-
+    //Essa url vai ser apenas para usuarios comuns
     @GetMapping("/user/processes")
     public ResponseEntity<Page<ProcessResponseDTO>> pagedUserProcesses(
             @RequestParam("id-user") Long id,

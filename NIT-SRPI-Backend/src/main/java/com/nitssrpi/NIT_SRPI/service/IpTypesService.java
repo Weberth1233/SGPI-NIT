@@ -27,4 +27,8 @@ public class IpTypesService {
         return repository.findById(id);
     }
 
+    public void delete(IpTypes ipTypes){
+        repository.delete(ipTypes);
+    }
+
 }
