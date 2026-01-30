@@ -35,6 +35,24 @@ public class IpTypesController implements GenericController{
     }
 
     //Obter autor pelo id
+    @PutMapping("{id}")
+    public ResponseEntity<Object> updateIpTypes
+    (@RequestBody @Valid IpTypesRequestDTO dto, @PathVariable("id") String id ) {
+        var idIpTypes = Long.parseLong(id);
+        //Buscando na base se existe alguem com esse id
+        Optional<IpTypes> ipTypesOptional = service.getById(idIpTypes);
+        //Se for vazio eu retorno notFound
+        if(ipTypesOptional.isEmpty()){
+            return ResponseEntity.notFound().build();
+        }
+        var ipTypes = ipTypesOptional.get();
+        ipTypes.setName(dto.name());
+        ipTypes.setFormStructure(dto.formStructure());
+        service.update(ipTypes);
+        return ResponseEntity.noContent().build();
+    }
+
+    //Obter autor pelo id
     @GetMapping("{id}")
     public ResponseEntity<IpTypesResponseDTO> getDetails
             (@PathVariable("id") String id) {

@@ -18,6 +18,14 @@ public class IpTypesService {
         return repository.save(ipTypes);
     }
 
+    public void update(IpTypes ipTypes){
+        if(ipTypes.getId() == null){
+            throw new IllegalArgumentException("Para atualizar é necessário que o usuário esteja cadastrado!");
+        }
+        repository.save(ipTypes);
+    }
+
+
     //ALL TYPES OF PROPERTY
      public List<IpTypes> allTypesOfProperty(){
         return repository.findAll();
