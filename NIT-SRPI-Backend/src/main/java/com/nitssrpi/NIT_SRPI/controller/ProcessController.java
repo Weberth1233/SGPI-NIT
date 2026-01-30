@@ -6,6 +6,7 @@ import com.nitssrpi.NIT_SRPI.controller.mappers.ProcessMapper;
 import com.nitssrpi.NIT_SRPI.model.Process;
 import com.nitssrpi.NIT_SRPI.model.StatusProcess;
 import com.nitssrpi.NIT_SRPI.service.ProcessService;
+import com.nitssrpi.NIT_SRPI.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,6 @@ import org.springframework.data.domain.Page;
 @RequestMapping("process")
 @RequiredArgsConstructor
 public class ProcessController {
-
     private final ProcessService service;
     private final ProcessMapper mapper;
 
@@ -39,6 +39,19 @@ public class ProcessController {
        Page<Process> resultPage = service.searchProcess(title, statusProcess, page, pageSize);
        Page<ProcessResponseDTO> result = resultPage.map(mapper::toDTO);
        return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/user/processes")
+    public ResponseEntity<Page<ProcessResponseDTO>> pagedUserProcesses(
+            @RequestParam("id-user") Long id,
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(name = "page-size", defaultValue = "10") Integer pageSize
+    ) {
+        Page<ProcessResponseDTO> result =
+                service.userProcesses(id, page, pageSize)
+                        .map(mapper::toDTO);
+
+        return ResponseEntity.ok(result);
     }
 
     @GetMapping("/status/amount")

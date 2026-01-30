@@ -1,12 +1,7 @@
 package com.nitssrpi.NIT_SRPI.controller;
-import com.nitssrpi.NIT_SRPI.controller.dto.IpTypesResponseDTO;
-import com.nitssrpi.NIT_SRPI.controller.dto.ProcessResponseDTO;
 import com.nitssrpi.NIT_SRPI.controller.dto.UserRequestDTO;
 import com.nitssrpi.NIT_SRPI.controller.dto.UserResponseDTO;
 import com.nitssrpi.NIT_SRPI.controller.mappers.UserMapper;
-import com.nitssrpi.NIT_SRPI.model.Address;
-import com.nitssrpi.NIT_SRPI.model.Process;
-import com.nitssrpi.NIT_SRPI.model.StatusProcess;
 import com.nitssrpi.NIT_SRPI.model.User;
 import com.nitssrpi.NIT_SRPI.service.UserService;
 import jakarta.validation.Valid;
@@ -23,7 +18,6 @@ import java.net.URI;
 public class UserController {
     private final UserService service;
     private final UserMapper mapper;
-
 
     @PostMapping
     public ResponseEntity<Object> save(@RequestBody @Valid UserRequestDTO dto) {

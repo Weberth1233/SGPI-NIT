@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,6 +52,13 @@ public class ProcessService {
         return repository.save(process);
     }
 
+    public Page<Process> userProcesses(Long createdId, Integer page, Integer pageSize){
+            Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
+        Page<Process> resultPage = repository.findByCreatorId(createdId, pageable);
+        return resultPage;
+    }
+
+
     public Page<Process> searchProcess(String title, StatusProcess statusProcess, Integer page, Integer pageSize){
         Specification<Process> specs = Specification.where((root, query, cb) -> cb.conjunction());
         if(title != null){
@@ -62,6 +70,8 @@ public class ProcessService {
         Pageable pageRequest = PageRequest.of(page, pageSize);
         return repository.findAll(specs, pageRequest);
     }
+
+
 
     public List<Process> getAllProcess() {
         return repository.findAll();

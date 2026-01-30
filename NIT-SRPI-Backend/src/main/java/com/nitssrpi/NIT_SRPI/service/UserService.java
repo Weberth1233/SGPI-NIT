@@ -4,7 +4,6 @@ import com.nitssrpi.NIT_SRPI.model.Process;
 import com.nitssrpi.NIT_SRPI.model.StatusProcess;
 import com.nitssrpi.NIT_SRPI.model.User;
 import com.nitssrpi.NIT_SRPI.repository.UserRepository;
-import com.nitssrpi.NIT_SRPI.repository.specs.ProcessSpecs;
 import com.nitssrpi.NIT_SRPI.repository.specs.UserSpecs;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
