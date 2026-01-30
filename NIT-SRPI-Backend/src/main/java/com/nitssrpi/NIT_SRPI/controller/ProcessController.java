@@ -18,7 +18,7 @@ import org.springframework.data.domain.Page;
 @RestController
 @RequestMapping("process")
 @RequiredArgsConstructor
-public class ProcessController {
+public class ProcessController implements GenericController{
     private final ProcessService service;
     private final ProcessMapper mapper;
 
@@ -58,11 +58,4 @@ public class ProcessController {
         return ResponseEntity.ok(service.countProcessStatus());
     }
 
-    private URI generateHeaderLocation(Long id) {
-        return ServletUriComponentsBuilder.
-                fromCurrentRequest().
-                path("/{id}")
-                .buildAndExpand(id).
-                toUri();
-    }
 }

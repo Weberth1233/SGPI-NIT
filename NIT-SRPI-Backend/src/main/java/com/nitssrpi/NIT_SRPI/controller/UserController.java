@@ -9,13 +9,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 
 @RestController
 @RequestMapping("users")
 @RequiredArgsConstructor
-public class UserController {
+public class UserController  implements GenericController{
     private final UserService service;
     private final UserMapper mapper;
 
@@ -70,21 +69,12 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<Page> pagedSearch(@RequestParam(value = "user-name", required = false) String userName,
+    public ResponseEntity<Page<UserResponseDTO>> pagedSearch(@RequestParam(value = "user-name", required = false) String userName,
                                             @RequestParam(value = "full-name", required = false) String fullName,
                                             @RequestParam(value = "page", defaultValue = "0") Integer page,
                                             @RequestParam(value = "page-size",  defaultValue = "10") Integer pageSize){
         Page<User> resultPage = service.searchUsers(userName, fullName, page, pageSize);
         Page<UserResponseDTO> result = resultPage.map(mapper::toDTO);
         return ResponseEntity.ok(result);
-    }
-
-//referenciando issue #1
-    private URI generateHeaderLocation(Long id) {
-        return ServletUriComponentsBuilder.
-                fromCurrentRequest().
-                path("/{id}")
-                .buildAndExpand(id).
-                toUri();
     }
 }
