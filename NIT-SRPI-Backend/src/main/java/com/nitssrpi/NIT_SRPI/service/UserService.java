@@ -1,7 +1,4 @@
 package com.nitssrpi.NIT_SRPI.service;
-
-import com.nitssrpi.NIT_SRPI.model.Process;
-import com.nitssrpi.NIT_SRPI.model.StatusProcess;
 import com.nitssrpi.NIT_SRPI.model.User;
 import com.nitssrpi.NIT_SRPI.repository.UserRepository;
 import com.nitssrpi.NIT_SRPI.repository.specs.UserSpecs;

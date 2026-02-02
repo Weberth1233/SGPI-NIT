@@ -23,5 +23,4 @@ public class Address {
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
-
 }

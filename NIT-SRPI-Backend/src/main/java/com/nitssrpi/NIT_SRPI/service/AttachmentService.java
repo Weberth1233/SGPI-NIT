@@ -1,6 +1,8 @@
 package com.nitssrpi.NIT_SRPI.service;
 
 import com.nitssrpi.NIT_SRPI.model.Attachment;
+import com.nitssrpi.NIT_SRPI.model.IpTypes;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -15,9 +17,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
-@Service
-public class AttachmentService {
 
+@Service
+@RequiredArgsConstructor
+public class AttachmentService {
     private final Path fileStorageLocation;
 
     @Autowired
@@ -33,6 +36,10 @@ public class AttachmentService {
             throw new RuntimeException("Erro ao criar pastas de upload", ex);
         }
     }
+
+//    public List<IpTypes> all(){
+//        return repository.findAll();
+//    }
 
     // Método para Download
     public Resource loadFile(String relativePath) {
