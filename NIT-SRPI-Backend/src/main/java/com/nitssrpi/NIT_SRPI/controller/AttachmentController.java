@@ -1,4 +1,6 @@
 package com.nitssrpi.NIT_SRPI.controller;
+import com.nitssrpi.NIT_SRPI.controller.dto.AttachmentResponseDTO;
+import com.nitssrpi.NIT_SRPI.controller.mappers.AttachmentMapper;
 import com.nitssrpi.NIT_SRPI.model.Attachment;
 import com.nitssrpi.NIT_SRPI.repository.AttachmentRepository;
 import com.nitssrpi.NIT_SRPI.service.AttachmentService;
@@ -11,14 +13,22 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("attachments")
 @RequiredArgsConstructor
 public class AttachmentController {
-//teste
     private final AttachmentService attachmentService;
+    private final AttachmentMapper mapper;
     private final AttachmentRepository attachmentRepository;
 
+    @GetMapping
+    public ResponseEntity<List<AttachmentResponseDTO>> getAllAttachments() {
+        List<Attachment> result = attachmentRepository.findAll();
+        List<AttachmentResponseDTO> list = result.stream().map(mapper::toDTO).toList();
+        return ResponseEntity.ok(list);
+    }
 
     @GetMapping("/download/template/{id}")
     public ResponseEntity<Resource> downloadTemplate(@PathVariable Long id){
@@ -55,6 +65,5 @@ public class AttachmentController {
         attachmentRepository.save(att);
         return ResponseEntity.ok("Enviado com sucesso!");
     }
-
     //teste backend
 }

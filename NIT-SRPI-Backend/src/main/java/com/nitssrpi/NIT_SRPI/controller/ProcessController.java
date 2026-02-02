@@ -1,4 +1,5 @@
 package com.nitssrpi.NIT_SRPI.controller;
+import com.nitssrpi.NIT_SRPI.controller.dto.IpTypesResponseDTO;
 import com.nitssrpi.NIT_SRPI.controller.dto.ProcessRequestDTO;
 import com.nitssrpi.NIT_SRPI.controller.dto.ProcessResponseDTO;
 import com.nitssrpi.NIT_SRPI.controller.dto.ProcessStatusCountDTO;
@@ -51,6 +52,16 @@ public class ProcessController implements GenericController{
                         .map(mapper::toDTO);
 
         return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("{id}")
+    public ResponseEntity<ProcessResponseDTO> getDetails
+    (@PathVariable("id") String id) {
+        var idProcess = Long.parseLong(id);
+        return service.getById(idProcess).map(process -> {
+            ProcessResponseDTO dto = mapper.toDTO(process);
+            return ResponseEntity.ok(dto);
+        }).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping("/status/amount")
