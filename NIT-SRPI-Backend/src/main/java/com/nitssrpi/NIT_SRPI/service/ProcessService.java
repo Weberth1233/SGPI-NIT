@@ -76,6 +76,9 @@ public class ProcessService {
         return repository.findById(id);
     }
 
+    public void delete(Process process){
+        repository.delete(process);
+    }
 
     public List<Process> getAllProcess() {
         return repository.findAll();

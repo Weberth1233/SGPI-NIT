@@ -4,6 +4,7 @@ import com.nitssrpi.NIT_SRPI.controller.dto.ProcessRequestDTO;
 import com.nitssrpi.NIT_SRPI.controller.dto.ProcessResponseDTO;
 import com.nitssrpi.NIT_SRPI.controller.dto.ProcessStatusCountDTO;
 import com.nitssrpi.NIT_SRPI.controller.mappers.ProcessMapper;
+import com.nitssrpi.NIT_SRPI.model.IpTypes;
 import com.nitssrpi.NIT_SRPI.model.Process;
 import com.nitssrpi.NIT_SRPI.model.StatusProcess;
 import com.nitssrpi.NIT_SRPI.service.ProcessService;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.data.domain.Page;
 
 @RestController
@@ -67,6 +70,21 @@ public class ProcessController implements GenericController{
     @GetMapping("/status/amount")
     public ResponseEntity<List<ProcessStatusCountDTO>> countStatus(){
         return ResponseEntity.ok(service.countProcessStatus());
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<Object> deleteIpTypes
+            (@PathVariable("id") String id) {
+        var idProcess = Long.parseLong(id);
+        //Buscando na base se existe alguem com esse id
+        Optional<Process> processOptional = service.getById(idProcess);
+        //Se for vazio eu retorno notFound
+        if(processOptional.isEmpty()){
+            return ResponseEntity.notFound().build();
+        }
+        //Se não eu deleto
+        service.delete(processOptional.get());
+        return ResponseEntity.noContent().build();
     }
 
 }
