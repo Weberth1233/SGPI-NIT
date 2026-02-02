@@ -1,19 +1,21 @@
 package com.nitssrpi.NIT_SRPI.controller;
-import com.nitssrpi.NIT_SRPI.controller.dto.IpTypesResponseDTO;
-import com.nitssrpi.NIT_SRPI.controller.dto.ProcessRequestDTO;
-import com.nitssrpi.NIT_SRPI.controller.dto.ProcessResponseDTO;
-import com.nitssrpi.NIT_SRPI.controller.dto.ProcessStatusCountDTO;
+import com.nitssrpi.NIT_SRPI.controller.dto.*;
 import com.nitssrpi.NIT_SRPI.controller.mappers.ProcessMapper;
 import com.nitssrpi.NIT_SRPI.model.IpTypes;
 import com.nitssrpi.NIT_SRPI.model.Process;
 import com.nitssrpi.NIT_SRPI.model.StatusProcess;
+import com.nitssrpi.NIT_SRPI.model.User;
+import com.nitssrpi.NIT_SRPI.service.IpTypesService;
 import com.nitssrpi.NIT_SRPI.service.ProcessService;
+import com.nitssrpi.NIT_SRPI.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.mapstruct.control.MappingControl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,6 +25,8 @@ import org.springframework.data.domain.Page;
 @RequestMapping("process")
 @RequiredArgsConstructor
 public class ProcessController implements GenericController{
+    private final IpTypesService ipTypesService;
+    private final UserService userService;
     private final ProcessService service;
     private final ProcessMapper mapper;
 
@@ -33,6 +37,46 @@ public class ProcessController implements GenericController{
         URI location = generateHeaderLocation(process.getId());
         return ResponseEntity.created(location).build();
     }
+
+    //Obter autor pelo id
+    @PutMapping("{id}")
+    public ResponseEntity<Object> updateIpTypes
+    (@RequestBody @Valid ProcessRequestDTO dto, @PathVariable("id") String id ) {
+        var idIpTypes = Long.parseLong(id);
+        //Buscando na base se existe alguem com esse id
+        Optional<Process> processOptional = service.getById(idIpTypes);
+        //Se for vazio eu retorno notFound
+        if(processOptional.isEmpty()){
+            return ResponseEntity.notFound().build();
+        }
+        var process = processOptional.get();
+        process.setTitle(dto.title());
+        //Pesquisar no service de usuarios os usuarios e trazer ele pra cá novamente
+        process.setFeatured(dto.isFeatured());
+        process.setFormData(dto.formData());
+        //Adicionando lista de users
+        List<User> users = new ArrayList<User>();
+        for (Long authorId : dto.authorIds()) {
+            System.out.println(authorId);
+            var user = userService.getUserById(authorId);
+            user.ifPresent(users::add);
+        }
+        if(!users.isEmpty()){
+            process.setAuthors(users);
+        }
+        Optional<User> user = userService.getUserById(dto.creatorId());
+        user.ifPresent(process::setCreator);
+
+        //Pesquisar no service de iptypes
+        Optional<IpTypes> ipTypes = ipTypesService.getById(dto.ipTypeId());
+        System.out.println(ipTypes);
+
+        ipTypes.ifPresent(process::setIpType);
+
+        service.update(process);
+        return ResponseEntity.noContent().build();
+    }
+
     //Essa url vai ser apenas para admin
     @GetMapping
     public ResponseEntity<Page<ProcessResponseDTO>> pagedSearch( @RequestParam(value = "title", required = false) String title,
