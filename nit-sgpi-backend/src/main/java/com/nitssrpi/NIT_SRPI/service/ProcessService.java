@@ -59,6 +59,33 @@ public class ProcessService {
         return resultPage;
     }
 
+    public void update(Process process){
+        if(process.getId() == null){
+            throw new IllegalArgumentException("Para atualizar é necessário que o processo esteja cadastrado!");
+        }
+        // 1. IMPORTANTE: Buscar o tipo de PI completo no banco para ter acesso à lista de documentos (RequiredDocuments)
+        IpTypes type = ipTypesRepository.findById(process.getIpType().getId())
+                .orElseThrow(() -> new RuntimeException("Tipo de PI não encontrado!"));
+        // Vinculamos o objeto "vivo" do banco ao processo
+        process.setIpType(type);
+        // 2. Agora o loop vai funcionar porque o 'type' carregou os documentos
+        if (type.getRequiredDocuments() != null && !type.getRequiredDocuments().isEmpty()) {
+            for (IpTypeDocument docModelo : type.getRequiredDocuments()) {
+                Attachment novoAnexo = new Attachment();
+                novoAnexo.setDisplayName(docModelo.getDisplayName());
+                // Aqui acontece a cópia que você perguntou: igualamos os caminhos!
+                novoAnexo.setTemplateFilePath(docModelo.getTemplateFilePath());
+                novoAnexo.setStatus("PENDING");
+                novoAnexo.setProcess(process);
+                // Adicionamos na lista do processo
+                process.getAttachments().add(novoAnexo);
+            }
+        }else if(type.getRequiredDocuments().isEmpty()){
+            process.getAttachments().clear();
+        }
+        process.setStatus(StatusProcess.CORRECAO);
+        repository.save(process);
+    }
 
     public Page<Process> searchProcess(String title, StatusProcess statusProcess, Integer page, Integer pageSize){
         Specification<Process> specs = Specification.where((root, query, cb) -> cb.conjunction());
