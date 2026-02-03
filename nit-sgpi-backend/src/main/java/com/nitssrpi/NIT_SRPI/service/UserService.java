@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,9 +25,9 @@ public class UserService {
             user.getAddress().setUser(user);
         }
         //Todos os usuarios cadastrados vão iniciar com a Role USER
-        if(user.getRole() == null){
-            user.setRole("USER");
-        }
+//        if(user.getRole() == null){
+//            user.setRole("USER");
+//        }
         return repository.save(user);
     }
 
@@ -46,14 +47,17 @@ public class UserService {
         return repository.findAll(specs, pageRequest);
     }
 
+    public UserDetails findByEmail(String email){
+        return repository.findByEmail(email);
+    }
 
     public void update(User user){
         if(user.getId() == null){
             throw new IllegalArgumentException("Para atualizar é necessário que o usuário esteja cadastrado!");
         }
-        if(user.getRole() == null){
-            user.setRole("USER");
-        }
+//        if(user.getRole() == null){
+//            user.setRole("USER");
+//        }
         repository.save(user);
     }
 }

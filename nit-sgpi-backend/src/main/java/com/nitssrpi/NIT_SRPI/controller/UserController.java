@@ -46,7 +46,7 @@ public class UserController  implements GenericController{
             User auxUser = mapper.toEntity(dto);
 
             //Passando novos valores para o usuario encontrado com o id passado como parametro
-            user.setUserName(auxUser.getUserName());
+            user.setUserName(auxUser.getUsername());
             user.setEmail(auxUser.getEmail());
             user.setPassword(auxUser.getPassword());
             user.setPhoneNumber(auxUser.getPhoneNumber());

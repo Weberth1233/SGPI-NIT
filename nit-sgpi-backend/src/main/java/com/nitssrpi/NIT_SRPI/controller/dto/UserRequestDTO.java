@@ -1,5 +1,6 @@
 package com.nitssrpi.NIT_SRPI.controller.dto;
 
+import com.nitssrpi.NIT_SRPI.model.UserRole;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Past;
@@ -26,7 +27,7 @@ public record UserRequestDTO(
         String profession,
         @NotBlank(message = "Campo obrigatório!")
         String fullName,
-        String role,
+        UserRole role,
         Boolean isEnabled,
         AddressRequestDTO address) {
 }
