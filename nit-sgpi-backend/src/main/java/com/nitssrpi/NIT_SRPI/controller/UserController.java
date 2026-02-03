@@ -77,4 +77,19 @@ public class UserController  implements GenericController{
         Page<UserResponseDTO> result = resultPage.map(mapper::toDTO);
         return ResponseEntity.ok(result);
     }
+
+// Método DELETE user
+@DeleteMapping("{id}")
+    public ResponseEntity<Object> deleteUser(@PathVariable("id") String id){
+
+        var idUser = Long.parseLong(id);
+
+        return service.getUserById(idUser)
+        .map(user -> {
+            service.delete(user);
+
+            return ResponseEntity.noContent().build();
+        })
+        .orElseGet(() -> ResponseEntity.notFound().build());
+    }
 }
