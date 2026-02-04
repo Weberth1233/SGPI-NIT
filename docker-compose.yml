@@ -10,6 +10,8 @@ services:
       POSTGRES_DB: nitsrpi
     ports:
       - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
     networks:
       - nitsrpi-network
     restart: unless-stopped
@@ -28,6 +30,24 @@ services:
       - nitsrpi-network
     restart: unless-stopped
 
+  backend:
+    build:
+      context: ./nit-sgpi-backend
+      dockerfile: Dockerfile
+    container_name: nitsrpi-backend
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    networks:
+      - nitsrpi-network
+    restart: unless-stopped
+    environment:
+      JWT_SECRET: my-secret-key
+
 networks:
   nitsrpi-network:
     driver: bridge
+
+volumes:
+  pgdata:
