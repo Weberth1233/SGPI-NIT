@@ -28,6 +28,9 @@ public class Process {
 
     @Enumerated(EnumType.STRING)
     private StatusProcess status;
+    
+    @Column(name = "justification", columnDefinition = "TEXT")
+    private String justification;
 
     @Column(name = "is_featured")
     private boolean isFeatured;

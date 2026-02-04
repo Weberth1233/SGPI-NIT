@@ -15,6 +15,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.nitssrpi.NIT_SRPI.controller.dto.ProcessStatusUpdateDTO;
 
 import java.util.List;
 import java.util.Optional;
@@ -29,6 +30,13 @@ public class ProcessService {
 
     @Transactional
     public Process save(Process process) {
+
+         // 🔐 BLINDAGEM OBRIGATÓRIA (ENTRA AQUI)
+    if (process.getIpType() == null || process.getIpType().getId() == null) {
+        throw new IllegalArgumentException(
+            "ipType é obrigatório e deve ser informado para criar um processo"
+        );
+    }
         // 1. IMPORTANTE: Buscar o tipo de PI completo no banco para ter acesso à lista de documentos (RequiredDocuments)
         IpTypes type = ipTypesRepository.findById(process.getIpType().getId())
                 .orElseThrow(() -> new RuntimeException("Tipo de PI não encontrado!"));
@@ -114,5 +122,24 @@ public class ProcessService {
     public List<ProcessStatusCountDTO> countProcessStatus(){
         return repository.countProcessStatus();
     }
+@Transactional
+    public void updateStatus(Long id, ProcessStatusUpdateDTO dto) {
+        // 1. Corrigido: Usando 'repository' (nome declarado no topo da sua classe)
+        Process process = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Processo não encontrado!"));
 
+        // 2. Corrigido: 'valueOf' com 'v' minúsculo
+        // Use toUpperCase() para evitar erros se o admin enviar "correcao" em vez de "CORRECAO"
+        process.setStatus(StatusProcess.valueOf(dto.status().toUpperCase()));
+
+        // 3. Lógica de Justificativa (RF014/RF021) - Sobrescreve a anterior
+        if ("CORRECAO".equalsIgnoreCase(dto.status())) {
+            process.setJustification(dto.justification());
+        } else {
+            // Limpa se o status não for mais correção
+            process.setJustification(null);
+        }
+
+        repository.save(process);
+    }
 }

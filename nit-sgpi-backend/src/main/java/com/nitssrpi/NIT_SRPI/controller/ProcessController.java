@@ -130,5 +130,14 @@ public class ProcessController implements GenericController{
         service.delete(processOptional.get());
         return ResponseEntity.noContent().build();
     }
-
+// Para atualização do status do processo    
+    @PutMapping("/{id}/status")
+    public ResponseEntity<Object> updateStatus(
+        @PathVariable Long id,
+        @RequestBody @Valid ProcessStatusUpdateDTO dto
+    ){ 
+        // CORREÇÃO: Usando a variável 'service' declarada na linha 33
+        service.updateStatus(id, dto);
+        return ResponseEntity.noContent().build();
+    }
 }
