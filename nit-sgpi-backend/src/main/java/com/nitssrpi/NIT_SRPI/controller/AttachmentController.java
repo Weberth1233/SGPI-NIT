@@ -65,5 +65,13 @@ public class AttachmentController {
         attachmentRepository.save(att);
         return ResponseEntity.ok("Enviado com sucesso!");
     }
+
     //teste backend
+    @GetMapping("/process/{id}")
+    public ResponseEntity<List<AttachmentResponseDTO>> getAllAttachmentsIpType(@PathVariable Long id) {
+        List<Attachment> result = attachmentRepository.findByProcessId(id);
+        List<AttachmentResponseDTO> list = result.stream().map(mapper::toDTO).toList();
+
+        return ResponseEntity.ok(list);
+    }
 }
