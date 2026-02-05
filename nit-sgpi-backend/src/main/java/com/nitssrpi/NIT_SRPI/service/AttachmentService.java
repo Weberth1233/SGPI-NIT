@@ -24,6 +24,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AttachmentService {
 
+    private final AttachmentRepository attachmentRepository
     private final Path fileStorageLocation;
 
     @Autowired
@@ -68,4 +69,12 @@ public class AttachmentService {
             throw new RuntimeException("Erro ao salvar arquivo assinado", ex);
         }
     }
+
+    // Metodo para buscar por tipo de propriedade
+    public List<Attachment> buscarPorTipoPropriedade(Long ipTypeId) {
+        if (ipTypeId == null) {
+            throw new illegalArgumentException("ipTypeId não pode ser nulo");
+        }    
+        return attachmentRepository.findByProcess_IpType_Id(ipTypeId);
+}
 }

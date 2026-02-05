@@ -16,7 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 @RestController
-@RequestMapping("attachments")
+@RequestMapping("/attachments")
 @RequiredArgsConstructor
 public class AttachmentController {
     private final AttachmentService attachmentService;
@@ -65,5 +65,12 @@ public class AttachmentController {
         attachmentRepository.save(att);
         return ResponseEntity.ok("Enviado com sucesso!");
     }
-    //teste backend
+    // método buscarPorTipoPropriedade
+    @GetMapping("/type/{id}")
+    public ResponseEntity<List<AttachmentResponseDTO>> getAllAttachmentsIpType(@PathVariable Long id) {
+        List<Attachment> result = attachmentService.buscarPorTipoPropriedade(id);
+        List<AttachmentResponseDTO> list = result.stream().map(mapper::toDTO).toList();
+
+        return ResponseEntity.ok(list);
+    }
 }
