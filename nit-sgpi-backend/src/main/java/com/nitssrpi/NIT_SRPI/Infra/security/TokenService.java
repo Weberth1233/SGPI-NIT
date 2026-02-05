@@ -9,8 +9,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
+
+import java.time.temporal.ChronoUnit;
 
 @Service
 public class TokenService {
@@ -20,14 +20,18 @@ public class TokenService {
 
     public String generateToken(User user){
         try{
-            //
             Algorithm algorithm = Algorithm.HMAC256(secret);
-            String token = JWT.create().withIssuer("auth-api")
+
+            String role = user.getRole().name(); // ou como for seu enum/string
+
+            return JWT.create()
+                    .withIssuer("auth-api")
                     .withSubject(user.getEmail())
+                    .withClaim("role", role)
                     .withExpiresAt(genExpirationDate())
                     .sign(algorithm);
-            return token;
-        }catch (JWTCreationException exception){
+
+        } catch (JWTCreationException exception){
             throw new RuntimeException("Error while generating token", exception);
         }
     }
@@ -35,18 +39,19 @@ public class TokenService {
     public String validateToken(String token){
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
+
             return JWT.require(algorithm)
                     .withIssuer("auth-api")
                     .build()
                     .verify(token)
                     .getSubject();
+
         } catch (JWTVerificationException exception){
-            return "";
+            return null; // <-- melhor que ""
         }
     }
 
     private Instant genExpirationDate(){
-        return LocalDateTime.now().plusHours(2).toInstant(ZoneOffset.of("-03:00"));
+        return Instant.now().plus(2, ChronoUnit.HOURS);
     }
-
 }
