@@ -7,6 +7,7 @@ import com.nitssrpi.NIT_SRPI.service.IpTypesService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.util.List;
@@ -26,7 +27,18 @@ public class IpTypesController implements GenericController{
         URI location = generateHeaderLocation(ipTypes.getId());
         return ResponseEntity.created(location).build();
     }
-
+/*
+* {
+  "email": "caiojorge23@hotmail.com",
+  "password": "caio2333"
+  }
+  *
+  {
+  "email": "mariadoloris@hotmail.com",
+  "password": "maria123"
+}
+  *
+}*/
     @GetMapping
     public ResponseEntity<List<IpTypesResponseDTO>> allTypesOfProperty(){
         List<IpTypes> result = service.allTypesOfProperty();
@@ -34,7 +46,6 @@ public class IpTypesController implements GenericController{
         return ResponseEntity.ok(list);
     }
 
-    //Obter autor pelo id
     @PutMapping("{id}")
     public ResponseEntity<Object> updateIpTypes
     (@RequestBody @Valid IpTypesRequestDTO dto, @PathVariable("id") String id ) {

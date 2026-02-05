@@ -2,12 +2,14 @@ package com.nitssrpi.NIT_SRPI.controller.common;
 import com.nitssrpi.NIT_SRPI.controller.dto.ErroCampo;
 import com.nitssrpi.NIT_SRPI.controller.dto.ErrorResposta;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.nio.file.AccessDeniedException;
 import java.util.List;
 
 @RestControllerAdvice
@@ -21,6 +23,18 @@ public class GlobalExceptionHandler {
                 stream().map(fe -> new ErroCampo(fe.getField(), fe.getDefaultMessage())).toList();
         return new ErrorResposta(HttpStatus.UNPROCESSABLE_ENTITY.value(), "Erro de validação!", listaErros);
     }
+
+    @ExceptionHandler(AuthorizationDeniedException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ErrorResposta handleAccessDenied(AuthorizationDeniedException e) {
+        return new ErrorResposta(
+                HttpStatus.FORBIDDEN.value(),
+                "Você não tem permissão para acessar este recurso",
+                null
+        );
+    }
+
+
 //
 //    @ExceptionHandler(RegistroDuplicadoException.class)
 //    @ResponseStatus(HttpStatus.CONFLICT)
