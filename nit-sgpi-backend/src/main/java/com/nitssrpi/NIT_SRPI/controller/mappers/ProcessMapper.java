@@ -19,7 +19,7 @@ public abstract class ProcessMapper {
 
     @Mapping(target = "ipType", expression = "java( ipTypesRepository.findById(dto.ipTypeId()).orElse(null))")
     @Mapping(target = "authors", expression = "java(userRepository.findAllById(dto.authorIds()))")
-    @Mapping(target = "creator", expression = "java(userRepository.findById(dto.creatorId()).orElse(null))")
+//    @Mapping(target = "creator", expression = "java(userRepository.findById(dto.creatorId()).orElse(null))")
     public abstract Process toEntity(ProcessRequestDTO dto);
 
     public abstract ProcessResponseDTO toDTO(Process process);

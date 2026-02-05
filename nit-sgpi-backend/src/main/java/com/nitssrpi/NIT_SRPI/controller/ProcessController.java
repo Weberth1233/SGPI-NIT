@@ -64,8 +64,6 @@ public class ProcessController implements GenericController{
         if(!users.isEmpty()){
             process.setAuthors(users);
         }
-        Optional<User> user = userService.getUserById(dto.creatorId());
-        user.ifPresent(process::setCreator);
 
         //Pesquisar no service de iptypes
         Optional<IpTypes> ipTypes = ipTypesService.getById(dto.ipTypeId());

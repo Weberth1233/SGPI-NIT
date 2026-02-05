@@ -1,5 +1,6 @@
 package com.nitssrpi.NIT_SRPI.service;
 
+import com.nitssrpi.NIT_SRPI.Infra.security.SecurityService;
 import com.nitssrpi.NIT_SRPI.controller.dto.ProcessStatusCountDTO;
 import com.nitssrpi.NIT_SRPI.model.*;
 import com.nitssrpi.NIT_SRPI.model.Process;
@@ -26,9 +27,15 @@ public class ProcessService {
     private final ProcessRepository repository;
     private final IpTypesRepository ipTypesRepository;
     private final UserRepository userRepository;
+    private final SecurityService securityService;
 
     @Transactional
     public Process save(Process process) {
+
+        User user = securityService.getAuthenticatedUser();
+        System.out.println(user.getEmail()+ " " + user.getFullName());
+        process.setCreator(user);
+
         // 1. IMPORTANTE: Buscar o tipo de PI completo no banco para ter acesso à lista de documentos (RequiredDocuments)
         IpTypes type = ipTypesRepository.findById(process.getIpType().getId())
                 .orElseThrow(() -> new RuntimeException("Tipo de PI não encontrado!"));
