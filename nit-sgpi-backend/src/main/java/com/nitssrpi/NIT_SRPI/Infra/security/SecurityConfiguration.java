@@ -50,6 +50,7 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.DELETE, "/ip_types/**").hasRole("ADMIN")
 
                         // Process - ROLES
+//                        .requestMatchers(HttpMethod.GET, "/process/user/processes").hasAnyRole("ADMIN", "USER")
                         .requestMatchers(HttpMethod.GET, "/process/**").hasAnyRole("ADMIN", "USER")
                         .requestMatchers(HttpMethod.POST, "/process/**").hasAnyRole("ADMIN", "USER")
                         .requestMatchers(HttpMethod.PUT, "/process/**").hasAnyRole("ADMIN", "USER")

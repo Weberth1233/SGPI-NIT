@@ -60,9 +60,10 @@ public class ProcessService {
         return repository.save(process);
     }
 
-    public Page<Process> userProcesses(Long createdId, Integer page, Integer pageSize){
+    public Page<Process> userProcesses(Integer page, Integer pageSize){
             Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
-        Page<Process> resultPage = repository.findByCreatorId(createdId, pageable);
+            User user = securityService.getAuthenticatedUser();
+            Page<Process> resultPage = repository.findByCreatorId(user.getId(), pageable);
         return resultPage;
     }
 

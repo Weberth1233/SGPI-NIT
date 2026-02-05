@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="f8257618-1329-4d8d-a065-e148448811e8" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/nit-sgpi-backend/src/main/java/com/nitssrpi/NIT_SRPI/repository/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/nit-sgpi-backend/src/main/java/com/nitssrpi/NIT_SRPI/repository/UserRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nit_sgpi_frontend/lib/presentation/pages/login_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/nit_sgpi_frontend/lib/presentation/pages/login_page.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nit_sgpi_frontend/macos/Flutter/GeneratedPluginRegistrant.swift" beforeDir="false" afterPath="$PROJECT_DIR$/nit_sgpi_frontend/macos/Flutter/GeneratedPluginRegistrant.swift" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 7
+}]]></component>
+  <component name="ProjectId" id="39G0RybwhleaUkJ93MVty9JiW1i" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "develop",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/weberth.ea/Documents/projetos-java/libraryapi"
+  }
+}]]></component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="f8257618-1329-4d8d-a065-e148448811e8" name="Changes" comment="" />
+      <created>1770307096102</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1770307096102</updated>
+    </task>
+    <servers />
+  </component>
+</project>
