@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import '../../../infra/datasources/auth_local_datasource.dart';
+import '../../datasources/auth_local_datasource.dart';
 
 class ApiClient {
   final AuthLocalDataSource local;

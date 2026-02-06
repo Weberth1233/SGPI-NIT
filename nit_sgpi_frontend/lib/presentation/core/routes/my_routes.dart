@@ -1,7 +1,6 @@
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:nit_sgpi_frontend/presentation/pages/home/home_PAGE.dart';
 import 'package:nit_sgpi_frontend/presentation/pages/login/login_page.dart';
-
 import '../../pages/login/bindings/login_bindings.dart';
 
 class MyRoutes {

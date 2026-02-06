@@ -37,6 +37,7 @@ dependencies:
   http: ^1.6.0
   shared_preferences: ^2.5.4
   get: ^4.7.3
+  equatable: ^2.0.8
 
 dev_dependencies:
   flutter_test:
