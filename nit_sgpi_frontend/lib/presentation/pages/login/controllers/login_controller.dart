@@ -1,17 +1,27 @@
+import 'package:get/get.dart';
 
 import '../../../../domain/usecases/login_usecase.dart';
 
-class LoginController {
+class LoginController extends GetxController {
   final LoginUsecase loginUseCase;
 
   LoginController(this.loginUseCase);
 
-  Future<bool> login(String email, String password) async {
+  RxBool loading = false.obs;
+  RxBool successLogin = false.obs;
+  RxString errorMessage = "".obs;
+
+  Future<void> login(String email, String password) async {
+    loading.value = true;
+    errorMessage.value = "";
     try {
       await loginUseCase(email, password);
-      return true;
+      successLogin.value = true;
+      Get.offAllNamed("/home");
     } catch (e) {
-      return false;
+      errorMessage.value = "Login ou senha inválidos!";
+    } finally {
+      loading.value = false;
     }
   }
 }

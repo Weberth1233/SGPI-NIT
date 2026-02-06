@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-// Supondo que você já tenha isso injetado no main.dart
-import '../../../main.dart'; // onde está o loginController global
+import 'package:nit_sgpi_frontend/presentation/pages/login/controllers/login_controller.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -14,35 +12,13 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final loginController = Get.find<LoginController>();
 
-  bool _loading = false;
-  String? _error;
-
-  Future<void> _doLogin() async {
-    setState(() {
-      _loading = true;
-      _error = null;
-    });
-
-    final success = await loginController.login(
-      _emailController.text.trim(),
-      _passwordController.text,
-    );
-
-    if (!mounted) return;
-
-    setState(() {
-      _loading = false;
-    });
-
-    if (success) {
-      print("deu tudo certo!!!!");
-      Get.toNamed("/home");
-    } else {
-      setState(() {
-        _error = 'Email ou senha inválidos';
-      });
-    }
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
   }
 
   @override
@@ -71,9 +47,7 @@ class _LoginPageState extends State<LoginPage> {
                     border: OutlineInputBorder(),
                   ),
                 ),
-
                 const SizedBox(height: 16),
-
                 // Campo Senha
                 TextField(
                   controller: _passwordController,
@@ -83,26 +57,41 @@ class _LoginPageState extends State<LoginPage> {
                     border: OutlineInputBorder(),
                   ),
                 ),
-
                 const SizedBox(height: 24),
-
                 // Erro
-                if (_error != null) ...[
-                  Text(
-                    _error!,
-                    style: const TextStyle(color: Colors.red),
-                  ),
-                  const SizedBox(height: 12),
-                ],
+                Obx(() {
+                  final error = loginController.errorMessage.value;
+                  if (error.isEmpty) {
+                    return const SizedBox(height: 20);
+                  }
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 12),
+                    child: Text(
+                      error,
+                      style: const TextStyle(color: Colors.red),
+                    ),
+                  );
+                }),
 
-                // Botão
-                SizedBox(
-                  width: double.infinity,
-                  height: 45,
-                  child: ElevatedButton(
-                    onPressed: _loading ? null : _doLogin,
-                    child: _loading
-                        ? const CircularProgressIndicator(color: Colors.white)
+                Obx(
+                  () => ElevatedButton(
+                    onPressed: loginController.loading.value
+                        ? null
+                        : () {
+                            loginController.login(
+                              _emailController.text,
+                              _passwordController.text,
+                            );
+                          },
+                    child: loginController.loading.value
+                        ? const SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: Colors.white,
+                            ),
+                          )
                         : const Text('Entrar'),
                   ),
                 ),
