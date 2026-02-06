@@ -8,7 +8,7 @@ import 'package:nit_sgpi_frontend/infra/datasources/process_remote_datasource.da
 
 class ProcessRepository implements IProcessRepository{
   
-  final ProcessRemoteDataSource remoteDataSource;
+  final IProcessRemoteDataSource remoteDataSource;
 
   ProcessRepository({required this.remoteDataSource});
   
@@ -24,10 +24,6 @@ class ProcessRepository implements IProcessRepository{
     }
     catch(e){
       return Left(ServerFailure("Erro inesperado!"));
-    }
-    
+    } 
   }
-
- 
-
 }

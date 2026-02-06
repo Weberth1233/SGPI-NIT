@@ -1,30 +1,29 @@
 import 'dart:convert';
 
-import 'package:http/http.dart' as http show Client;
+import 'package:nit_sgpi_frontend/infra/core/network/api_client.dart';
 
 import '../../domain/core/errors/exceptions.dart';
 import '../models/paged_result_model.dart';
 
-abstract class ProcessRemoteDataSource {
+abstract class IProcessRemoteDataSource {
   Future<PagedProcessResultModel> getProcesses({
     int page = 0,
     int size = 10,
   });
 }
 
-class ProcessRemoteDataSourceImpl implements ProcessRemoteDataSource {
-  final http.Client client;
+class ProcessRemoteDataSourceImpl implements IProcessRemoteDataSource {
+  final ApiClient apiClient;
 
-  ProcessRemoteDataSourceImpl(this.client);
+  ProcessRemoteDataSourceImpl(this.apiClient);
   
   @override
   Future<PagedProcessResultModel> getProcesses({
     int page = 0,
     int size = 10,
   }) async {
-    final url = Uri.parse('http://localhost:8080/process/user/processes?page=$page&page-size=$size');
     try {
-      final response = await client.get(url);
+      final response = await apiClient.get('http://localhost:8080/process/user/processes?page=$page&page-size=$size');
       if (response.statusCode == 200) {
         final jsonMap = json.decode(response.body);
         return PagedProcessResultModel.fromJson(jsonMap);
