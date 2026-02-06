@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 // Supondo que você já tenha isso injetado no main.dart
-import '../../main.dart'; // onde está o loginController global
+import '../../../main.dart'; // onde está o loginController global
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -36,7 +37,7 @@ class _LoginPageState extends State<LoginPage> {
 
     if (success) {
       print("deu tudo certo!!!!");
-      // Navigator.pushReplacementNamed(context, '/home');s
+      Get.toNamed("/home");
     } else {
       setState(() {
         _error = 'Email ou senha inválidos';
