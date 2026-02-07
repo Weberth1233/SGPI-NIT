@@ -39,6 +39,7 @@ dependencies:
   get: ^4.7.3
   equatable: ^2.0.8
   dartz: ^0.10.0
+  google_fonts: ^8.0.1
 
 dev_dependencies:
   flutter_test:

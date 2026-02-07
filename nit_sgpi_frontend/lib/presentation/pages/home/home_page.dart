@@ -12,6 +12,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.onSecondary,
       appBar: AppBar(title: const Text('Processos')),
       body: Obx(() {
         if (processController.isLoading.value) {
