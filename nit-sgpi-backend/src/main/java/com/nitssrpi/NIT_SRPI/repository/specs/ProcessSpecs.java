@@ -14,4 +14,11 @@ public class ProcessSpecs {
         return (root, query, cb) -> cb.equal(root.get("status"), status);
     }
 
+    public static Specification<Process> equalCreatorId(Long creatorId) {
+        return (root, query, cb) -> {
+            // Assumindo que sua entidade Process tem um atributo 'creator' que é um User
+            // Se for apenas um Long chamado 'creatorId', use root.get("creatorId")
+            return cb.equal(root.get("creator").get("id"), creatorId);
+        };
+    }
 }

@@ -89,11 +89,13 @@ public class ProcessController implements GenericController{
     //Essa url vai ser apenas para usuarios comuns
     @GetMapping("/user/processes")
     public ResponseEntity<Page<ProcessResponseDTO>> pagedUserProcesses(
+            @RequestParam(value = "title", required = false) String title,
+            @RequestParam(value = "status-process", required = false) StatusProcess statusProcess,
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(name = "page-size", defaultValue = "10") Integer pageSize
     ) {
         Page<ProcessResponseDTO> result =
-                service.userProcesses(page, pageSize)
+                service.userProcesses(title,statusProcess, page, pageSize)
                         .map(mapper::toDTO);
 
         return ResponseEntity.ok(result);

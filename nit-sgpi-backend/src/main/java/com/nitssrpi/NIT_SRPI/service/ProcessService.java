@@ -60,12 +60,7 @@ public class ProcessService {
         return repository.save(process);
     }
 
-    public Page<Process> userProcesses(Integer page, Integer pageSize){
-            Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
-            User user = securityService.getAuthenticatedUser();
-            Page<Process> resultPage = repository.findByCreatorId(user.getId(), pageable);
-        return resultPage;
-    }
+
 
     public void update(Process process){
         if(process.getId() == null){
@@ -106,6 +101,30 @@ public class ProcessService {
         Pageable pageRequest = PageRequest.of(page, pageSize);
         return repository.findAll(specs, pageRequest);
     }
+
+    public Page<Process> userProcesses(String title, StatusProcess statusProcess, Integer page, Integer pageSize) {
+        // 1. Pega o usuário logado
+        User user = securityService.getAuthenticatedUser();
+        // 2. Começa a Specification definindo que o processo DEVE pertencer ao usuário
+        // Se você não criou o método na classe ProcessSpecs, pode fazer o lambda direto aqui
+        Specification<Process> specs = Specification.where(ProcessSpecs.equalCreatorId(user.getId()));
+        // 3. Adiciona os filtros dinâmicos (igual ao searchProcess)
+        if (title != null && !title.isEmpty()) {
+            specs = specs.and(ProcessSpecs.likeTitle(title));
+        }
+
+        if (statusProcess != null) {
+            specs = specs.and(ProcessSpecs.equalStatusProcess(statusProcess));
+        }
+
+        // 4. Configura a paginação
+        Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
+
+        // 5. Chama o findAll (que vem do JpaSpecificationExecutor)
+        return repository.findAll(specs, pageable);
+    }
+
+
 
     public Optional<Process> getById(Long id){
         return repository.findById(id);
