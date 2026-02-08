@@ -11,9 +11,11 @@ class GetProcesses {
   GetProcesses({required this.repository});
 
   Future<Either<Failure, PagedResultEntity<ProcessEntity>>> call({
+    String title ="",
+    String statusGenero = "",
     int page = 0,
     int size = 10,
   }) {
-    return repository.getProcesses(page: page, size: size);
+    return repository.getProcesses(title: title,statusGenero: statusGenero, page: page, size: size);
   }
 }

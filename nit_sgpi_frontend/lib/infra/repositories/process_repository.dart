@@ -13,9 +13,9 @@ class ProcessRepository implements IProcessRepository{
   ProcessRepository({required this.remoteDataSource});
   
   @override
-  Future<Either<Failure, PagedResultEntity<ProcessEntity>>> getProcesses({int page = 0, int size = 10}) async{
+  Future<Either<Failure, PagedResultEntity<ProcessEntity>>> getProcesses({String title="", String statusGenero="", int page = 0, int size = 10}) async{
     try{
-      final result = await remoteDataSource.getProcesses(page: page, size: size);
+      final result = await remoteDataSource.getProcesses(title: title,statusProcess: statusGenero, page: page, size: size);
       return Right(result);
     }on ServerException catch(e){
       return Left(ServerFailure(e.message));

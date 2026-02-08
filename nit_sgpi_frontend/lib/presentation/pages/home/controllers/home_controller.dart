@@ -1,5 +1,4 @@
 import 'package:get/get.dart';
-import 'package:dartz/dartz.dart';
 
 import '../../../../domain/core/errors/failures.dart';
 import '../../../../domain/entities/process/process_entity.dart';
@@ -15,7 +14,10 @@ class ProcessController extends GetxController {
   final RxString errorMessage = ''.obs;
   final RxList<ProcessEntity> processes = <ProcessEntity>[].obs;
 
-  // Paginação (opcional)
+  final RxString title = ''.obs;
+  final RxString status = ''.obs; // 👈 novo filtro de status
+
+  // Paginação
   final RxInt page = 0.obs;
   final int size = 10;
 
@@ -39,6 +41,8 @@ class ProcessController extends GetxController {
     }
 
     final result = await getProcesses(
+      title: title.value,
+      statusGenero: status.value, // 👈 agora manda o status também
       page: page.value,
       size: size,
     );
@@ -56,5 +60,17 @@ class ProcessController extends GetxController {
     );
 
     isLoading.value = false;
+  }
+
+  /// 🔍 Chamar quando apertar ENTER na busca
+  void searchByTitle(String value) {
+    title.value = value;
+    fetchProcesses(loadMore: false); // reseta a lista e busca de novo
+  }
+
+  /// 🏷️ Chamar quando clicar em um filtro de status
+  void filterByStatus(String newStatus) {
+    status.value = newStatus; // ex: "EM_ANDAMENTO" ou ""
+    fetchProcesses(loadMore: false); // reseta e busca de novo
   }
 }

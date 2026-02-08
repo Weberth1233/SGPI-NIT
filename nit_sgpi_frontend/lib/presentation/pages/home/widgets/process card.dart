@@ -10,9 +10,13 @@ class ProcessCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(height: 150, width: 281,child: Card(color: Color(0XFF004093),child: Padding(
+    return SizedBox(height: 180, width: 360,child: Card(color: Color(0XFF004093),child: Padding(
       padding: EdgeInsetsGeometry.symmetric(horizontal: 10,vertical: 20),
-      child: Column(spacing: 5,crossAxisAlignment: CrossAxisAlignment.start,children: [ Text(item.ipType.name, style: context.textTheme.bodySmall),Text(item.title, style: context.textTheme.bodySmall), Text(item.status, style: Theme.of(context).textTheme.bodySmall), Text(item.createdAt.toLocal().toString(), style: Theme.of(context).textTheme.bodySmall)],),
+      child: Column(spacing: 10,crossAxisAlignment: CrossAxisAlignment.start,children: [ 
+        Text(item.title, style: context.textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.bold)),
+        Text(item.ipType.name, style: context.textTheme.bodySmall), 
+        Text(item.status, style: context.textTheme.bodySmall), 
+        Text(item.createdAt.toLocal().toString(), style: context.textTheme.bodySmall)],),
     ),));
 
   }

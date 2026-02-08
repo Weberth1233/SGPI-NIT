@@ -4,4 +4,5 @@ public enum StatusProcess {
     EM_ANDAMENTO,
     CONCLUIDO,
     CORRECAO,
+    FINALIZADO
 }
