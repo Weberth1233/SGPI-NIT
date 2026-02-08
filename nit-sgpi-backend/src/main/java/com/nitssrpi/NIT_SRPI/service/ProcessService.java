@@ -139,7 +139,9 @@ public class ProcessService {
     }
 
     public List<ProcessStatusCountDTO> countProcessStatus(){
-        return repository.countProcessStatus();
+        User user = securityService.getAuthenticatedUser();
+        System.out.println(user.getEmail()+ " " + user.getFullName());
+        return repository.countProcessStatus(user.getId());
     }
 
 }
