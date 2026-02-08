@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http show Client;
 import 'package:nit_sgpi_frontend/domain/usecases/get_process.dart';
+import 'package:nit_sgpi_frontend/domain/usecases/get_process_status_count.dart';
 import 'package:nit_sgpi_frontend/infra/datasources/process_remote_datasource.dart';
 import 'package:nit_sgpi_frontend/infra/repositories/process_repository.dart';
 import 'package:nit_sgpi_frontend/presentation/pages/home/controllers/home_controller.dart';
@@ -43,9 +44,15 @@ class HomeBindings extends Bindings {
       ),
     );
 
+    Get.lazyPut<GetProcessStatusCount>(
+      () => GetProcessStatusCount(
+        repository: Get.find<IProcessRepository>(),
+      ),
+    );
+
     // Controller
     Get.lazyPut<ProcessController>(
-      () => ProcessController(Get.find<GetProcesses>()),
+      () => ProcessController(Get.find<GetProcesses>(), Get.find<GetProcessStatusCount>()),
     );
   }
 }

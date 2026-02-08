@@ -18,4 +18,5 @@ class GetProcesses {
   }) {
     return repository.getProcesses(title: title,statusGenero: statusGenero, page: page, size: size);
   }
+
 }

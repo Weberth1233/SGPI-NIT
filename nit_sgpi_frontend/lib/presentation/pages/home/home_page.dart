@@ -27,29 +27,62 @@ class HomePage extends StatelessWidget {
                   style: Theme.of(context).textTheme.headlineLarge,
                 ),
                 const SizedBox(height: 20),
-                 Center(
-                  child: Wrap(spacing: 10,runSpacing: 10, children: [
-                    SizedBox(height:120,width: 280, child: Card(color: Theme.of(context).colorScheme.onSecondary,child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                      child:Column(crossAxisAlignment: CrossAxisAlignment.start,children: [
-                        Text("EM andamento", style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: Theme.of(context).colorScheme.tertiary),),
-                        Text("01", style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: Theme.of(context).colorScheme.tertiary),),
-                      ],)
-                    ),)),
-                    SizedBox(height:120,width: 280, child: Card(color: Theme.of(context).colorScheme.onSecondary,child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                      child:Column(crossAxisAlignment: CrossAxisAlignment.start,children: [
-                        Text("CORREÇÃO", style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: Theme.of(context).colorScheme.tertiary),),
-                        Text("01", style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: Theme.of(context).colorScheme.tertiary),),
-                      ],)
-                    ),)),SizedBox(height:120,width: 280, child: Card(color: Theme.of(context).colorScheme.onSecondary,child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                      child:Column(crossAxisAlignment: CrossAxisAlignment.start,children: [
-                        Text("FINALIZADO", style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: Theme.of(context).colorScheme.tertiary),),
-                        Text("01", style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: Theme.of(context).colorScheme.tertiary),),
-                      ],)
-                    ),)),
-                  ],),
+                Center(
+                  child: Obx(() {
+                    if (processController.isLoadingProcessCount.value) {
+                      return const CircularProgressIndicator();
+                    }
+                    if (processController.processesStatus.isEmpty) {
+                      return const Text("Nenhum dado encontrado");
+                    }
+                    return Wrap(
+                      spacing: 10,
+                      runSpacing: 10,
+                      children: processController.processesStatus.map((item) {
+                        return SizedBox(
+                          height: 120,
+                          width: 280,
+                          child: Card(
+                            color: Theme.of(context).colorScheme.onSecondary,
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 20,
+                                vertical: 20,
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    item.status, // 👈 vem da API
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium!
+                                        .copyWith(
+                                          color: Theme.of(
+                                            context,
+                                          ).colorScheme.tertiary,
+                                        ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    item.amount.toString(), // 👈 vem da API
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyLarge!
+                                        .copyWith(
+                                          color: Theme.of(
+                                            context,
+                                          ).colorScheme.tertiary,
+                                        ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    );
+                  }),
                 ),
 
                 Text(
@@ -67,6 +100,7 @@ class HomePage extends StatelessWidget {
                 const SizedBox(height: 12),
                 const FilterHeader(),
                 const SizedBox(height: 20),
+
                 /// 👇 Só essa parte é reativa
                 Obx(() {
                   final list = processController.processes.toList();

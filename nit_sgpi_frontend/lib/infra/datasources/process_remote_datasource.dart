@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:nit_sgpi_frontend/infra/core/network/api_client.dart';
+import 'package:nit_sgpi_frontend/infra/models/process/proces_status_count_model.dart';
 
 import '../../domain/core/errors/exceptions.dart';
 import '../models/paged_result_model.dart';
@@ -12,6 +13,8 @@ abstract class IProcessRemoteDataSource {
     int page = 0,
     int size = 10,
   });
+
+  Future<List<ProcessStatusCountModel>> getProcessesStatusCount();
 }
 
 class ProcessRemoteDataSourceImpl implements IProcessRemoteDataSource {
@@ -51,6 +54,32 @@ class ProcessRemoteDataSourceImpl implements IProcessRemoteDataSource {
       if (response.statusCode == 200) {
         final jsonMap = json.decode(response.body);
         return PagedProcessResultModel.fromJson(jsonMap);
+      } else {
+        throw ServerException(
+          'Erro ${response.statusCode} ao buscar processos! - Detalhes: ${response.body}',
+        );
+      }
+    } catch (e) {
+      throw NetworkException('Erro de conexão com o servidor!');
+    }
+  }
+
+  @override
+  Future<List<ProcessStatusCountModel>> getProcessesStatusCount() async {
+    try {
+      final response = await apiClient.get(
+        "http://localhost:8080/process/status/amount",
+      );
+
+      if (response.statusCode == 200) {
+        final List decoded = json.decode(response.body) as List;
+
+        return decoded
+            .map(
+              (e) =>
+                  ProcessStatusCountModel.fromJson(e as Map<String, dynamic>),
+            )
+            .toList();
       } else {
         throw ServerException(
           'Erro ${response.statusCode} ao buscar processos! - Detalhes: ${response.body}',

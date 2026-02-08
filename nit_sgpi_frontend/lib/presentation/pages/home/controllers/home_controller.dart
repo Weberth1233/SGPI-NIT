@@ -1,4 +1,6 @@
 import 'package:get/get.dart';
+import 'package:nit_sgpi_frontend/domain/entities/process/process_status_count_entity.dart';
+import 'package:nit_sgpi_frontend/domain/usecases/get_process_status_count.dart';
 
 import '../../../../domain/core/errors/failures.dart';
 import '../../../../domain/entities/process/process_entity.dart';
@@ -6,13 +8,19 @@ import '../../../../domain/usecases/get_process.dart';
 
 class ProcessController extends GetxController {
   final GetProcesses getProcesses;
+  final GetProcessStatusCount getProcessStatusCount;
 
-  ProcessController(this.getProcesses);
+  ProcessController(this.getProcesses, this.getProcessStatusCount);
 
   // Observables
   final RxBool isLoading = false.obs;
+  final RxBool isLoadingProcessCount = false.obs;
+
   final RxString errorMessage = ''.obs;
   final RxList<ProcessEntity> processes = <ProcessEntity>[].obs;
+
+  final RxList<ProcessStatusCountEntity> processesStatus =
+      <ProcessStatusCountEntity>[].obs;
 
   final RxString title = ''.obs;
   final RxString status = ''.obs; // 👈 novo filtro de status
@@ -25,6 +33,7 @@ class ProcessController extends GetxController {
   void onInit() {
     super.onInit();
     fetchProcesses();
+    processStatusCount();
   }
 
   Future<void> fetchProcesses({bool loadMore = false}) async {
@@ -62,15 +71,32 @@ class ProcessController extends GetxController {
     isLoading.value = false;
   }
 
-  /// 🔍 Chamar quando apertar ENTER na busca
   void searchByTitle(String value) {
     title.value = value;
-    fetchProcesses(loadMore: false); // reseta a lista e busca de novo
+    fetchProcesses(loadMore: false);
   }
 
-  /// 🏷️ Chamar quando clicar em um filtro de status
   void filterByStatus(String newStatus) {
-    status.value = newStatus; // ex: "EM_ANDAMENTO" ou ""
-    fetchProcesses(loadMore: false); // reseta e busca de novo
+    status.value = newStatus;
+    fetchProcesses(loadMore: false);
+  }
+
+  Future<void> processStatusCount() async {
+    if (isLoadingProcessCount.value) return;
+
+    isLoadingProcessCount.value = true;
+
+    final result = await getProcessStatusCount();
+
+    result.fold(
+      (Failure failure) {
+        errorMessage.value = failure.message;
+      },
+      (list) {
+        processesStatus.assignAll(list);
+      },
+    );
+
+    isLoadingProcessCount.value = false;
   }
 }
