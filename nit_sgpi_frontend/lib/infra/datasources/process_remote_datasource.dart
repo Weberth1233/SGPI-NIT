@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:nit_sgpi_frontend/infra/core/network/api_client.dart';
+import 'package:nit_sgpi_frontend/infra/core/network/base_url.dart';
 import 'package:nit_sgpi_frontend/infra/models/process/proces_status_count_model.dart';
 
 import '../../domain/core/errors/exceptions.dart';
@@ -44,7 +45,7 @@ class ProcessRemoteDataSourceImpl implements IProcessRemoteDataSource {
       }
 
       final uri = Uri.http(
-        'localhost:8080',
+        BaseUrl.url,
         '/process/user/processes',
         queryParams,
       );

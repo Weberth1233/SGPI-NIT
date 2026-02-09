@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:nit_sgpi_frontend/infra/core/network/base_url.dart';
 
 class AuthRemoteDataSource {
   final http.Client client;
@@ -8,7 +9,7 @@ class AuthRemoteDataSource {
 
   Future<String> login(String email, String password) async {
   final response = await client.post(
-    Uri.parse('http://localhost:8080/auth/login'),
+    Uri.parse('${BaseUrl.url}/auth/login'),
     headers: {'Content-Type': 'application/json'},
     body: jsonEncode({
       "email": email,

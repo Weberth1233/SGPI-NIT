@@ -19,7 +19,6 @@ class CustomMenu extends StatelessWidget {
           child: Column(
             children: [
               Image.asset("assets/images/Logo SGPI-Photoroom 1.png"),
-            
               Expanded(
                 child: Column(spacing: 40,children: [Text("NIT"),
                 Icon(Icons.home),
