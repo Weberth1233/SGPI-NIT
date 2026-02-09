@@ -70,7 +70,8 @@ class HomePage extends StatelessWidget {
                   const SizedBox(height: 20),
 
                   // ===== Cards de status (resumo)
-                  Center(
+                  Align(
+                    alignment: Alignment.center, // Alinha os cards à esquerda
                     child: Obx(() {
                       if (processController.isLoadingProcessCount.value) {
                         return const CircularProgressIndicator();
@@ -80,14 +81,24 @@ class HomePage extends StatelessWidget {
                       }
 
                       return Wrap(
-                        spacing: 10,
-                        runSpacing: 10,
+                        spacing: 16,
+                        runSpacing: 16,
                         children: processController.processesStatus.map((item) {
                           return SizedBox(
                             height: 120,
                             width: 280,
                             child: Card(
-                              color: theme.colorScheme.onSecondary,
+                              elevation: 4,
+                              color: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                side: BorderSide(
+                                  color: theme.colorScheme.primary.withOpacity(
+                                    0.2,
+                                  ),
+                                  width: 1,
+                                ),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
                               child: Padding(
                                 padding: const EdgeInsets.symmetric(
                                   horizontal: 20,
@@ -97,19 +108,21 @@ class HomePage extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      item.status,
-                                      style: theme.textTheme.bodyMedium!
-                                          .copyWith(
-                                            color: theme.colorScheme.tertiary,
-                                          ),
+                                      item.status.toUpperCase(),
+                                      style: theme.textTheme.bodyMedium?.copyWith(
+                                        color: Colors
+                                            .grey[700], // Cinza escuro para melhor leitura no branco
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
                                     const SizedBox(height: 8),
                                     Text(
                                       item.amount.toString(),
-                                      style: theme.textTheme.bodyLarge!
-                                          .copyWith(
-                                            color: theme.colorScheme.tertiary,
-                                          ),
+                                      style: theme.textTheme.bodyLarge!.copyWith(
+                                        color: Colors
+                                            .black87, // Preto suave para o número
+                                        fontWeight: FontWeight.w900,
+                                      ),
                                     ),
                                   ],
                                 ),
