@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:nit_sgpi_frontend/infra/models/process/user_model.dart';
 import 'package:nit_sgpi_frontend/infra/models/user/address_model.dart';
 import 'package:nit_sgpi_frontend/infra/models/user/user_post_model.dart';
 import 'package:nit_sgpi_frontend/presentation/pages/register/controllers/register_controller.dart';
@@ -8,27 +7,31 @@ import 'package:nit_sgpi_frontend/presentation/shared/widgets/custom_text_field.
 
 import '../../shared/utils/responsive.dart';
 
-class RegisterPage extends StatelessWidget {
+class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
 
   @override
+  State<RegisterPage> createState() => _RegisterPageState();
+}
+
+class _RegisterPageState extends State<RegisterPage> {
+  TextEditingController nameController = TextEditingController();
+  TextEditingController userController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController professionController = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
+  TextEditingController birthdateController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController cepController = TextEditingController();
+  TextEditingController streetController = TextEditingController();
+  TextEditingController numberController = TextEditingController();
+  TextEditingController complementController = TextEditingController();
+  TextEditingController neighborhoodController = TextEditingController();
+  TextEditingController cityController = TextEditingController();
+  TextEditingController stateController = TextEditingController();
+  @override
   Widget build(BuildContext context) {
     final registerController = Get.find<RegisterController>();
-
-    TextEditingController nameController = TextEditingController();
-    TextEditingController userController = TextEditingController();
-    TextEditingController emailController = TextEditingController();
-    TextEditingController professionController = TextEditingController();
-    TextEditingController phoneController = TextEditingController();
-    TextEditingController birthdateController = TextEditingController();
-    TextEditingController passwordController = TextEditingController();
-    TextEditingController cepController = TextEditingController();
-    TextEditingController streetController = TextEditingController();
-    TextEditingController numberController = TextEditingController();
-    TextEditingController complementController = TextEditingController();
-    TextEditingController neighborhoodController = TextEditingController();
-    TextEditingController cityController = TextEditingController();
-    TextEditingController stateController = TextEditingController();
 
     return Obx(() {
       // Escuta a mensagem e mostra o popup

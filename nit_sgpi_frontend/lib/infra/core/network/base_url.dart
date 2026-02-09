@@ -1,3 +1,4 @@
 class BaseUrl {
-  static String url = "http://localhost:8080";
+  static String urlWithHttp = "http://localhost:8080";
+  static String url = "localhost:8080";
 }

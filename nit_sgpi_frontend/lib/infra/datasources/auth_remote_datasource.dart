@@ -9,7 +9,7 @@ class AuthRemoteDataSource {
 
   Future<String> login(String email, String password) async {
   final response = await client.post(
-    Uri.parse('${BaseUrl.url}/auth/login'),
+    Uri.parse('${BaseUrl.urlWithHttp}/auth/login'),
     headers: {'Content-Type': 'application/json'},
     body: jsonEncode({
       "email": email,

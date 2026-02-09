@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:http/http.dart' as http;
 import 'package:nit_sgpi_frontend/infra/models/user/user_post_model.dart';
 import '../../domain/core/errors/exceptions.dart';
@@ -16,15 +18,15 @@ class UserRemoteDatasourceImpl implements IUserRemoteDataSource {
   Future<String> postUser(UserPostModel user) async {
     try {
       final response = await client.post(
-        Uri.parse('${BaseUrl.url}/auth/register'),
+        Uri.parse('http://localhost:8080/auth/register'),
         headers: {'Content-Type': 'application/json'},
-        body: user.toJson(),
+        body: jsonEncode(user.toJson()), // ✅ AQUI
       );
 
       print('STATUS: ${response.statusCode}');
       print('BODY: ${response.body}');
 
-      if (response.statusCode == 204) {
+      if (response.statusCode == 201) {
         return "Cadastrado com sucesso!";
       } else {
         throw ServerException(
@@ -32,6 +34,7 @@ class UserRemoteDatasourceImpl implements IUserRemoteDataSource {
         );
       }
     } catch (e) {
+      print(e);
       throw NetworkException('Erro de conexão com o servidor!');
     }
   }
