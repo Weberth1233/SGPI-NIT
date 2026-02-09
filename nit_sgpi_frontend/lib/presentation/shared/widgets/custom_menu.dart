@@ -8,10 +8,12 @@ class CustomMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Container(
           height: double.infinity,
-          width: 90,
+          width: 100,
           color: Theme.of(context).colorScheme.primary,
           padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
           child: Column(
@@ -25,7 +27,10 @@ class CustomMenu extends StatelessWidget {
               ),
               Column(children: [
                 CircleAvatar(backgroundColor: Theme.of(context).colorScheme.tertiary,child: Text("W"),),
-                Text("Usuario", style: Theme.of(context).textTheme.bodySmall,)
+                Text("Usuario", style: Theme.of(context).textTheme.bodySmall,),
+                TextButton(onPressed: (){
+                  // Get.toNamed("/login");
+                }, child:Text("SAIR", style: Theme.of(context).textTheme.bodySmall!.copyWith(color: Colors.amber),) )
               ],)
              
             ],

@@ -19,8 +19,9 @@ class HomePage extends StatelessWidget {
           padding: Responsive.getPadding(context),
           child: SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.only(top: 71),
+              padding: const EdgeInsets.only(top: 40),
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
@@ -33,7 +34,7 @@ class HomePage extends StatelessWidget {
                       ),
                       ElevatedButton(
                         onPressed: () {},
-                        child: Text("Novo processo"),
+                        child: Text("Novo processo", style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: Theme.of(context).colorScheme.onSecondary),),
                       ),
                     ],
                   ),
@@ -95,7 +96,7 @@ class HomePage extends StatelessWidget {
                       );
                     }),
                   ),
-        
+                      
                   Text(
                     "Processos",
                     style: context.textTheme.bodyLarge!.copyWith(
@@ -111,7 +112,7 @@ class HomePage extends StatelessWidget {
                   const SizedBox(height: 12),
                   const FilterHeader(),
                   const SizedBox(height: 20),
-        
+                      
                   /// 👇 Só essa parte é reativa
                   Obx(() {
                     final list = processController.processes.toList();
@@ -141,9 +142,10 @@ class HomePage extends StatelessWidget {
                               )
                               .toList(),
                         ),
+                        SizedBox(height: 20,),
                         Obx(() {
                           final isLoadingMore = processController.isLoading.value;
-        
+                      
                           return ElevatedButton(
                             onPressed: isLoadingMore
                                 ? null

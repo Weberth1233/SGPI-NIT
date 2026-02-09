@@ -5,7 +5,9 @@ class CustomTextField extends StatelessWidget {
   final TextEditingController controller;
   final String label;
   final bool obscureText;
-  const CustomTextField({super.key, required this.controller, required this.label, this.obscureText = false});
+  final double? size;
+  
+  const CustomTextField({super.key, required this.controller, required this.label, this.obscureText = false, this.size});
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +17,7 @@ class CustomTextField extends StatelessWidget {
       children: [
         Text(label, style: context.textTheme.bodyMedium,),
         SizedBox(
-                    width: 447,
+                    width: size,
                     child: TextField(
                       obscureText: obscureText,
                       style: context.textTheme.bodyMedium!.copyWith(color: Theme.of(context).colorScheme.tertiary),

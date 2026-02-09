@@ -26,12 +26,12 @@ class ThemeTypography {
 
   static final TextStyle paragraphText = GoogleFonts.montserrat(
     textStyle: const TextStyle(
-        color: ThemeColor.colorVariantWhite, letterSpacing: .5, fontSize: 15),
+        color: ThemeColor.colorVarianteBlack, letterSpacing: .5, fontSize: 15),
   );
 
   static final TextStyle smallText = GoogleFonts.montserrat(
     textStyle: const TextStyle(
-        color: ThemeColor.colorVariantWhite, letterSpacing: .5, fontSize: 12),
+        color: ThemeColor.colorVarianteBlack, letterSpacing: .5, fontSize: 12),
   );
 
 }
