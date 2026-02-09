@@ -21,6 +21,7 @@ class MyTheme {
       onSecondary: ThemeColor.colorVariantWhite,
       tertiary: ThemeColor.colorVarianteBlack,
     ),
+    iconTheme: IconThemeData(color: ThemeColor.iconColor, size: 40),
     textTheme: _textTheme,
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
