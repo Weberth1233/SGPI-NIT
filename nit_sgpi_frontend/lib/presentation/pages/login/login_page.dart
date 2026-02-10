@@ -46,13 +46,15 @@ class _LoginPageState extends State<LoginPage> {
               const SizedBox(height: 24),
 
               // Campo Email
-              CustomTextField(label: "LOGIN", controller: _emailController),
+              CustomTextField(label: "LOGIN", controller: _emailController, size: 447,textWhiteColor: true,),
               const SizedBox(height: 16),
               // Campo Senha
               CustomTextField(
                 label: "SENHA",
                 controller: _passwordController,
                 obscureText: true,
+                size: 447,
+                textWhiteColor: true,
               ),
               const SizedBox(height: 24),
               // Erro
@@ -72,6 +74,7 @@ class _LoginPageState extends State<LoginPage> {
                   width: 447,
                   height: 44,
                   child: ElevatedButton(
+                    style: ButtonStyle(backgroundColor: WidgetStateProperty.all(Theme.of(context).colorScheme.onSecondary)),
                     onPressed: loginController.loading.value
                         ? null
                         : () {
@@ -92,19 +95,15 @@ class _LoginPageState extends State<LoginPage> {
                         : const Text("Login"),
                   ),
                 ),
-              ),
+              ), 
               SizedBox(height: 23),
-              RichText(
-                text: TextSpan(
-                  children: [
-                    TextSpan(text: "Nao tem cadastro ? ", style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: Theme.of(context).colorScheme.onSecondary)),
-                    TextSpan(
-                      text: "Fazer cadastro",
-                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: Colors.yellow),
-                    ),
-                  ],
-                ),
-              ),
+              Row(crossAxisAlignment: CrossAxisAlignment.center,mainAxisAlignment: MainAxisAlignment.center,children: [
+                Text("Nao tem cadastro ? ", style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: Theme.of(context).colorScheme.onSecondary)),
+                TextButton(onPressed: (){
+                  Get.toNamed("/register");
+                },child: Text("Fazer cadastro",
+                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: Colors.yellow)))
+              ],)
             ],
           ),
         ),

@@ -1,10 +1,11 @@
 import 'dart:convert';
 
 import 'package:nit_sgpi_frontend/infra/core/network/api_client.dart';
+import 'package:nit_sgpi_frontend/infra/core/network/base_url.dart';
 import 'package:nit_sgpi_frontend/infra/models/process/proces_status_count_model.dart';
 
 import '../../domain/core/errors/exceptions.dart';
-import '../models/paged_result_model.dart';
+import '../models/process/paged_result_model.dart';
 
 abstract class IProcessRemoteDataSource {
   Future<PagedProcessResultModel> getProcesses({
@@ -44,7 +45,7 @@ class ProcessRemoteDataSourceImpl implements IProcessRemoteDataSource {
       }
 
       final uri = Uri.http(
-        'localhost:8080',
+        BaseUrl.url,
         '/process/user/processes',
         queryParams,
       );
@@ -68,7 +69,7 @@ class ProcessRemoteDataSourceImpl implements IProcessRemoteDataSource {
   Future<List<ProcessStatusCountModel>> getProcessesStatusCount() async {
     try {
       final response = await apiClient.get(
-        "http://localhost:8080/process/status/amount",
+        "${BaseUrl.urlWithHttp}/process/status/amount",
       );
 
       if (response.statusCode == 200) {

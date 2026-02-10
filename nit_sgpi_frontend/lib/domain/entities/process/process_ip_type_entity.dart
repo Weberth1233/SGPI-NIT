@@ -1,9 +1,9 @@
-class IpTypeEntity {
+class ProcessIpTypeEntity {
   final int id;
   final String name;
   final FormStructureEntity formStructure;
 
-  IpTypeEntity({
+  ProcessIpTypeEntity({
     required this.id,
     required this.name,
     required this.formStructure,

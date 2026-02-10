@@ -10,6 +10,8 @@ class CustomMenu extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Container(
           height: double.infinity,

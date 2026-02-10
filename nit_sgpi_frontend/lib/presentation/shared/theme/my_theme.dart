@@ -16,15 +16,17 @@ class MyTheme {
     scaffoldBackgroundColor: ThemeColor.primaryColor,
     cardTheme: CardThemeData(color: ThemeColor.primaryColor, elevation: 2),
     colorScheme: const ColorScheme.light(
-      primary: ThemeColor.primaryColor,
+      primary: ThemeColor.primaryColor ,
       secondary: ThemeColor.secondaryColor,
       onSecondary: ThemeColor.colorVariantWhite,
       tertiary: ThemeColor.colorVarianteBlack,
+      onSurface: ThemeColor.greyColor
     ),
     iconTheme: IconThemeData(color: ThemeColor.iconColor, size: 40),
     textTheme: _textTheme,
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
+        backgroundColor: ThemeColor.primaryColor,
         shape: const RoundedRectangleBorder( 
                         borderRadius: BorderRadius.horizontal(
                           left: Radius.circular(5),
@@ -37,7 +39,7 @@ class MyTheme {
       filled: true,
       fillColor: Colors.white,
       contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
-      hintStyle: const TextStyle(color: Colors.grey),
+      hintStyle: const TextStyle(color: ThemeColor.secondaryColor),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(6),
         borderSide: const BorderSide(color: Colors.transparent, width: 1),
@@ -45,7 +47,7 @@ class MyTheme {
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(6),
         borderSide: const BorderSide(
-          color: Colors.purple, // ou ThemeColor.secondaryColor
+          color: ThemeColor.primaryColor, // ou ThemeColor.secondaryColor
           width: 2,
         ),
       ),

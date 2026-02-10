@@ -19,12 +19,13 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       backgroundColor: theme.colorScheme.onSecondary,
       body: CustomMenu(
-        child: Padding(
-          padding: Responsive.getPadding(context),
-          child: SingleChildScrollView(
+        child: SingleChildScrollView(
+          child: Container(
+            padding: Responsive.getPadding(context),
             child: Padding(
-              padding: const EdgeInsets.only(top: 71),
+              padding: const EdgeInsets.only(top: 40),
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // ===== Header: título + botão
@@ -200,7 +201,7 @@ class HomePage extends StatelessWidget {
                                 : Text(
                                     "Ver mais",
                                     style: theme.textTheme.bodyMedium!.copyWith(
-                                      color: theme.colorScheme.primary,
+                                      color: theme.colorScheme.onSecondary,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
@@ -252,7 +253,7 @@ class _FilterHeaderState extends State<FilterHeader> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
       decoration: BoxDecoration(
-        color: Colors.grey.shade300,
+        color: Theme.of(context).colorScheme.onSurface,
         borderRadius: BorderRadius.circular(10),
       ),
       child: isMobile

@@ -40,6 +40,7 @@ dependencies:
   equatable: ^2.0.8
   dartz: ^0.10.0
   google_fonts: ^8.0.1
+  syncfusion_flutter_datepicker: ^27.1.0
 
 dev_dependencies:
   flutter_test:

@@ -1,18 +1,34 @@
-import '../../../domain/entities/process/ip_type_entity.dart';
+import '../../../domain/entities/process/process_ip_type_entity.dart';
 
-class IpTypeModel extends IpTypeEntity {
-  IpTypeModel({
-    required super.id,
-    required super.name,
-    required super.formStructure,
+class ProcessIpTypeModel {
+  final int id;
+  final String name;
+  final FormStructureEntity formStructure;
+
+  ProcessIpTypeModel({
+    required this.id,
+    required this.name,
+    required this.formStructure,
   });
 
-  factory IpTypeModel.fromJson(Map<String, dynamic> json) {
-    return IpTypeModel(
+  factory ProcessIpTypeModel.fromJson(Map<String, dynamic> json) {
+    return ProcessIpTypeModel(
       id: json['id'],
       name: json['name'],
       formStructure: FormStructureModel.fromJson(json['formStructure']),
     );
+  }
+
+  factory ProcessIpTypeModel.fromEntity(ProcessIpTypeEntity entity) {
+    return ProcessIpTypeModel(
+      id: entity.id,
+      name: entity.name,
+      formStructure: entity.formStructure,
+    );
+  }
+
+  ProcessIpTypeEntity toEntity() {
+    return ProcessIpTypeEntity(id: id, name: name, formStructure: formStructure);
   }
 }
 
