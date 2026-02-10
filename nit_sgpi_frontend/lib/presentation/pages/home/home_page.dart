@@ -15,9 +15,9 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.onSecondary,
       body: CustomMenu(
-        child: Container(
-          padding: Responsive.getPadding(context),
-          child: SingleChildScrollView(
+        child: SingleChildScrollView(
+          child: Container(
+            padding: Responsive.getPadding(context),
             child: Padding(
               padding: const EdgeInsets.only(top: 40),
               child: Column(
@@ -174,7 +174,8 @@ class HomePage extends StatelessWidget {
                                         .textTheme
                                         .bodyMedium!
                                         .copyWith(
-                                          color: Theme.of(context).colorScheme.primary,
+                                          color: Theme.of(context).colorScheme.
+                                           onSecondary,
                                           fontWeight: FontWeight.bold,
                                         ),
                                   ),
