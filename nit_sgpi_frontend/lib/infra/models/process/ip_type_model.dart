@@ -1,10 +1,14 @@
 import '../../../domain/entities/process/ip_type_entity.dart';
 
-class IpTypeModel extends IpTypeEntity {
+class IpTypeModel {
+  final int id;
+  final String name;
+  final FormStructureEntity formStructure;
+
   IpTypeModel({
-    required super.id,
-    required super.name,
-    required super.formStructure,
+    required this.id,
+    required this.name,
+    required this.formStructure,
   });
 
   factory IpTypeModel.fromJson(Map<String, dynamic> json) {
@@ -13,6 +17,18 @@ class IpTypeModel extends IpTypeEntity {
       name: json['name'],
       formStructure: FormStructureModel.fromJson(json['formStructure']),
     );
+  }
+
+  factory IpTypeModel.fromEntity(IpTypeEntity entity) {
+    return IpTypeModel(
+      id: entity.id,
+      name: entity.name,
+      formStructure: entity.formStructure,
+    );
+  }
+
+  IpTypeEntity toEntity() {
+    return IpTypeEntity(id: id, name: name, formStructure: formStructure);
   }
 }
 

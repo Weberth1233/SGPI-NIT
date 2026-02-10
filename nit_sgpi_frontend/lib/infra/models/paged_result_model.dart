@@ -1,17 +1,28 @@
-import '../../domain/entities/paged_result_entity.dart';
+import '../../../domain/entities/paged_result_entity.dart';
+import '../../../domain/entities/process/process_entity.dart';
 import 'process/process_model.dart';
 
-class PagedProcessResultModel extends PagedResultEntity<ProcessModel> {
+class PagedProcessResultModel {
+  final List<ProcessModel> content;
+  final int totalPages;
+  final int totalElements;
+  final bool last;
+  final bool first;
+  final int size;
+  final int number;
+  final int numberOfElements;
+  final bool empty;
+
   PagedProcessResultModel({
-    required super.content,
-    required super.totalPages,
-    required super.totalElements,
-    required super.last,
-    required super.first,
-    required super.size,
-    required super.number,
-    required super.numberOfElements,
-    required super.empty,
+    required this.content,
+    required this.totalPages,
+    required this.totalElements,
+    required this.last,
+    required this.first,
+    required this.size,
+    required this.number,
+    required this.numberOfElements,
+    required this.empty,
   });
 
   factory PagedProcessResultModel.fromJson(Map<String, dynamic> json) {
@@ -27,6 +38,21 @@ class PagedProcessResultModel extends PagedResultEntity<ProcessModel> {
       number: json['number'],
       numberOfElements: json['numberOfElements'],
       empty: json['empty'],
+    );
+  }
+
+  /// 👇 Model -> Entity
+  PagedResultEntity<ProcessEntity> toEntity() {
+    return PagedResultEntity<ProcessEntity>(
+      content: content.map((e) => e.toEntity()).toList(),
+      totalPages: totalPages,
+      totalElements: totalElements,
+      last: last,
+      first: first,
+      size: size,
+      number: number,
+      numberOfElements: numberOfElements,
+      empty: empty,
     );
   }
 }

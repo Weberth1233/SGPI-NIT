@@ -69,7 +69,7 @@ class ProcessRemoteDataSourceImpl implements IProcessRemoteDataSource {
   Future<List<ProcessStatusCountModel>> getProcessesStatusCount() async {
     try {
       final response = await apiClient.get(
-        "http://localhost:8080/process/status/amount",
+        "${BaseUrl.urlWithHttp}/process/status/amount",
       );
 
       if (response.statusCode == 200) {
