@@ -37,7 +37,7 @@ class _LoginPageState extends State<LoginPage> {
             children: [
               Image.asset("assets/images/Logo SGPI-Photoroom 1.png"),
               Text(
-                'NIT',
+                '𝙉𝙄𝙏',
                 style: context.textTheme.bodyLarge!.copyWith(
                   color: Theme.of(context).colorScheme.onSecondary,
                   fontWeight: FontWeight.bold,
