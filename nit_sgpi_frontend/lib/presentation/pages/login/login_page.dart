@@ -46,7 +46,7 @@ class _LoginPageState extends State<LoginPage> {
               const SizedBox(height: 24),
 
               // Campo Email
-              CustomTextField(label: "LOGIN", controller: _emailController, size: 447,),
+              CustomTextField(label: "LOGIN", controller: _emailController, size: 447,textWhiteColor: true,),
               const SizedBox(height: 16),
               // Campo Senha
               CustomTextField(
@@ -54,6 +54,7 @@ class _LoginPageState extends State<LoginPage> {
                 controller: _passwordController,
                 obscureText: true,
                 size: 447,
+                textWhiteColor: true,
               ),
               const SizedBox(height: 24),
               // Erro

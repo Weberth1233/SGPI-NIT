@@ -20,6 +20,7 @@ class RegisterController extends GetxController{
     );
     result.fold(
       (Failure failure) {
+        
         message.value = failure.message;
       },
       (sucess) {
