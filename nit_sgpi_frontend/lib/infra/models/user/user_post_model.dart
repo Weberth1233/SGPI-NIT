@@ -1,31 +1,17 @@
-
-
 import 'package:nit_sgpi_frontend/infra/models/user/address_model.dart';
-
-import '../../../domain/entities/user/address_entity.dart';
 import '../../../domain/entities/user/user_post_entity.dart';
 
-class UserPostModel extends UserPostEntity {
-  @override
+class UserPostModel {
   final String userName;
-  @override
   final String email;
-  @override
   final String password;
-  @override
   final String phoneNumber;
-  @override
   final String birthDate;
-  @override
   final String profession;
-  @override
   final String fullName;
-  @override
   final String role;
-  @override
   final bool isEnabled;
-  @override
-  final AddressEntity address;
+  final AddressModel address;
 
   UserPostModel({
     required this.userName,
@@ -40,6 +26,7 @@ class UserPostModel extends UserPostEntity {
     required this.address,
   });
 
+  /// Converte JSON -> Model (se você realmente precisar disso)
   factory UserPostModel.fromJson(Map<String, dynamic> json) {
     return UserPostModel(
       userName: json['userName'],
@@ -55,6 +42,7 @@ class UserPostModel extends UserPostEntity {
     );
   }
 
+  /// Converte Model -> JSON (pra API)
   Map<String, dynamic> toJson() {
     return {
       "userName": userName,
@@ -66,7 +54,23 @@ class UserPostModel extends UserPostEntity {
       "fullName": fullName,
       "role": role,
       "isEnabled": isEnabled,
-      "address": (address as AddressModel).toJson(),
+      "address": address.toJson(),
     };
+  }
+
+  /// Converte Entity -> Model (pra enviar pra API)
+  factory UserPostModel.fromEntity(UserPostEntity entity) {
+    return UserPostModel(
+      userName: entity.userName,
+      email: entity.email,
+      password: entity.password,
+      phoneNumber: entity.phoneNumber,
+      birthDate: entity.birthDate,
+      profession: entity.profession,
+      fullName: entity.fullName,
+      role: entity.role,
+      isEnabled: entity.isEnabled,
+      address: AddressModel.fromEntity(entity.address),
+    );
   }
 }

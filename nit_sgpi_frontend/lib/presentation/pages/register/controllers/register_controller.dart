@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
+import 'package:nit_sgpi_frontend/domain/entities/user/user_post_entity.dart';
 import 'package:nit_sgpi_frontend/domain/usecases/post_user.dart';
-import 'package:nit_sgpi_frontend/infra/models/user/user_post_model.dart';
 
 import '../../../../domain/core/errors/failures.dart';
 
@@ -11,7 +11,7 @@ class RegisterController extends GetxController{
   RxBool isLoading = false.obs;
   RxString message = "".obs;
 
-  Future<void> post(UserPostModel user) async {
+  Future<void> post(UserPostEntity user) async {
     if (isLoading.value) return;
     isLoading.value = true;
     message.value = '';

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:nit_sgpi_frontend/domain/entities/user/address_entity.dart';
+import 'package:nit_sgpi_frontend/domain/entities/user/user_post_entity.dart';
 import 'package:nit_sgpi_frontend/infra/models/user/address_model.dart';
 import 'package:nit_sgpi_frontend/infra/models/user/user_post_model.dart';
 import 'package:nit_sgpi_frontend/presentation/pages/register/controllers/register_controller.dart';
@@ -339,7 +341,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                   : () {
                                       if (_formKey.currentState!.validate()) {
                                         registerController.post(
-                                          UserPostModel(
+                                          UserPostEntity(
                                             userName: userController.text,
                                             email: emailController.text,
                                             password: passwordController.text,
@@ -350,7 +352,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                             fullName: nameController.text,
                                             role: "USER",
                                             isEnabled: true,
-                                            address: AddressModel(
+                                            address: AddressEntity(
                                               zipCode: cepController.text,
                                               street: streetController.text,
                                               number: numberController.text,

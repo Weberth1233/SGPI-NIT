@@ -1,20 +1,12 @@
-
 import '../../../domain/entities/user/address_entity.dart';
 
-class AddressModel extends AddressEntity {
-  @override
+class AddressModel {
   final String zipCode;
-  @override
   final String street;
-  @override
   final String number;
-  @override
   final String complement;
-  @override
   final String neighborhood;
-  @override
   final String city;
-  @override
   final String state;
 
   AddressModel({
@@ -27,6 +19,19 @@ class AddressModel extends AddressEntity {
     required this.state,
   });
 
+  /// Converte AddressEntity -> AddressModel
+  factory AddressModel.fromEntity(AddressEntity entity) {
+    return AddressModel(
+      zipCode: entity.zipCode,
+      street: entity.street,
+      number: entity.number,
+      complement: entity.complement,
+      neighborhood: entity.neighborhood,
+      city: entity.city,
+      state: entity.state,
+    );
+  }
+
   factory AddressModel.fromJson(Map<String, dynamic> json) {
     return AddressModel(
       zipCode: json['zipCode'],
@@ -38,6 +43,7 @@ class AddressModel extends AddressEntity {
       state: json['state'],
     );
   }
+
 
   Map<String, dynamic> toJson() {
     return {

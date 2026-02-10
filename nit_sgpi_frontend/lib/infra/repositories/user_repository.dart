@@ -1,8 +1,8 @@
 import 'package:dartz/dartz.dart';
 import 'package:nit_sgpi_frontend/domain/core/errors/failures.dart';
+import 'package:nit_sgpi_frontend/domain/entities/user/user_post_entity.dart';
 import 'package:nit_sgpi_frontend/domain/repositories/iuser_repository.dart';
 import 'package:nit_sgpi_frontend/infra/datasources/user_remote_datasource.dart';
-import 'package:nit_sgpi_frontend/infra/models/user/user_post_model.dart';
 import '../../domain/core/errors/exceptions.dart';
 
 class UserRepository implements IUserRepository {
@@ -11,7 +11,7 @@ class UserRepository implements IUserRepository {
   UserRepository({required this.remoteDataSource});
 
   @override
-  Future<Either<Failure, String>> postUser(UserPostModel userEntity) async {
+  Future<Either<Failure, String>> postUser(UserPostEntity userEntity) async {
     try {
       final result = await remoteDataSource.postUser(userEntity);
       return Right(result);
