@@ -10,8 +10,11 @@ class ProcessCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final size = MediaQuery.of(context).size.width;
+
     final textColorCard = Theme.of(context).colorScheme;
-    return SizedBox(height: 180, width: 280,child: Card(color: Color(0XFF004093),child: Padding(
+    return SizedBox(height: 180, width: size < 1200 ? 250 :450,child: Card(color: Color(0XFF004093),child: Padding(
       padding: EdgeInsetsGeometry.symmetric(horizontal: 10,vertical: 20),
       child: Column(spacing: 10,crossAxisAlignment: CrossAxisAlignment.start,children: [ 
         Text(item.title, style: context.textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.bold, color: textColorCard.onSecondary)),
