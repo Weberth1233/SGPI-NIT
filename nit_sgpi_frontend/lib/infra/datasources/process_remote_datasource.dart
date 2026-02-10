@@ -5,7 +5,7 @@ import 'package:nit_sgpi_frontend/infra/core/network/base_url.dart';
 import 'package:nit_sgpi_frontend/infra/models/process/proces_status_count_model.dart';
 
 import '../../domain/core/errors/exceptions.dart';
-import '../models/paged_result_model.dart';
+import '../models/process/paged_result_model.dart';
 
 abstract class IProcessRemoteDataSource {
   Future<PagedProcessResultModel> getProcesses({

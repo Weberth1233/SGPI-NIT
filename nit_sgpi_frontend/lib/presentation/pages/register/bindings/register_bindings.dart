@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:nit_sgpi_frontend/domain/repositories/iuser_repository.dart';
 import 'package:nit_sgpi_frontend/domain/usecases/post_user.dart';
 import 'package:nit_sgpi_frontend/infra/datasources/user_remote_datasource.dart';
-import 'package:nit_sgpi_frontend/infra/repositories/user_repository.dart';
+import 'package:nit_sgpi_frontend/infra/repositories/user_repository_impl.dart';
 import 'package:nit_sgpi_frontend/presentation/pages/register/controllers/register_controller.dart';
 
 class RegisterBindings extends Bindings {
@@ -15,7 +15,7 @@ class RegisterBindings extends Bindings {
     );
     // Repository
     Get.lazyPut<IUserRepository>(
-      () => UserRepository(remoteDataSource: Get.find<IUserRemoteDataSource>()),
+      () => UserRepositoryImpl(remoteDataSource: Get.find<IUserRemoteDataSource>()),
     );
     // UseCase
     Get.lazyPut<PostUser>(

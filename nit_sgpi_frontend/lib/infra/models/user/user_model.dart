@@ -1,7 +1,7 @@
 import 'package:nit_sgpi_frontend/infra/models/user/address_model.dart';
-import '../../../domain/entities/user/user_post_entity.dart';
+import '../../../domain/entities/user/user_entity.dart';
 
-class UserPostModel {
+class UserModel {
   final String userName;
   final String email;
   final String password;
@@ -13,7 +13,7 @@ class UserPostModel {
   final bool isEnabled;
   final AddressModel address;
 
-  UserPostModel({
+  UserModel({
     required this.userName,
     required this.email,
     required this.password,
@@ -27,8 +27,8 @@ class UserPostModel {
   });
 
   /// Converte JSON -> Model (se você realmente precisar disso)
-  factory UserPostModel.fromJson(Map<String, dynamic> json) {
-    return UserPostModel(
+  factory UserModel.fromJson(Map<String, dynamic> json) {
+    return UserModel(
       userName: json['userName'],
       email: json['email'],
       password: json['password'],
@@ -59,8 +59,8 @@ class UserPostModel {
   }
 
   /// Converte Entity -> Model (pra enviar pra API)
-  factory UserPostModel.fromEntity(UserPostEntity entity) {
-    return UserPostModel(
+  factory UserModel.fromEntity(UserEntity entity) {
+    return UserModel(
       userName: entity.userName,
       email: entity.email,
       password: entity.password,

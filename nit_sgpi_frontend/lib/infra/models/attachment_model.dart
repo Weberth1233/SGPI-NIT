@@ -1,4 +1,4 @@
-import 'package:nit_sgpi_frontend/domain/entities/process/attachment_entity.dart';
+import 'package:nit_sgpi_frontend/domain/entities/attachment_entity.dart';
 
 class AttachmentModel {
   final int id;

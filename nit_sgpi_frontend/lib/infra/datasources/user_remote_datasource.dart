@@ -1,15 +1,15 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'package:nit_sgpi_frontend/domain/entities/user/user_post_entity.dart';
-import 'package:nit_sgpi_frontend/infra/models/user/user_post_model.dart';
+import 'package:nit_sgpi_frontend/domain/entities/user/user_entity.dart';
+import 'package:nit_sgpi_frontend/infra/models/user/user_model.dart';
 import 'package:nit_sgpi_frontend/infra/utils/error_formatter%20.dart';
 import '../../domain/core/errors/exceptions.dart';
 
 import '../core/network/base_url.dart';
 
 abstract class IUserRemoteDataSource {
-  Future<String> postUser(UserPostEntity user);
+  Future<String> postUser(UserEntity user);
 }
 
 class UserRemoteDatasourceImpl implements IUserRemoteDataSource {
@@ -18,9 +18,10 @@ class UserRemoteDatasourceImpl implements IUserRemoteDataSource {
   UserRemoteDatasourceImpl(this.client);
 
   @override
-  Future<String> postUser(UserPostEntity user) async {
+  Future<String> postUser(UserEntity user) async {
   try {
-    final model = UserPostModel.fromEntity(user); 
+    //Trasnformando entidade user em uma variavel de modelo
+    final model = UserModel.fromEntity(user); 
     final response = await client.post(
       Uri.parse('${BaseUrl.urlWithHttp}/auth/register'),
       headers: {'Content-Type': 'application/json'},

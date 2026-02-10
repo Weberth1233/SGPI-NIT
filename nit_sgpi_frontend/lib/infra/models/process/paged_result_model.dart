@@ -1,6 +1,6 @@
-import '../../../domain/entities/paged_result_entity.dart';
-import '../../../domain/entities/process/process_entity.dart';
-import 'process/process_model.dart';
+import '../../../../domain/entities/paged_result_entity.dart';
+import '../../../../domain/entities/process/process_entity.dart';
+import 'process_model.dart';
 
 class PagedProcessResultModel {
   final List<ProcessModel> content;

@@ -3,11 +3,11 @@ import 'package:http/http.dart' as http show Client;
 import 'package:nit_sgpi_frontend/domain/usecases/get_process.dart';
 import 'package:nit_sgpi_frontend/domain/usecases/get_process_status_count.dart';
 import 'package:nit_sgpi_frontend/infra/datasources/process_remote_datasource.dart';
-import 'package:nit_sgpi_frontend/infra/repositories/process_repository.dart';
 import 'package:nit_sgpi_frontend/presentation/pages/home/controllers/home_controller.dart';
 import '../../../../domain/repositories/iprocess_repository.dart';
 import '../../../../infra/core/network/api_client.dart';
 import '../../../../infra/datasources/auth_local_datasource.dart';
+import '../../../../infra/repositories/process_repository_impl.dart';
 class HomeBindings extends Bindings {
   @override
   void dependencies() {
@@ -32,7 +32,7 @@ class HomeBindings extends Bindings {
 
     // Repository
     Get.lazyPut<IProcessRepository>(
-      () => ProcessRepository(
+      () => ProcessRepositoryImpl(
         remoteDataSource: Get.find<IProcessRemoteDataSource>(),
       ),
     );

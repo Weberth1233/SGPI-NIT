@@ -6,12 +6,12 @@ import 'package:nit_sgpi_frontend/domain/entities/process/process_entity.dart';
 import 'package:nit_sgpi_frontend/domain/entities/process/process_status_count_entity.dart';
 import 'package:nit_sgpi_frontend/domain/repositories/iprocess_repository.dart';
 import 'package:nit_sgpi_frontend/infra/datasources/process_remote_datasource.dart';
-import 'package:nit_sgpi_frontend/infra/models/paged_result_model.dart';
+import 'package:nit_sgpi_frontend/infra/models/process/paged_result_model.dart';
 
-class ProcessRepository implements IProcessRepository {
+class ProcessRepositoryImpl implements IProcessRepository {
   final IProcessRemoteDataSource remoteDataSource;
 
-  ProcessRepository({required this.remoteDataSource});
+  ProcessRepositoryImpl({required this.remoteDataSource});
 
   @override
   Future<Either<Failure, PagedResultEntity<ProcessEntity>>> getProcesses({

@@ -1,6 +1,6 @@
 import 'address_entity.dart';
 
-class UserPostEntity {
+class UserEntity {
   final String userName;
   final String email;
   final String password;
@@ -12,7 +12,7 @@ class UserPostEntity {
   final bool isEnabled;
   final AddressEntity address;
 
-  UserPostEntity({
+  UserEntity({
     required this.userName,
     required this.email,
     required this.password,

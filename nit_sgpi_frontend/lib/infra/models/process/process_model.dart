@@ -1,9 +1,9 @@
 import 'package:nit_sgpi_frontend/infra/models/base_model.dart';
 
 import '../../../domain/entities/process/process_entity.dart';
-import 'attachment_model.dart';
-import 'ip_type_model.dart';
-import 'user_model.dart';
+import '../attachment_model.dart';
+import 'process_ip_type_model.dart';
+import 'process_user_model.dart';
 
 class ProcessModel implements BaseModel{
   @override
@@ -13,10 +13,10 @@ class ProcessModel implements BaseModel{
   final bool isFeatured;
   final DateTime createdAt;
   final Map<String, dynamic> formData;
-  final IpTypeModel ipType;
-  final List<UserModel> authors;
+  final ProcessIpTypeModel ipType;
+  final List<ProcessUserModel> authors;
   final List<AttachmentModel> attachments;
-  final UserModel creator;
+  final ProcessUserModel creator;
 
   ProcessModel({
     required this.id,
@@ -39,18 +39,18 @@ class ProcessModel implements BaseModel{
       isFeatured: json['isFeatured'],
       createdAt: DateTime.parse(json['createdAt']),
       formData: Map<String, dynamic>.from(json['formData'] ?? {}),
-      ipType: IpTypeModel.fromJson(json['ipType']),
+      ipType: ProcessIpTypeModel.fromJson(json['ipType']),
       authors: (json['authors'] as List)
-          .map((e) => UserModel.fromJson(e))
+          .map((e) => ProcessUserModel.fromJson(e))
           .toList(),
       attachments: (json['attachments'] as List)
           .map((e) => AttachmentModel.fromJson(e))
           .toList(),
-      creator: UserModel.fromJson(json['creator']),
+      creator: ProcessUserModel.fromJson(json['creator']),
     );
   }
 
-  factory ProcessModel.fromEntity(ProcessEntity entity) {
+  /*factory ProcessModel.fromEntity(ProcessEntity entity) {
     return ProcessModel(
       id: entity.id,
       title: entity.title,
@@ -65,7 +65,7 @@ class ProcessModel implements BaseModel{
           .toList(),
       creator: UserModel.fromEntity(entity.creator),
     );
-  }
+  }*/
 
   @override
   ProcessEntity toEntity() {

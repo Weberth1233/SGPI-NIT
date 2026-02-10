@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nit_sgpi_frontend/domain/entities/user/address_entity.dart';
-import 'package:nit_sgpi_frontend/domain/entities/user/user_post_entity.dart';
+import 'package:nit_sgpi_frontend/domain/entities/user/user_entity.dart';
 import 'package:nit_sgpi_frontend/infra/models/user/address_model.dart';
-import 'package:nit_sgpi_frontend/infra/models/user/user_post_model.dart';
+import 'package:nit_sgpi_frontend/infra/models/user/user_model.dart';
 import 'package:nit_sgpi_frontend/presentation/pages/register/controllers/register_controller.dart';
 import 'package:nit_sgpi_frontend/presentation/shared/widgets/custom_text_field.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
@@ -104,9 +104,7 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     final registerController = Get.find<RegisterController>();
-
     
-
     return Obx(() {
       if (registerController.message.value.isNotEmpty) {
         Future.microtask(() {
@@ -341,7 +339,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                   : () {
                                       if (_formKey.currentState!.validate()) {
                                         registerController.post(
-                                          UserPostEntity(
+                                          UserEntity(
                                             userName: userController.text,
                                             email: emailController.text,
                                             password: passwordController.text,
