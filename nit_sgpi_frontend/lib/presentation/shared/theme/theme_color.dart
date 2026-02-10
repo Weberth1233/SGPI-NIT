@@ -6,4 +6,5 @@ class ThemeColor {
   static const Color colorVarianteBlack = Color(0XFF303030);
   static const Color colorVariantWhite = Color(0XFFF3F3F3);
   static const Color iconColor = Colors.white;
+  static const Color greyColor = Colors.grey;
 }

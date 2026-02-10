@@ -1,8 +1,5 @@
 package com.nitssrpi.NIT_SRPI.controller.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.nitssrpi.NIT_SRPI.controller.config.MultiFormatLocalDateDeserializer;
 import com.nitssrpi.NIT_SRPI.model.UserRole;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -26,8 +23,6 @@ public record UserRequestDTO(
         )
         String phoneNumber,
         @Past(message = "Não pode ser uma data futura!")
-        @JsonDeserialize(using = MultiFormatLocalDateDeserializer.class)
-        @JsonFormat(pattern = "yyyy-MM-dd") // padrão de saída
         LocalDate birthDate,
         String profession,
         @NotBlank(message = "Campo obrigatório!")
