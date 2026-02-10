@@ -10,6 +10,11 @@ class HomePage extends StatelessWidget {
   HomePage({super.key});
 
   final processController = Get.find<ProcessController>();
+
+  /*{
+  "email": "marialurdes123@gmail.com",
+  "password": "marialurdes123"
+}*/
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,7 +38,9 @@ class HomePage extends StatelessWidget {
                         ),
                       ),
                       ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                        Get.toNamed("/ip_types");
+                        },
                         child: Text("Novo processo", style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: Theme.of(context).colorScheme.onSecondary),),
                       ),
                     ],
