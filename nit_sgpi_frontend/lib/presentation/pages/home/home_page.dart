@@ -23,7 +23,7 @@ class HomePage extends StatelessWidget {
           child: Container(
             padding: Responsive.getPadding(context),
             child: Padding(
-              padding: const EdgeInsets.only(top: 40),
+              padding: const EdgeInsets.only(top: 50),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -37,65 +37,68 @@ class HomePage extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "Meus Processos",
+                              "Painel de Processos",
                               style: Theme.of(context).textTheme.headlineLarge
                                   ?.copyWith(
-                                    fontWeight: FontWeight.w700,
+                                    fontWeight: FontWeight.w900,
                                     letterSpacing: -0.5,
                                     color: Theme.of(
                                       context,
                                     ).colorScheme.primary,
                                   ),
                             ),
-                            const SizedBox(height: 4),
+                            const SizedBox(height: 1),
                             Text(
                               "Sistema de Gestão de Propriedade Intelectual",
-                              style: Theme.of(context).textTheme.bodyMedium
-                                  ?.copyWith(
-                                    color: Colors.black
+                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                    fontSize: 17,
+                                    color: Colors.black,
                                   ),
                             ),
                           ],
                         ),
-                      ),
+                      ),                    
+                      
+   // BOTÃO ADICIONAR PROCESSOS
+    Column(
+      children: [
+        const SizedBox(height: 20), // 👈 controla o quanto ele desce
+        ElevatedButton(
+          onPressed: () {},
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Theme.of(context).colorScheme.primary,
+            foregroundColor: Colors.white,
+            padding: const EdgeInsets.symmetric(
+              horizontal: 25,
+              vertical: 20,
+            ),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            elevation: 5,
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: const [
+              Icon(Icons.add, size: 25),
+              SizedBox(width: 3),
+              Text(
+                "NOVO PROCESSO",
+                style: TextStyle(fontWeight: FontWeight.w800),
+              ),
+            ],
+          ),
+        ),
+      ],
+    ),
+  ],
+),
 
-                      // 🔒 BOTÃO DE CADASTRAR PROCESSOS
-                      ElevatedButton(
-                        onPressed: () {},
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Theme.of(
-                            context,
-                          ).colorScheme.primary,
-                          foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 25,
-                            vertical: 20,
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          elevation: 0,
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: const [
-                            Icon(Icons.add, size: 25),
-                            SizedBox(width: 3),
-                            Text(
-                              "CADASTRAR PROCESSO",
-                              style: TextStyle(fontWeight: FontWeight.w800),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 40),
 
                   // ===== Cards de status (resumo)
                   Align(
-                    alignment: Alignment.center, // Alinha os cards à esquerda
+                    alignment: Alignment.bottomLeft, // Alinha os cards à esquerda
                     child: Obx(() {
                       if (processController.isLoadingProcessCount.value) {
                         return const CircularProgressIndicator();
@@ -158,9 +161,9 @@ class HomePage extends StatelessWidget {
                     }),
                   ),
 
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 40),
 
-                  // ===== Bloco cinza: filtros + search (seu exemplo)
+                  // ===== Bloco cinza: filtros 
                   const FilterHeader(),
 
                   const SizedBox(height: 20),
@@ -315,8 +318,9 @@ class _FilterHeaderState extends State<FilterHeader> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          "Processos",
+          "Visão Geral",
           style: context.textTheme.bodyLarge!.copyWith(
+            fontSize: 35,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -324,7 +328,8 @@ class _FilterHeaderState extends State<FilterHeader> {
         Text(
           "Filtre pelo status do seu processo",
           style: context.textTheme.bodySmall!.copyWith(
-            color: Colors.black.withOpacity(0.45),
+            fontSize: 14,
+            color: Colors.black,
           ),
         ),
       ],
@@ -384,7 +389,7 @@ class _FilterHeaderState extends State<FilterHeader> {
               child: Text(
                 filters[index],
                 style: TextStyle(
-                  fontSize: 13,
+                  fontSize: 15,
                   color: isSelected ? Colors.white : Colors.black87,
                   fontWeight: FontWeight.w500,
                 ),
@@ -395,31 +400,35 @@ class _FilterHeaderState extends State<FilterHeader> {
       ),
     );
   }
-
-  Widget _buildSearch(BuildContext context, TextEditingController controller) {
-    return TextFormField(
-      controller: controller,
-      decoration: InputDecoration(
-        hintText: "Pesquisar...",
-        prefixIcon: Icon(
-          Icons.search,
-          size: 25,
-          color: Colors.black.withOpacity(0.55),
-        ),
-        filled: true,
-        fillColor: Colors.white,
-        isDense: true,
-        contentPadding: const EdgeInsets.symmetric(
-          vertical: 12,
-          horizontal: 12,
-        ),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(24),
-          borderSide: BorderSide.none,
-        ),
+Widget _buildSearch(BuildContext context, TextEditingController controller) {
+  return TextFormField(
+    controller: controller,
+    // Define o tamanho da fonte do texto que o usuário digita
+    style: const TextStyle(fontSize: 17), 
+    decoration: InputDecoration(
+      hintText: "Pesquisar..",
+      // Define o tamanho da fonte do texto de dica (placeholder)
+      hintStyle: const TextStyle(fontSize: 20),
+      prefixIcon: Icon(
+        Icons.search,
+        size: 20, // 
+        color: Colors.black.withOpacity(0.55),
       ),
-      textInputAction: TextInputAction.search,
-      onFieldSubmitted: (value) => processController.searchByTitle(value),
-    );
-  }
+
+      filled: true,
+      fillColor: Colors.white,
+      isDense: true,
+      contentPadding: const EdgeInsets.symmetric(
+        vertical: 10, // Ajuste leve no vertical para manter a proporção
+        horizontal: 12,
+      ),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(24),
+        borderSide: BorderSide.none,
+      ),
+    ),
+    textInputAction: TextInputAction.search,
+    onFieldSubmitted: (value) => processController.searchByTitle(value),
+  );
+}
 }
