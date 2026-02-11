@@ -15,34 +15,35 @@ class CustomMenu extends StatelessWidget {
       children: [
         Container(
           height: double.infinity,
-          width: 90,
+          width: 100,
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
           color: theme.colorScheme.primary,
           child: Column(
             children: [
-              Image.asset("assets/images/Logo SGPI-Photoroom 1.png", width: 74),
-              const SizedBox(height: 40),
+              Image.asset("assets/images/Logo SGPI-Photoroom 1.png", width: 100),
+              const SizedBox(height:3),
               /// Menu central
               Expanded(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: const [
                     Text(
-                      "NIT",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                      "𝙉𝙄𝙏",
+                      style: const TextStyle(
+                     fontSize: 25,
+                     fontWeight: FontWeight.w900,
+                     letterSpacing: 2.0,
+                     color: Colors.white,
                       ),
                     ),
-                    SizedBox(height: 32),
+                    SizedBox(height: 136),
                     Icon(Icons.home, color: Colors.white),
-                    SizedBox(height: 32),
+                    SizedBox(height: 20),
                     Icon(Icons.person, color: Colors.white),
                   ],
                 ),
               ),
 
-              /// Perfil + botão sair
               _UserSection(theme: theme),
             ],
           ),

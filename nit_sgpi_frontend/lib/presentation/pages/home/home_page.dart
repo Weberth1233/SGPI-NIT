@@ -34,13 +34,36 @@ class HomePage extends StatelessWidget {
                 children: [
                   // ===== Header: título + botão
                   Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Expanded(
-                        child: Text(
-                          "Meus Processos",
-                          style: Theme.of(context).textTheme.headlineLarge,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Meus Processos",
+                              style: Theme.of(context).textTheme.headlineLarge
+                                  ?.copyWith(
+                                    fontWeight: FontWeight.w700,
+                                    letterSpacing: -0.5,
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.primary,
+                                  ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              "Sistema de Gestão de Propriedade Intelectual",
+                              style: Theme.of(context).textTheme.bodyMedium
+                                  ?.copyWith(
+                                    color: Colors.black
+                                  ),
+                            ),
+                          ],
                         ),
                       ),
+
+                      // 🔒 BOTÃO DE CADASTRAR PROCESSOS
                       ElevatedButton(
                         onPressed: () {
                         Get.toNamed("/process");
