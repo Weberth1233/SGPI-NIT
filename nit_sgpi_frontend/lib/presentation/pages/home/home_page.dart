@@ -6,7 +6,7 @@ import 'package:nit_sgpi_frontend/presentation/shared/utils/responsive.dart';
 import 'package:nit_sgpi_frontend/presentation/shared/widgets/custom_menu.dart';
 
 import 'controllers/home_controller.dart';
-  
+
 class HomePage extends StatelessWidget {
   HomePage({super.key});
 
@@ -43,7 +43,7 @@ class HomePage extends StatelessWidget {
                       ),
                       ElevatedButton(
                         onPressed: () {
-                        Get.toNamed("/ip_types");
+                        Get.toNamed("/process");
                         },
                         child: Text("Novo processo", style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: Theme.of(context).colorScheme.onSecondary),),
                       ),

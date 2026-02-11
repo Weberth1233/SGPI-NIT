@@ -77,7 +77,18 @@ class IpTypesPage extends StatelessWidget {
                     children: list
                         .map(
                           (item) => SizedBox(
-                            child: Container(child: Text(item.name)),
+                            child: InkWell(
+                              onTap: () {
+                                Get.toNamed(
+                                  '/home/ip_types/form',
+                                  arguments: item, // 👈 passa o objeto inteiro
+                                );
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.all(12),
+                                child: Text(item.name),
+                              ),
+                            ),
                           ),
                         )
                         .toList(),

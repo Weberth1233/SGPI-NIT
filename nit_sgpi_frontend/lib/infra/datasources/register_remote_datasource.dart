@@ -8,14 +8,15 @@ import '../../domain/core/errors/exceptions.dart';
 
 import '../core/network/base_url.dart';
 
-abstract class IUserRemoteDataSource {
+abstract class IRegisterRemoteDataSource {
   Future<String> postUser(UserEntity user);
+
 }
 
-class UserRemoteDatasourceImpl implements IUserRemoteDataSource {
+class RegisterRemoteDatasource implements IRegisterRemoteDataSource {
   final http.Client client;
 
-  UserRemoteDatasourceImpl(this.client);
+  RegisterRemoteDatasource(this.client);
 
   @override
   Future<String> postUser(UserEntity user) async {

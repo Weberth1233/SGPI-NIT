@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:nit_sgpi_frontend/domain/repositories/iip_types_repository.dart';
 import 'package:nit_sgpi_frontend/domain/usecases/get_iptypes.dart';
 import 'package:nit_sgpi_frontend/infra/datasources/ip_types_remote_datasources.dart';
+import 'package:nit_sgpi_frontend/presentation/pages/ip_types/controllers/Ip_types_form_controller.dart';
 import 'package:nit_sgpi_frontend/presentation/pages/ip_types/controllers/ip_types_controller.dart';
 import '../../../../infra/core/network/api_client.dart';
 import '../../../../infra/datasources/auth_local_datasource.dart';
@@ -37,5 +38,6 @@ class IpTypesBindings extends Bindings{
     Get.lazyPut<IpTypesController>(
       () => IpTypesController(Get.find<GetIptypes>()),
     );
+    
   }
 }

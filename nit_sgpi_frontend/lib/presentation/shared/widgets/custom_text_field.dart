@@ -31,7 +31,7 @@ class CustomTextField extends StatelessWidget {
       spacing: 7,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style:  context.textTheme.bodyMedium!.copyWith(color: textWhiteColor ? Theme.of(context).colorScheme.onSecondary: Theme.of(context).colorScheme.tertiary,)),
+        Text(label, style:  context.textTheme.bodyMedium!.copyWith(color: textWhiteColor ? Theme.of(context).colorScheme.onSecondary: Theme.of(context).colorScheme.tertiary,fontWeight: FontWeight.w600)),
         SizedBox(
           width: size,
           child: TextFormField(
