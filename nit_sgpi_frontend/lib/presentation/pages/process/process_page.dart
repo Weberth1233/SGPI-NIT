@@ -5,6 +5,14 @@ import 'package:nit_sgpi_frontend/presentation/pages/process/controllers/process
 import '../../shared/utils/responsive.dart';
 import '../../shared/widgets/custom_text_field.dart';
 
+class AuxProcess{
+  final String title;
+  final List<int> idsUser;
+
+  AuxProcess({required this.title, required this.idsUser});
+
+}
+
 class ProcessPage extends StatelessWidget {
   const ProcessPage({super.key});
 
@@ -12,7 +20,9 @@ class ProcessPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final userController = Get.find<ProcessUserController>();
 
-    TextEditingController controller = TextEditingController();
+    TextEditingController titlecontroller = TextEditingController();
+    TextEditingController searchController = TextEditingController();
+
     final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(),
@@ -30,23 +40,15 @@ class ProcessPage extends StatelessWidget {
               ),
               SizedBox(height: 90),
               CustomTextField(
-                controller: controller,
+                controller: titlecontroller,
                 label: "Titulo do Processo",
               ),
               SizedBox(height: 20),
+
               Row(
                 children: [
-                  Expanded(child: Text("Selecione os membros")),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).primaryColor,
-                      borderRadius: BorderRadius.circular(50),
-                    ),
-                    child: IconButton(
-                      onPressed: () {},
-                      icon: Icon(Icons.add, size: 25),
-                    ),
-                  ),
+                  Expanded(flex: 2,child: Text("Selecione os membros")),
+                  Expanded(child: CustomTextField(controller: searchController, label: "Pesquisar", onFieldSubmitted: (_) => userController.searchByFullName(searchController.text),))
                 ],
               ),
               Obx(() {
@@ -75,12 +77,12 @@ class ProcessPage extends StatelessWidget {
         
                       children: list.map((item) {
                         return Obx(() {
-                          print(item.id);
+                        
                           final isChecked = userController.selectedUserIds
                               .contains(item.id);
         
                           return CheckboxListTile(
-                            title: Text(item.fullName, style: Theme.of(context).textTheme.bodySmall,),
+                            title: Text(item.fullName, style: Theme.of(context).textTheme.bodySmall!.copyWith(fontWeight: FontWeight.bold),),
                             value: isChecked,
                             onChanged: (value) {
                               userController.toggleUser(item.id!);
@@ -92,7 +94,12 @@ class ProcessPage extends StatelessWidget {
                       }).toList(),
                     ),
                     const SizedBox(height: 14),
-                    Obx(() {
+                    ElevatedButton(onPressed: (){
+                      print(userController.selectedUserIds.toList());
+                       AuxProcess(title: titlecontroller.text, idsUser: userController.selectedUserIds.toList());
+                        Get.toNamed("/process/ip_types",);
+                    }, child: Text("Proximo", style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: Theme.of(context).colorScheme.onSecondary),))
+                    /*Obx(() {
                       final isLoadingMore = userController.isLoading.value;
         
                       return ElevatedButton(
@@ -119,7 +126,7 @@ class ProcessPage extends StatelessWidget {
                                 ),
                               ),
                       );
-                    }),
+                    }),*/
                   ],
                 );
               }),

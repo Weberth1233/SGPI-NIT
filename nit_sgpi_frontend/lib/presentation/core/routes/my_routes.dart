@@ -26,13 +26,13 @@ class MyRoutes {
     GetPage(name: "/process", page: () => ProcessPage(), binding: UserBindings()),
     
     GetPage(
-      name: '/home/ip_types',
+      name: '/process/ip_types',
       page: () => IpTypesPage(),
       binding: IpTypesBindings(),
     ),
 
     GetPage(
-      name: '/home/ip_types/form',
+      name: '/process/ip_types/form',
       page: () => IpTypesForm(),
       binding: IpTypesFormBinding(),
     ),

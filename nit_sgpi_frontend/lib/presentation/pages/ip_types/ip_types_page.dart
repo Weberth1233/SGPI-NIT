@@ -31,7 +31,7 @@ class IpTypesPage extends StatelessWidget {
                   ),
                   child: IconButton(
                     onPressed: () {
-                      Get.toNamed("/home");
+                      Get.back();
                     },
                     icon: const Icon(Icons.arrow_back, size: 30),
                   ),
@@ -80,7 +80,7 @@ class IpTypesPage extends StatelessWidget {
                             child: InkWell(
                               onTap: () {
                                 Get.toNamed(
-                                  '/home/ip_types/form',
+                                  "/process/ip_types/form",
                                   arguments: item, // 👈 passa o objeto inteiro
                                 );
                               },

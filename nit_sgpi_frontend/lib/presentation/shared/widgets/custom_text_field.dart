@@ -11,6 +11,7 @@ class CustomTextField extends StatelessWidget {
   final VoidCallback? onTap;
   final bool readOnly;
   final  bool textWhiteColor;
+   final void Function(String)? onFieldSubmitted;
 
   const CustomTextField({
     super.key,
@@ -22,7 +23,7 @@ class CustomTextField extends StatelessWidget {
     this.keyboardType,
     this.onTap,
     this.readOnly = false,
-    this.textWhiteColor = false
+    this.textWhiteColor = false, this.onFieldSubmitted
   });
 
   @override
@@ -45,6 +46,7 @@ class CustomTextField extends StatelessWidget {
               color: Theme.of(context).colorScheme.tertiary,
             ),
             decoration: const InputDecoration(border: OutlineInputBorder()),
+            onFieldSubmitted: onFieldSubmitted,
           ),
         ),
       ],
