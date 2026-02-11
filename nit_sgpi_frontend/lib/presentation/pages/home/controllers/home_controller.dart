@@ -3,7 +3,7 @@ import 'package:nit_sgpi_frontend/domain/entities/process/process_status_count_e
 import 'package:nit_sgpi_frontend/domain/usecases/get_process_status_count.dart';
 
 import '../../../../domain/core/errors/failures.dart';
-import '../../../../domain/entities/process/process_entity.dart';
+import '../../../../domain/entities/process/process_response_entity.dart';
 import '../../../../domain/usecases/get_process.dart';
 
 class ProcessController extends GetxController {
@@ -17,7 +17,7 @@ class ProcessController extends GetxController {
   final RxBool isLoadingProcessCount = false.obs;
 
   final RxString errorMessage = ''.obs;
-  final RxList<ProcessEntity> processes = <ProcessEntity>[].obs;
+  final RxList<ProcessResponseEntity> processes = <ProcessResponseEntity>[].obs;
 
   final RxList<ProcessStatusCountEntity> processesStatus =
       <ProcessStatusCountEntity>[].obs;

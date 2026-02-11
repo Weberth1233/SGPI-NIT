@@ -10,7 +10,7 @@ class IpTypesForm extends GetView<IpTypesFormController> {
 
   @override
   Widget build(BuildContext context) {
-    final ipType = controller.ipType;
+    final secondaryStage = controller.secondStageProcess;
     final theme = Theme.of(context).colorScheme;
 
     return Scaffold(
@@ -44,7 +44,7 @@ class IpTypesForm extends GetView<IpTypesFormController> {
                           ),
                           Expanded(
                             child: Text(
-                              ipType.name,
+                              secondaryStage.item.name,
                               style: Theme.of(context).textTheme.headlineSmall!
                                   .copyWith(fontWeight: FontWeight.bold),
                             ),
@@ -52,7 +52,7 @@ class IpTypesForm extends GetView<IpTypesFormController> {
                         ],
                       ),
             
-                ...ipType.formStructure.fields.map((field) {
+                ...secondaryStage.item.formStructure.fields.map((field) {
                   final textController = controller.controllers[field.name]!;
             
                   return Padding(
