@@ -12,6 +12,10 @@ class HomePage extends StatelessWidget {
 
   final processController = Get.find<ProcessController>();
 
+  /*{
+  "email": "marialurdes123@gmail.com",
+  "password": "marialurdes123"
+}*/
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -61,32 +65,10 @@ class HomePage extends StatelessWidget {
 
                       // 🔒 BOTÃO DE CADASTRAR PROCESSOS
                       ElevatedButton(
-                        onPressed: () {},
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Theme.of(
-                            context,
-                          ).colorScheme.primary,
-                          foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 25,
-                            vertical: 20,
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          elevation: 0,
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: const [
-                            Icon(Icons.add, size: 25),
-                            SizedBox(width: 3),
-                            Text(
-                              "CADASTRAR PROCESSO",
-                              style: TextStyle(fontWeight: FontWeight.w800),
-                            ),
-                          ],
-                        ),
+                        onPressed: () {
+                        Get.toNamed("/process");
+                        },
+                        child: Text("Novo processo", style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: Theme.of(context).colorScheme.onSecondary),),
                       ),
                     ],
                   ),
@@ -253,9 +235,9 @@ class FilterHeader extends StatefulWidget {
 class _FilterHeaderState extends State<FilterHeader> {
   final List<String> filters = [
     "Ver todos",
-    "Finalizado",
-    "Tramitado",
+    "Em andamento",
     "Correção",
+    "Finalizado",
   ];
 
   int selectedIndex = 0;
@@ -366,9 +348,9 @@ class _FilterHeaderState extends State<FilterHeader> {
 
               final statusMap = {
                 0: "",
-                1: "FINALIZADO",
-                2: "TRAMITADO",
-                3: "CORRECAO",
+                1: "EM_ANDAMENTO",
+                2: "CORRECAO",
+                3: "FINALIZADO",
               };
 
               processController.filterByStatus(statusMap[index]!);

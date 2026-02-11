@@ -35,6 +35,14 @@ class MyTheme {
                       ),
       ),
     ),
+    scrollbarTheme: ScrollbarThemeData(
+      thumbColor: WidgetStateProperty.all(ThemeColor.primaryColor), // cor da "alça" do scroll
+      trackColor: WidgetStateProperty.all(ThemeColor.greyColor), // fundo da barra
+      trackBorderColor: WidgetStateProperty.all(ThemeColor.greyColor),
+      thickness: WidgetStateProperty.all(8), // espessura
+      radius: const Radius.circular(10), // bordas arredondadas
+      thumbVisibility: WidgetStateProperty.all(true), // sempre visível (opcional)
+    ),
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
       fillColor: Colors.white,
