@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:nit_sgpi_frontend/presentation/shared/extensions/context_extensions.dart';
 
-import '../../../../domain/entities/process/process_entity.dart';
+import '../../../../domain/entities/process/process_response_entity.dart';
 
 class ProcessCard extends StatelessWidget {
-  final ProcessEntity item;
+  final ProcessResponseEntity item;
   //Teste token 222
   const ProcessCard({super.key, required this.item});
 

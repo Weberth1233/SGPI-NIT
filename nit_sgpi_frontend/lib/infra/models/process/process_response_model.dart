@@ -1,11 +1,11 @@
 import 'package:nit_sgpi_frontend/infra/models/base_model.dart';
 
-import '../../../domain/entities/process/process_entity.dart';
+import '../../../domain/entities/process/process_response_entity.dart';
 import '../attachment_model.dart';
 import 'process_ip_type_model.dart';
 import 'process_user_model.dart';
 
-class ProcessModel implements BaseModel{
+class ProcessResponseModel implements BaseModel{
   @override
   final int id;
   final String title;
@@ -18,7 +18,7 @@ class ProcessModel implements BaseModel{
   final List<AttachmentModel> attachments;
   final ProcessUserModel creator;
 
-  ProcessModel({
+  ProcessResponseModel({
     required this.id,
     required this.title,
     required this.status,
@@ -31,8 +31,8 @@ class ProcessModel implements BaseModel{
     required this.creator,
   });
 
-  factory ProcessModel.fromJson(Map<String, dynamic> json) {
-    return ProcessModel(
+  factory ProcessResponseModel.fromJson(Map<String, dynamic> json) {
+    return ProcessResponseModel(
       id: json['id'],
       title: json['title'],
       status: json['status'],
@@ -68,8 +68,8 @@ class ProcessModel implements BaseModel{
   }
 */
   @override
-  ProcessEntity toEntity() {
-    return ProcessEntity(
+  ProcessResponseEntity toEntity() {
+    return ProcessResponseEntity(
       id: id,
       title: title,
       status: status,

@@ -1,9 +1,9 @@
 import '../../../../domain/entities/paged_result_entity.dart';
-import '../../../../domain/entities/process/process_entity.dart';
-import 'process_model.dart';
+import '../../../domain/entities/process/process_response_entity.dart';
+import 'process_response_model.dart';
 
 class PagedProcessResultModel {
-  final List<ProcessModel> content;
+  final List<ProcessResponseModel> content;
   final int totalPages;
   final int totalElements;
   final bool last;
@@ -28,7 +28,7 @@ class PagedProcessResultModel {
   factory PagedProcessResultModel.fromJson(Map<String, dynamic> json) {
     return PagedProcessResultModel(
       content: (json['content'] as List)
-          .map((e) => ProcessModel.fromJson(e))
+          .map((e) => ProcessResponseModel.fromJson(e))
           .toList(),
       totalPages: json['totalPages'],
       totalElements: json['totalElements'],
@@ -42,8 +42,8 @@ class PagedProcessResultModel {
   }
 
   /// 👇 Model -> Entity
-  PagedResultEntity<ProcessEntity> toEntity() {
-    return PagedResultEntity<ProcessEntity>(
+  PagedResultEntity<ProcessResponseEntity> toEntity() {
+    return PagedResultEntity<ProcessResponseEntity>(
       content: content.map((e) => e.toEntity()).toList(),
       totalPages: totalPages,
       totalElements: totalElements,

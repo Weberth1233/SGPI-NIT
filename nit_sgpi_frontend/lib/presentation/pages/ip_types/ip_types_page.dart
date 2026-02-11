@@ -1,13 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:nit_sgpi_frontend/domain/entities/ip_types/ip_type_entity.dart';
 import 'package:nit_sgpi_frontend/presentation/pages/ip_types/controllers/ip_types_controller.dart';
+import 'package:nit_sgpi_frontend/presentation/pages/process/process_page.dart';
 import 'package:nit_sgpi_frontend/presentation/shared/utils/responsive.dart';
 
+class SecondStageProcess{
+   final FirstStageProcess firstStageProcess;
+   final IpTypeEntity item;
+
+  SecondStageProcess({required this.firstStageProcess, required this.item});
+
+
+}
 class IpTypesPage extends StatelessWidget {
   const IpTypesPage({super.key});
-
   @override
   Widget build(BuildContext context) {
+    final auxProcess = Get.arguments;
+
     final ipTypesController = Get.find<IpTypesController>();
     final textTheme = Theme.of(context).textTheme;
 
@@ -79,9 +90,11 @@ class IpTypesPage extends StatelessWidget {
                           (item) => SizedBox(
                             child: InkWell(
                               onTap: () {
+                               final secondStageProcess =  SecondStageProcess(firstStageProcess: auxProcess, item: item);
                                 Get.toNamed(
                                   "/process/ip_types/form",
-                                  arguments: item, // 👈 passa o objeto inteiro
+                                  arguments: secondStageProcess
+                                  //arguments: item, // 👈 passa o objeto inteiro
                                 );
                               },
                               child: Container(
