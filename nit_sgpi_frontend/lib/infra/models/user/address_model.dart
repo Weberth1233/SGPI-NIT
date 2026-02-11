@@ -56,4 +56,16 @@ class AddressModel {
       "state": state,
     };
   }
+
+  AddressEntity toEntity() {
+    return AddressEntity(
+      city: city,
+      complement: complement,
+      neighborhood: neighborhood,
+      number: number,
+      state: state,
+      street: street,
+      zipCode: zipCode,
+    );
+  }
 }

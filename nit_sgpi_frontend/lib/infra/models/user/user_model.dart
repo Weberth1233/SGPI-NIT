@@ -2,6 +2,7 @@ import 'package:nit_sgpi_frontend/infra/models/user/address_model.dart';
 import '../../../domain/entities/user/user_entity.dart';
 
 class UserModel {
+  final int? id;
   final String userName;
   final String email;
   final String password;
@@ -14,6 +15,7 @@ class UserModel {
   final AddressModel address;
 
   UserModel({
+    this.id,
     required this.userName,
     required this.email,
     required this.password,
@@ -29,6 +31,7 @@ class UserModel {
   /// Converte JSON -> Model (se você realmente precisar disso)
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
+      id: json['id'] ?? '',
       userName: json['userName'],
       email: json['email'],
       password: json['password'],
@@ -45,6 +48,7 @@ class UserModel {
   /// Converte Model -> JSON (pra API)
   Map<String, dynamic> toJson() {
     return {
+      "id": id ?? '',
       "userName": userName,
       "email": email,
       "password": password,
@@ -61,6 +65,7 @@ class UserModel {
   /// Converte Entity -> Model (pra enviar pra API)
   factory UserModel.fromEntity(UserEntity entity) {
     return UserModel(
+      id: entity.id,
       userName: entity.userName,
       email: entity.email,
       password: entity.password,
@@ -71,6 +76,21 @@ class UserModel {
       role: entity.role,
       isEnabled: entity.isEnabled,
       address: AddressModel.fromEntity(entity.address),
+    );
+  }
+  UserEntity toEntity() {
+    return UserEntity(
+      id: id,
+      userName: userName,
+      email: email,
+      birthDate: birthDate,
+      fullName: fullName,
+      password: password,
+      phoneNumber: phoneNumber,
+      profession: profession,
+      isEnabled: isEnabled,
+      role: role,
+      address: address.toEntity(),
     );
   }
 }

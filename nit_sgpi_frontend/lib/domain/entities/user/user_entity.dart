@@ -1,6 +1,7 @@
 import 'address_entity.dart';
 
 class UserEntity {
+  final int? id;
   final String userName;
   final String email;
   final String password;
@@ -13,6 +14,7 @@ class UserEntity {
   final AddressEntity address;
 
   UserEntity({
+    this.id,
     required this.userName,
     required this.email,
     required this.password,

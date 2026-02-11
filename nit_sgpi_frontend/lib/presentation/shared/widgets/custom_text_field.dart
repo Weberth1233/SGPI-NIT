@@ -11,6 +11,7 @@ class CustomTextField extends StatelessWidget {
   final VoidCallback? onTap;
   final bool readOnly;
   final  bool textWhiteColor;
+   final void Function(String)? onFieldSubmitted;
 
   const CustomTextField({
     super.key,
@@ -22,7 +23,7 @@ class CustomTextField extends StatelessWidget {
     this.keyboardType,
     this.onTap,
     this.readOnly = false,
-    this.textWhiteColor = false
+    this.textWhiteColor = false, this.onFieldSubmitted
   });
 
   @override
@@ -31,7 +32,7 @@ class CustomTextField extends StatelessWidget {
       spacing: 7,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style:  context.textTheme.bodyMedium!.copyWith(color: textWhiteColor ? Theme.of(context).colorScheme.onSecondary: Theme.of(context).colorScheme.tertiary,)),
+        Text(label, style:  context.textTheme.bodyMedium!.copyWith(color: textWhiteColor ? Theme.of(context).colorScheme.onSecondary: Theme.of(context).colorScheme.tertiary,fontWeight: FontWeight.w600)),
         SizedBox(
           width: size,
           child: TextFormField(
@@ -45,6 +46,7 @@ class CustomTextField extends StatelessWidget {
               color: Theme.of(context).colorScheme.tertiary,
             ),
             decoration: const InputDecoration(border: OutlineInputBorder()),
+            onFieldSubmitted: onFieldSubmitted,
           ),
         ),
       ],

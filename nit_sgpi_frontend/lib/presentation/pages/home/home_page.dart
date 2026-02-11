@@ -12,6 +12,10 @@ class HomePage extends StatelessWidget {
 
   final processController = Get.find<ProcessController>();
 
+  /*{
+  "email": "marialurdes123@gmail.com",
+  "password": "marialurdes123"
+}*/
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -256,9 +260,9 @@ class FilterHeader extends StatefulWidget {
 class _FilterHeaderState extends State<FilterHeader> {
   final List<String> filters = [
     "Ver todos",
-    "Finalizado",
-    "Tramitado",
+    "Em andamento",
     "Correção",
+    "Finalizado",
   ];
 
   int selectedIndex = 0;
@@ -371,9 +375,9 @@ class _FilterHeaderState extends State<FilterHeader> {
 
               final statusMap = {
                 0: "",
-                1: "FINALIZADO",
-                2: "TRAMITADO",
-                3: "CORRECAO",
+                1: "EM_ANDAMENTO",
+                2: "CORRECAO",
+                3: "FINALIZADO",
               };
 
               processController.filterByStatus(statusMap[index]!);

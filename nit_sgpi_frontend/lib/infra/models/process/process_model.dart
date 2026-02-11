@@ -50,7 +50,7 @@ class ProcessModel implements BaseModel{
     );
   }
 
-  /*factory ProcessModel.fromEntity(ProcessEntity entity) {
+ /* factory ProcessModel.fromEntity(ProcessEntity entity) {
     return ProcessModel(
       id: entity.id,
       title: entity.title,
@@ -65,8 +65,8 @@ class ProcessModel implements BaseModel{
           .toList(),
       creator: UserModel.fromEntity(entity.creator),
     );
-  }*/
-
+  }
+*/
   @override
   ProcessEntity toEntity() {
     return ProcessEntity(
