@@ -78,6 +78,7 @@ class UserModel {
       address: AddressModel.fromEntity(entity.address),
     );
   }
+  
   UserEntity toEntity() {
     return UserEntity(
       id: id,

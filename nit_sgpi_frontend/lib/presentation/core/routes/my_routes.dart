@@ -1,4 +1,5 @@
 import 'package:get/get_navigation/get_navigation.dart';
+import 'package:nit_sgpi_frontend/presentation/pages/home/detail_page.dart';
 import 'package:nit_sgpi_frontend/presentation/pages/ip_types/bindings/ip_types_bindings.dart';
 import 'package:nit_sgpi_frontend/presentation/pages/ip_types/ip_types_page.dart';
 import 'package:nit_sgpi_frontend/presentation/pages/login/login_page.dart';
@@ -24,6 +25,7 @@ class MyRoutes {
     ),
     GetPage(name: "/home", page: () => HomePage(), binding: HomeBindings()),
     GetPage(name: "/process", page: () => ProcessPage(), binding: UserBindings()),
+    GetPage(name: "/home/detail", page:() =>  DetailPage()),
     
     GetPage(
       name: '/process/ip_types',

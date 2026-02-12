@@ -5,23 +5,36 @@ import 'package:nit_sgpi_frontend/presentation/pages/process/controllers/process
 import '../../shared/utils/responsive.dart';
 import '../../shared/widgets/custom_text_field.dart';
 
-class AuxProcess{
+//first stage of the process
+class FirstStageProcess {
   final String title;
   final List<int> idsUser;
 
-  AuxProcess({required this.title, required this.idsUser});
-
+  FirstStageProcess({required this.title, required this.idsUser});
 }
 
-class ProcessPage extends StatelessWidget {
+class ProcessPage extends StatefulWidget {
   const ProcessPage({super.key});
+
+  @override
+  State<ProcessPage> createState() => _ProcessPageState();
+}
+
+class _ProcessPageState extends State<ProcessPage> {
+  TextEditingController titlecontroller = TextEditingController();
+  TextEditingController searchController = TextEditingController();
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    titlecontroller.dispose();
+    searchController.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final userController = Get.find<ProcessUserController>();
-
-    TextEditingController titlecontroller = TextEditingController();
-    TextEditingController searchController = TextEditingController();
 
     final theme = Theme.of(context);
     return Scaffold(
@@ -34,7 +47,10 @@ class ProcessPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(height: 90),
-              Text("Cadastro de Processo", style: theme.textTheme.headlineMedium),
+              Text(
+                "Cadastro de Processo",
+                style: theme.textTheme.headlineMedium,
+              ),
               Text(
                 "Insirar as informações necessárias para cadastrar seu processo no sistema",
               ),
@@ -47,17 +63,25 @@ class ProcessPage extends StatelessWidget {
 
               Row(
                 children: [
-                  Expanded(flex: 2,child: Text("Selecione os membros")),
-                  Expanded(child: CustomTextField(controller: searchController, label: "Pesquisar", onFieldSubmitted: (_) => userController.searchByFullName(searchController.text),))
+                  Expanded(flex: 2, child: Text("Selecione os membros")),
+                  Expanded(
+                    child: CustomTextField(
+                      controller: searchController,
+                      label: "Pesquisar",
+                      onFieldSubmitted: (_) => userController.searchByFullName(
+                        searchController.text,
+                      ),
+                    ),
+                  ),
                 ],
               ),
               Obx(() {
                 final list = userController.users.toList();
-        
+
                 if (userController.isLoading.value) {
                   return const Center(child: CircularProgressIndicator());
                 }
-        
+
                 if (list.isEmpty) {
                   return Center(
                     child: Text(
@@ -68,21 +92,24 @@ class ProcessPage extends StatelessWidget {
                     ),
                   );
                 }
-        
+
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Column(
                       spacing: 20,
-        
+
                       children: list.map((item) {
                         return Obx(() {
-                        
                           final isChecked = userController.selectedUserIds
                               .contains(item.id);
-        
+
                           return CheckboxListTile(
-                            title: Text(item.fullName, style: Theme.of(context).textTheme.bodySmall!.copyWith(fontWeight: FontWeight.bold),),
+                            title: Text(
+                              item.fullName,
+                              style: Theme.of(context).textTheme.bodySmall!
+                                  .copyWith(fontWeight: FontWeight.bold),
+                            ),
                             value: isChecked,
                             onChanged: (value) {
                               userController.toggleUser(item.id!);
@@ -94,11 +121,38 @@ class ProcessPage extends StatelessWidget {
                       }).toList(),
                     ),
                     const SizedBox(height: 14),
-                    ElevatedButton(onPressed: (){
-                      print(userController.selectedUserIds.toList());
-                       AuxProcess(title: titlecontroller.text, idsUser: userController.selectedUserIds.toList());
-                        Get.toNamed("/process/ip_types",);
-                    }, child: Text("Proximo", style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: Theme.of(context).colorScheme.onSecondary),))
+                    ElevatedButton(
+                      onPressed: () {
+                        if (titlecontroller.text == "" ||
+                            userController.selectedUserIds.toList().isEmpty) {
+                          Get.snackbar(
+                            "Campos inválidos!",
+                            "Necessário inserir os campos abaixo para prosseguir com o cadastro do processo!",
+                            backgroundColor: Theme.of(
+                              context,
+                            ).colorScheme.error,
+                          );
+                        } else {
+                    
+                          final auxProcess = FirstStageProcess(
+                            title: titlecontroller.text,
+                            idsUser: userController.selectedUserIds.toList(),
+                          );
+                          Get.toNamed(
+                            "/process/ip_types",
+                            arguments: auxProcess,
+                          );
+                          titlecontroller.clear();
+                          userController.selectedUserIds.clear();
+                        }
+                      },
+                      child: Text(
+                        "Proximo",
+                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                          color: Theme.of(context).colorScheme.onSecondary,
+                        ),
+                      ),
+                    ),
                     /*Obx(() {
                       final isLoadingMore = userController.isLoading.value;
         

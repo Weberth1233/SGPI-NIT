@@ -3,7 +3,7 @@ import 'package:nit_sgpi_frontend/domain/entities/process/process_ip_type_entity
 import '../attachment_entity.dart';
 import 'process_user_entity.dart';
 
-class ProcessEntity {
+class ProcessResponseEntity {
   final int id;
   final String title;
   final String status;
@@ -15,7 +15,7 @@ class ProcessEntity {
   final List<AttachmentEntity> attachments;
   final ProcessUserEntity creator;
 
-  ProcessEntity({
+  ProcessResponseEntity({
     required this.id,
     required this.title,
     required this.status,
