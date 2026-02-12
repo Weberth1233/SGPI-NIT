@@ -68,7 +68,9 @@ class HomePage extends StatelessWidget {
       children: [
         const SizedBox(height: 20), // 👈 controla o quanto ele desce
         ElevatedButton(
-          onPressed: () {},
+          onPressed: () {
+            Get.toNamed("/process");
+          },
           style: ElevatedButton.styleFrom(
             backgroundColor: Theme.of(context).colorScheme.primary,
             foregroundColor: Colors.white,
