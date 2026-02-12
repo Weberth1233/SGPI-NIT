@@ -61,6 +61,7 @@ class ProcessRemoteDataSourceImpl implements IProcessRemoteDataSource {
         );
       }
     } catch (e) {
+      print(e);
       throw NetworkException('Erro de conexão com o servidor!');
     }
   }

@@ -21,7 +21,7 @@ class AttachmentModel {
       displayName: json['displayName'],
       status: json['status'],
       templateFilePath: json['templateFilePath'],
-      signedFilePath: json['signedFilePath'],
+      signedFilePath: json['signedFilePath'] ?? '',
     );
   }
 
