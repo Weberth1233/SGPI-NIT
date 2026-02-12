@@ -36,10 +36,15 @@ class CustomMenu extends StatelessWidget {
                      color: Colors.white,
                       ),
                     ),
-                    SizedBox(height: 136),
+                     
+                    SizedBox(height: 138),
+
                     Icon(Icons.home, color: Colors.white),
+
                     SizedBox(height: 20),
-                    Icon(Icons.person, color: Colors.white),
+                    
+
+                    Icon(Icons.settings, color: Colors.white),
                   ],
                 ),
               ),
@@ -54,7 +59,6 @@ class CustomMenu extends StatelessWidget {
     );
   }
 }
-
 /// =======================
 /// Seção do usuário
 /// =======================

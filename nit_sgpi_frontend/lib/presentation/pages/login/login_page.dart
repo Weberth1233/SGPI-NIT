@@ -25,20 +25,20 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
-  // ✅ Background: Linhas diagonais minimalistas + Glow radial atrás da logo
+  //  Background: Linhas diagonais minimalistas + Glow radial atrás da logo
   Widget _bgDiagonalLines(ThemeData theme) {
     return Stack(
       children: [
         // cor base
         Container(color: theme.colorScheme.primary),
 
-        //linhas diagonais (padrão sutil)
+        //linhas diagonais 
         Positioned.fill(
           child: CustomPaint(
             painter: _DiagonalLinesPainter(
-              color: theme.colorScheme.onPrimary.withOpacity(0.040),
+              color: theme.colorScheme.onPrimary.withOpacity(0.030),
               spacing: 70,
-              strokeWidth: 2,
+              strokeWidth: 1.5,
             ),
           ),
         ),
@@ -85,10 +85,11 @@ class _LoginPageState extends State<LoginPage> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const SizedBox(height: 24),
+                  
+                  const SizedBox(height: 45),
 
                   CustomTextField(
-                    label: "LOGIN",
+                    label: "𝗘-𝗠𝗔𝗜𝗟",
                     controller: _emailController,
                     size: 447,
                     textWhiteColor: true,
@@ -96,7 +97,7 @@ class _LoginPageState extends State<LoginPage> {
                   const SizedBox(height: 16),
 
                   CustomTextField(
-                    label: "SENHA",
+                    label: "𝗦𝗘𝗡𝗛𝗔",
                     controller: _passwordController,
                     obscureText: true,
                     size: 447,
@@ -139,7 +140,13 @@ class _LoginPageState extends State<LoginPage> {
                                   color: Colors.white,
                                 ),
                               )
-                            : const Text("Login"),
+                            : const Text(
+                              "𝗟𝗢𝗚𝗜𝗡",
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              ),
                       ),
                     ),
                   ),
@@ -149,7 +156,7 @@ class _LoginPageState extends State<LoginPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "Nao tem cadastro ? ",
+                        "NÃO TEM CADASTRO? ",
                         style: theme.textTheme.bodyMedium!.copyWith(
                           color: theme.colorScheme.onSecondary,
                         ),
@@ -157,7 +164,7 @@ class _LoginPageState extends State<LoginPage> {
                       TextButton(
                         onPressed: () => Get.toNamed("/register"),
                         child: Text(
-                          "Fazer cadastro",
+                          "FAZER CADASTRO",
                           style: theme.textTheme.bodyMedium!.copyWith(
                             color: Colors.yellow,
                           ),
