@@ -21,7 +21,7 @@ return MouseRegion(
   cursor: SystemMouseCursors.click,
   child: InkWell(
     onTap: (){
-      Get.toNamed("/home/detail", arguments: item);
+      Get.toNamed("/home/process-detail", arguments: item);
     },
     child: SizedBox(
       height: 180,

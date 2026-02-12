@@ -30,7 +30,7 @@ public class AttachmentService {
     public AttachmentService(@Value("${file.upload-dir}") String uploadDir) {
         // Converte './uploads' em um caminho real no seu PC
         this.fileStorageLocation = Paths.get(uploadDir).toAbsolutePath().normalize();
-
+        System.out.println("📁 Upload dir REAL: " + this.fileStorageLocation);
         try {
             // Cria as pastas caso você mude de PC e elas não existam
             Files.createDirectories(this.fileStorageLocation.resolve("templates"));
@@ -45,6 +45,7 @@ public class AttachmentService {
     public Resource loadFile(String relativePath) {
         try {
             Path filePath = this.fileStorageLocation.resolve(relativePath).normalize();
+            System.out.println("📄 Tentando abrir: " + filePath);
             Resource resource = new UrlResource(filePath.toUri());
             if (resource.exists()) return resource;
             throw new RuntimeException("Arquivo não encontrado: " + relativePath);

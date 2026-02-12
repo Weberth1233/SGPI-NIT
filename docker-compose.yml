@@ -44,6 +44,8 @@ services:
     restart: unless-stopped
     environment:
       JWT_SECRET: my-secret-key
+    volumes:
+      - ./nit-sgpi-backend/uploads:/app/uploads
 
 networks:
   nitsrpi-network:
