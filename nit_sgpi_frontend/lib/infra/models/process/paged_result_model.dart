@@ -26,6 +26,7 @@ class PagedProcessResultModel {
   });
 
   factory PagedProcessResultModel.fromJson(Map<String, dynamic> json) {
+    print(json);
     return PagedProcessResultModel(
       content: (json['content'] as List)
           .map((e) => ProcessResponseModel.fromJson(e))
