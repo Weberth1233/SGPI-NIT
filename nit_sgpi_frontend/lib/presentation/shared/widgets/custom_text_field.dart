@@ -10,8 +10,12 @@ class CustomTextField extends StatelessWidget {
   final TextInputType? keyboardType;
   final VoidCallback? onTap;
   final bool readOnly;
-  final  bool textWhiteColor;
-   final void Function(String)? onFieldSubmitted;
+  final bool textWhiteColor;
+  final void Function(String)? onFieldSubmitted;
+
+  // ✅ novos parâmetros (para parar os erros)
+  final Widget? prefixIcon;
+  final Widget? suffixIcon;
 
   const CustomTextField({
     super.key,
@@ -23,16 +27,31 @@ class CustomTextField extends StatelessWidget {
     this.keyboardType,
     this.onTap,
     this.readOnly = false,
-    this.textWhiteColor = false, this.onFieldSubmitted
+    this.textWhiteColor = false,
+    this.onFieldSubmitted,
+
+    // ✅ adicionar aqui
+    this.prefixIcon,
+    this.suffixIcon,
   });
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Column(
       spacing: 7,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style:  context.textTheme.bodyMedium!.copyWith(color: textWhiteColor ? Theme.of(context).colorScheme.onSecondary: Theme.of(context).colorScheme.tertiary,fontWeight: FontWeight.w600)),
+        Text(
+          label,
+          style: context.textTheme.bodyMedium!.copyWith(
+            color: textWhiteColor
+                ? theme.colorScheme.onSecondary
+                : theme.colorScheme.tertiary,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
         SizedBox(
           width: size,
           child: TextFormField(
@@ -41,12 +60,24 @@ class CustomTextField extends StatelessWidget {
             keyboardType: keyboardType,
             validator: validator,
             onTap: onTap,
-            readOnly: readOnly, // 👈 importante
-            style: context.textTheme.bodyMedium!.copyWith(
-              color: Theme.of(context).colorScheme.tertiary,
-            ),
-            decoration: const InputDecoration(border: OutlineInputBorder()),
+            readOnly: readOnly,
             onFieldSubmitted: onFieldSubmitted,
+            style: context.textTheme.bodyMedium!.copyWith(
+              color: theme.colorScheme.tertiary,
+            ),
+
+            // 👇 melhoria visual leve
+            decoration: InputDecoration(
+              prefixIcon: prefixIcon,
+              suffixIcon: suffixIcon,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 14,
+                vertical: 14,
+              ),
+            ),
           ),
         ),
       ],

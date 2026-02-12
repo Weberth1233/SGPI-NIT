@@ -51,7 +51,7 @@ class _LoginPageState extends State<LoginPage> {
                 center: const Alignment(0, -0.25),
                 radius: 0.50,
                 colors: [
-                  Colors.white.withOpacity(0.11),
+                  Colors.white.withOpacity(0.15),
                   Colors.transparent,
                 ],
               ),
