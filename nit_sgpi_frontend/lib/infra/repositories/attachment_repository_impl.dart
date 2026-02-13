@@ -1,3 +1,6 @@
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:dartz/dartz.dart';
 import 'package:nit_sgpi_frontend/domain/core/errors/failures.dart';
 import 'package:nit_sgpi_frontend/domain/entities/attachment_entity.dart';
@@ -38,4 +41,19 @@ class AttachmentRepositoryImpl implements IAttachmentRepository{
       return Left(ServerFailure("Erro inesperado!"));
     }
   }
+
+  @override
+  Future<Either<Failure, String>> uploadDocument({required int id, String? filePath, Uint8List? fileBytes, required String fileName})async {
+    try {
+      final result = await remoteDataSource.uploadDocument(id: id, fileName: fileName, fileBytes: fileBytes, filePath: filePath);
+      return Right(result);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(e.message));
+    } on NetworkException catch (e) {
+      return Left(NetworkFailure(e.message));
+    } catch (e) {
+      return Left(ServerFailure("Erro inesperado!"));
+    }
+  }
+
 }

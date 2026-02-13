@@ -208,6 +208,7 @@ class _AttachmentsPageState extends State<AttachmentsPage> {
                     const SizedBox(width: 8),
                     OutlinedButton.icon( // Usei OutlinedButton para combinar com a imagem
                       onPressed: () {
+                        controller.pickAndUpload(attachmentId: entity.id);
                         // Ação para upload/alterar
                         
                       },

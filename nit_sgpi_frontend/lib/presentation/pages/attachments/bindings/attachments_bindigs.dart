@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:nit_sgpi_frontend/domain/repositories/iattachment_repository.dart';
 import 'package:nit_sgpi_frontend/domain/usecases/get_attachments.dart';
 import 'package:nit_sgpi_frontend/domain/usecases/open_attachment.dart';
+import 'package:nit_sgpi_frontend/domain/usecases/upload_file.dart';
 import 'package:nit_sgpi_frontend/infra/datasources/attachment_datasource.dart';
 import 'package:nit_sgpi_frontend/infra/repositories/attachment_repository_impl.dart';
 import 'package:nit_sgpi_frontend/presentation/pages/attachments/controllers/attachments_controller.dart';
@@ -39,9 +40,12 @@ class AttachmentsBindigs extends Bindings{
     Get.lazyPut<GetAttachments>(
       () => GetAttachments(Get.find<IAttachmentRepository>()),
     );
+    Get.lazyPut<UploadFile>(
+      () => UploadFile(Get.find<IAttachmentRepository>()),
+    );
 
     Get.lazyPut<AttachmentController>(
-      () => AttachmentController(Get.find<OpenAttachmentUseCase>(), Get.find<GetAttachments>()),
+      () => AttachmentController(Get.find<OpenAttachmentUseCase>(), Get.find<GetAttachments>(), Get.find<UploadFile>()),
     );
     
   }
