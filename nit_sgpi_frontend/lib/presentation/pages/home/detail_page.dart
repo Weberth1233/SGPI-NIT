@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:nit_sgpi_frontend/domain/entities/attachment_entity.dart';
 import 'package:nit_sgpi_frontend/domain/entities/process/process_response_entity.dart';
-import 'package:nit_sgpi_frontend/domain/entities/user/user_entity.dart';
 import 'package:nit_sgpi_frontend/presentation/shared/utils/responsive.dart';
+
+import '../../../infra/datasources/auth_local_datasource.dart';
 
 class DetailPage extends StatelessWidget {
   const DetailPage({super.key});
@@ -14,6 +14,8 @@ class DetailPage extends StatelessWidget {
     final entity = Get.arguments as ProcessResponseEntity;
     final theme = Theme.of(context);
     final colors = theme.colorScheme;
+
+    final controller = Get.find<AuthLocalDataSource>();
 
     final dateFormatted = DateFormat(
       "d 'de' MMM 'de' y",
@@ -126,10 +128,50 @@ class DetailPage extends StatelessWidget {
 
               _buildSectionTitle(context, "Anexos"),
               const SizedBox(height: 12),
-              ElevatedButton(onPressed: (){
-                Get.toNamed("/home/process-detail/attachments", arguments: entity.id);
-              }, child: Text("Visualizar documentos", style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: Theme.of(context).colorScheme.onSecondary),))
-            
+              ElevatedButton(
+                onPressed: () {
+                  Get.toNamed(
+                    "/home/process-detail/attachments",
+                    arguments: entity.id,
+                  );
+                },
+                child: Text(
+                  "Visualizar documentos",
+                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                    color: Theme.of(context).colorScheme.onSecondary,
+                  ),
+                ),
+              ),
+SizedBox(height: 20,),
+              FutureBuilder<String?>(
+                future: controller.getRole(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Scaffold(
+                      body: Center(child: CircularProgressIndicator()),
+                    );
+                  }
+                  final role = snapshot.data;
+                  if (role == 'ADMIN') {
+                    return Row(crossAxisAlignment:CrossAxisAlignment.end,mainAxisAlignment: MainAxisAlignment.end,spacing: 5,children: [
+                      ElevatedButton(onPressed: (){}, child: Text("Aprovar", style: Theme.of(context).textTheme.bodyMedium
+                                    ?.copyWith(
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.onSecondary,
+                                    ),)),
+                      ElevatedButton(onPressed: (){}, child: Text("Correção", style: Theme.of(context).textTheme.bodyMedium
+                                    ?.copyWith(
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.onSecondary,
+                                    ),)),
+                    ],);
+                  } else {
+                    return SizedBox();
+                  }
+                },
+              ),
             ],
           ),
         ),
