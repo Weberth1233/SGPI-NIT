@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nit_sgpi_frontend/domain/entities/attachment_entity.dart';
 import 'package:nit_sgpi_frontend/presentation/shared/utils/responsive.dart';
-import 'package:nit_sgpi_frontend/presentation/shared/widgets/custom_menu.dart';
 // Importe seus ícones ou bibliotecas de ícones se necessário
 // import 'package:lucide_icons/lucide_icons.dart';
 
@@ -16,14 +15,12 @@ class AttachmentsPage extends StatefulWidget {
 }
 
 class _AttachmentsPageState extends State<AttachmentsPage> {
-  // Pegando o ID com segurança (caso venha nulo, trata antes)
   final int processId = Get.arguments is int ? Get.arguments : 0;
   final controller = Get.find<AttachmentController>();
 
   @override
   void initState() {
     super.initState();
-    // Chamada inicial para buscar dados
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (processId != 0) {
         controller.attachments(processId);
@@ -206,11 +203,19 @@ class _AttachmentsPageState extends State<AttachmentsPage> {
                       },
                     ),
                     const SizedBox(width: 8),
-                    OutlinedButton.icon( // Usei OutlinedButton para combinar com a imagem
+                     entity.status == "SIGNED" ? IconButton(
+                      tooltip: "Baixar Documento assinado",
+                      icon: const Icon(Icons.download_rounded, color: textColor),
+                      onPressed: () {
+                        controller.open(entity.id,signed: true);
+                         // Ação para baixar modelo
+                         // controller.downloadTemplate(entity.id);
+                      },
+                    ): SizedBox(),
+                    const SizedBox(width: 8),
+                    OutlinedButton.icon(
                       onPressed: () {
                         controller.pickAndUpload(attachmentId: entity.id);
-                        // Ação para upload/alterar
-                        
                       },
                       icon: Icon(isSigned ? Icons.edit : Icons.upload_file, color: textColor),
                       label: Text(isSigned ? "Alterar" : "Enviar", style: const TextStyle(color: textColor)),

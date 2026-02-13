@@ -15,9 +15,9 @@ class AttachmentRepositoryImpl implements IAttachmentRepository{
   AttachmentRepositoryImpl({required this.remoteDataSource});
 
   @override
-  Future<Either<Failure, void>> openDocument(int id) async{
+  Future<Either<Failure, void>> openDocument(int id, {bool signed = false}) async{
     try {
-      final result = await remoteDataSource.openDocument(id);
+      final result = await remoteDataSource.openDocument(id, signed: signed);
       return Right(result);
     } on ServerException catch (e) {
       return Left(ServerFailure(e.message));

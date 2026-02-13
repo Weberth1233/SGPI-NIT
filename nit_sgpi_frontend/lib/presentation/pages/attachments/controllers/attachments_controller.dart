@@ -32,7 +32,6 @@ class AttachmentController extends GetxController {
   // ===========================================================================
   Future<void> pickAndUpload({required int attachmentId}) async {
     try {
-      // 'withData: true' é CRUCIAL para Web, pois carrega os bytes na memória
       FilePickerResult? result = await FilePicker.platform.pickFiles(
         type: FileType.custom,
         allowedExtensions: ['pdf', 'png', 'jpg', 'jpeg'],
@@ -42,9 +41,6 @@ class AttachmentController extends GetxController {
       if (result != null) {
         PlatformFile pFile = result.files.single;
 
-        // Chamamos o método de upload passando os dados brutos
-        // O path virá null na Web, e os bytes virão null no Mobile (dependendo da versão),
-        // mas o PlatformFile gerencia isso bem.
         await _upload(
           attachmentId: attachmentId,
           path: pFile.path,        // Útil para Mobile (Android/iOS)
@@ -73,8 +69,6 @@ class AttachmentController extends GetxController {
   }) async {
     isLoadingUploadFile.value = true;
 
-    // AQUI MUDOU: O UseCase deve estar preparado para receber esses parâmetros
-    // em vez de um objeto 'File'.
     final result = await uploadFile(
       id: attachmentId,
       fileName: fileName,
@@ -141,9 +135,9 @@ class AttachmentController extends GetxController {
   // ===========================================================================
   // 4. Abrir Anexo
   // ===========================================================================
-  Future<void> open(int id) async {
+  Future<void> open(int id,{bool signed = false}) async {
     try {
-      await openAttachment(id);
+      await openAttachment(id,signed: signed);
     } catch (e) {
       Get.snackbar("Erro", "Não foi possível abrir o documento");
     }

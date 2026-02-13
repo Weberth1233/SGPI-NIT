@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import '../../datasources/auth_local_datasource.dart';
@@ -47,7 +46,7 @@ Future<http.Response> upload(
   }) async {
     final request = http.MultipartRequest('POST', Uri.parse(url));
 
-    // Headers de Auth
+  
     final token = await local.getToken();
     if (token != null && token.isNotEmpty) {
       request.headers['Authorization'] = 'Bearer $token';
@@ -55,10 +54,7 @@ Future<http.Response> upload(
 
     http.MultipartFile multipartFile;
 
-    // Lógica Híbrida (Web vs Mobile)
     if (kIsWeb) {
-      // --- MODO WEB ---
-      // Na web, o path é inútil/falso, precisamos dos bytes
       if (fileBytes == null) throw Exception("Na Web, os bytes do arquivo são obrigatórios");
       
       multipartFile = http.MultipartFile.fromBytes(
@@ -67,10 +63,7 @@ Future<http.Response> upload(
         filename: fileName,
       );
     } else {
-      // --- MODO MOBILE (Android/iOS) ---
-      // No mobile, usar path é melhor para memória
       if (filePath == null) throw Exception("No Mobile, o path é obrigatório");
-
       multipartFile = await http.MultipartFile.fromPath(
         fieldName,
         filePath,

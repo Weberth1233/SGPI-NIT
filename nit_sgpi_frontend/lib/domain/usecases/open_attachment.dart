@@ -8,7 +8,7 @@ class OpenAttachmentUseCase {
 
   OpenAttachmentUseCase(this.repository);
 
-  Future<Either<Failure, void>> call(int id) {
-    return repository.openDocument(id);
+  Future<Either<Failure, void>> call(int id, {bool signed = false}) {
+    return repository.openDocument(id, signed: signed);
   }
 }
