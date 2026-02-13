@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nit_sgpi_frontend/presentation/pages/login/controllers/login_controller.dart';
-
 import '../../shared/widgets/custom_text_field.dart';
 
 class LoginPage extends StatefulWidget {
@@ -32,7 +31,7 @@ class _LoginPageState extends State<LoginPage> {
         // cor base
         Container(color: theme.colorScheme.primary),
 
-        //linhas diagonais 
+        //linhas diagonais
         Positioned.fill(
           child: CustomPaint(
             painter: _DiagonalLinesPainter(
@@ -50,10 +49,7 @@ class _LoginPageState extends State<LoginPage> {
               gradient: RadialGradient(
                 center: const Alignment(0, -0.25),
                 radius: 0.50,
-                colors: [
-                  Colors.white.withOpacity(0.15),
-                  Colors.transparent,
-                ],
+                colors: [Colors.white.withOpacity(0.15), Colors.transparent],
               ),
             ),
           ),
@@ -85,7 +81,7 @@ class _LoginPageState extends State<LoginPage> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  
+
                   const SizedBox(height: 45),
 
                   CustomTextField(
@@ -110,7 +106,10 @@ class _LoginPageState extends State<LoginPage> {
                     if (error.isEmpty) return const SizedBox(height: 20);
                     return Padding(
                       padding: const EdgeInsets.only(bottom: 12),
-                      child: Text(error, style: const TextStyle(color: Colors.red)),
+                      child: Text(
+                        error,
+                        style: const TextStyle(color: Colors.red),
+                      ),
                     );
                   }),
 
@@ -120,8 +119,9 @@ class _LoginPageState extends State<LoginPage> {
                       height: 44,
                       child: ElevatedButton(
                         style: ButtonStyle(
-                          backgroundColor:
-                              WidgetStateProperty.all(theme.colorScheme.onSecondary),
+                          backgroundColor: WidgetStateProperty.all(
+                            theme.colorScheme.onSecondary,
+                          ),
                         ),
                         onPressed: loginController.loading.value
                             ? null
@@ -141,37 +141,79 @@ class _LoginPageState extends State<LoginPage> {
                                 ),
                               )
                             : const Text(
-                              "𝗟𝗢𝗚𝗜𝗡",
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
+                                "𝗟𝗢𝗚𝗜𝗡",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                       ),
                     ),
                   ),
-                  const SizedBox(height: 23),
 
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "NÃO TEM CADASTRO? ",
-                        style: theme.textTheme.bodyMedium!.copyWith(
-                          color: theme.colorScheme.onSecondary,
-                        ),
-                      ),
-                      TextButton(
-                        onPressed: () => Get.toNamed("/register"),
-                        child: Text(
-                          "FAZER CADASTRO",
-                          style: theme.textTheme.bodyMedium!.copyWith(
-                            color: Colors.yellow,
+                  const SizedBox(height: 30),
+
+                  Center(
+                    child: Row(
+                      mainAxisSize:
+                          MainAxisSize.min, // não estica a Row inteira
+                      children: [
+                        OutlinedButton(
+                          onPressed: () => Get.toNamed("/register"),
+                          style: OutlinedButton.styleFrom(
+                            backgroundColor: Colors.green,
+                            foregroundColor: Colors.white,
+                            side: const BorderSide(
+                              color: Colors.green,
+                              width: 1.5,
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 18,
+                              vertical: 12,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          child: Text(
+                            "FAZER CADASTRO",
+                            style: theme.textTheme.bodyMedium!.copyWith(
+                              color: theme.colorScheme.primary,
+                              fontWeight: FontWeight.w800,
+                            ),
                           ),
                         ),
-                      )
-                    ],
-                  )
+
+                        const SizedBox(width: 12),
+
+                        OutlinedButton(
+                          onPressed: () {}, // por enquanto não navega
+                          style: OutlinedButton.styleFrom(
+                            backgroundColor: Colors.yellow,
+                             foregroundColor: Colors.white,
+                            side: const BorderSide(
+                              color: Colors.yellow,
+                              width: 1.5,
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 18,
+                              vertical: 12,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          child: Text(
+                            "ESQUECI A SENHA",
+                            style: theme.textTheme.bodyMedium!.copyWith(
+                              color: theme.colorScheme.primary,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),
