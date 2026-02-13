@@ -18,7 +18,10 @@ class CustomMenu extends StatelessWidget {
       return Scaffold(
         backgroundColor: Theme.of(context).colorScheme.onSecondary,
         appBar: AppBar(
-          title: const Text("NIT SGPI", style: TextStyle(fontWeight: FontWeight.bold)),
+          title: const Text(
+            "NIT SGPI",
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
           backgroundColor: theme.colorScheme.primary,
           foregroundColor: Colors.white,
           elevation: 0,
@@ -72,11 +75,11 @@ class _MenuContent extends StatelessWidget {
           Image.asset(
             "assets/images/Logo SGPI-Photoroom 1.png",
             width: 100,
-            errorBuilder: (context, error, stackTrace) => 
+            errorBuilder: (context, error, stackTrace) =>
                 const Icon(Icons.image_not_supported, color: Colors.white),
           ),
           const SizedBox(height: 3),
-          
+
           /// Itens do Menu
           Expanded(
             child: Column(
@@ -91,8 +94,9 @@ class _MenuContent extends StatelessWidget {
                     color: Colors.white,
                   ),
                 ),
-                SizedBox(height: 50), // Ajustei o espaçamento para ficar flexível
-                
+                SizedBox(
+                  height: 50,
+                ), // Ajustei o espaçamento para ficar flexível
                 // Botões de navegação (Dica: Use IconButton ou InkWell para cliques)
                 Icon(Icons.home, color: Colors.white, size: 30),
                 SizedBox(height: 30),
@@ -128,19 +132,33 @@ class _UserSection extends StatelessWidget {
           child: const Icon(Icons.person, color: Colors.white),
         ),
         const SizedBox(height: 8),
-        Text(
-          "Usuário",
-          style: theme.textTheme.bodySmall!.copyWith(color: Colors.white),
-        ),
-        const SizedBox(height: 16),
         
+        FutureBuilder<String?>(
+          future: controller.getRole(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Scaffold(
+                body: Center(child: CircularProgressIndicator()),
+              );
+            }
+            final role = snapshot.data;
+            if (role == 'ADMIN') {
+              return Text("Admin", style: Theme.of(context).textTheme.bodySmall!.copyWith(color: Theme.of(context).colorScheme.onSecondary,));
+            } else {
+              return Text("Usuário", style: Theme.of(context).textTheme.bodySmall!.copyWith(color: Theme.of(context).colorScheme.onSecondary,));
+            }
+          },
+        ),
+        const SizedBox(height: 8),
         // Corrigi o botão: Havia um TextButton dentro de um ElevatedButton
         SizedBox(
           width: double.infinity,
           child: ElevatedButton(
             onPressed: () {
-              controller.clearToken();
-              Get.offAllNamed("/login"); // Use offAllNamed para limpar histórico ao sair
+              controller.clear();
+              Get.offAllNamed(
+                "/login",
+              ); // Use offAllNamed para limpar histórico ao sair
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.white,
