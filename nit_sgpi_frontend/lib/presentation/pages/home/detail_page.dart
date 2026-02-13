@@ -126,79 +126,10 @@ class DetailPage extends StatelessWidget {
 
               _buildSectionTitle(context, "Anexos"),
               const SizedBox(height: 12),
-
-              ListView.separated(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: entity.attachments.length,
-                separatorBuilder: (_, _) => const SizedBox(height: 12),
-                itemBuilder: (context, index) {
-                  final AttachmentEntity attachment = entity.attachments[index];
-                  final isSigned = attachment.signedFilePath.isNotEmpty;
-
-                  return MouseRegion(
-                    cursor: SystemMouseCursors.click,
-                    child: InkWell(
-                      onTap: (){
-                        Get.toNamed("/home/process-detail/attachments", arguments:attachment);
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(16),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.05),
-                              blurRadius: 8,
-                              offset: const Offset(0, 4),
-                            ),
-                          ],
-                        ),
-                        child: Row(
-                          children: [
-                            Icon(
-                              isSigned
-                                  ? Icons.check_circle
-                                  : Icons.description_outlined,
-                              color: isSigned ? Colors.green : colors.secondary,
-                            ),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    attachment.displayName,
-                                    style: theme.textTheme.bodyLarge?.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                      color: colors.tertiary,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    attachment.status,
-                                    style: theme.textTheme.bodySmall?.copyWith(
-                                      color: colors.secondary,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Text(
-                              isSigned ? "Assinado" : "Pendente",
-                              style: TextStyle(
-                                color: isSigned ? Colors.green : Colors.orange,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              ),
+              ElevatedButton(onPressed: (){
+                Get.toNamed("/home/process-detail/attachments", arguments: entity.id);
+              }, child: Text("Visualizar documentos", style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: Theme.of(context).colorScheme.onSecondary),))
+            
             ],
           ),
         ),
