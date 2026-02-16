@@ -111,6 +111,9 @@ public class ProcessController implements GenericController{
         }).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+
+
+
     @GetMapping("/status/amount")
     public ResponseEntity<List<ProcessStatusCountDTO>> countStatus(){
         return ResponseEntity.ok(service.countProcessStatus());

@@ -65,4 +65,8 @@ public class Process {
     @ManyToOne
     @JoinColumn(name = "creator_id", nullable = false) // Mapeia a coluna que o banco está reclamando
     private User creator;
+
+    @OneToMany(mappedBy = "process", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Justification> justifications = new ArrayList<>();
+
 }

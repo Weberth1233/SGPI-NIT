@@ -61,7 +61,6 @@ public class ProcessService {
     }
 
 
-
     public void update(Process process){
         if(process.getId() == null){
             throw new IllegalArgumentException("Para atualizar é necessário que o processo esteja cadastrado!");
@@ -124,6 +123,14 @@ public class ProcessService {
         }else {
             return searchProcess(title, statusProcess, page, pageSize);
         }
+    }
+
+    public void updateProcessStatus(Process process, StatusProcess newStatus){
+        if(process.getId() == null){
+            throw new IllegalArgumentException("Para atualizar o status do processo esteja cadastrado!");
+        }
+        process.setStatus(newStatus);
+        repository.save(process);
     }
 
     public Optional<Process> getById(Long id){
