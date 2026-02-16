@@ -10,8 +10,11 @@ class CustomTextField extends StatelessWidget {
   final TextInputType? keyboardType;
   final VoidCallback? onTap;
   final bool readOnly;
-  final  bool textWhiteColor;
-   final void Function(String)? onFieldSubmitted;
+  final bool textWhiteColor;
+  final void Function(String)? onFieldSubmitted;
+  
+  // Nova propriedade para controlar as linhas (TextArea)
+  final int? maxLines;
 
   const CustomTextField({
     super.key,
@@ -23,16 +26,28 @@ class CustomTextField extends StatelessWidget {
     this.keyboardType,
     this.onTap,
     this.readOnly = false,
-    this.textWhiteColor = false, this.onFieldSubmitted
+    this.textWhiteColor = false,
+    this.onFieldSubmitted,
+    // Define 1 como padrão para manter o comportamento original.
+    // Para virar TextArea, passe um número maior ou null.
+    this.maxLines = 1, 
   });
 
   @override
   Widget build(BuildContext context) {
     return Column(
-      spacing: 7,
+      spacing: 7, // Requer Flutter 3.24+
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style:  context.textTheme.bodyMedium!.copyWith(color: textWhiteColor ? Theme.of(context).colorScheme.onSecondary: Theme.of(context).colorScheme.tertiary,fontWeight: FontWeight.w600)),
+        Text(
+          label,
+          style: context.textTheme.bodyMedium!.copyWith(
+            color: textWhiteColor
+                ? Theme.of(context).colorScheme.onSecondary
+                : Theme.of(context).colorScheme.tertiary,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
         SizedBox(
           width: size,
           child: TextFormField(
@@ -41,7 +56,8 @@ class CustomTextField extends StatelessWidget {
             keyboardType: keyboardType,
             validator: validator,
             onTap: onTap,
-            readOnly: readOnly, // 👈 importante
+            readOnly: readOnly,
+            maxLines: maxLines, // 👈 Aqui a mágica acontece
             style: context.textTheme.bodyMedium!.copyWith(
               color: Theme.of(context).colorScheme.tertiary,
             ),

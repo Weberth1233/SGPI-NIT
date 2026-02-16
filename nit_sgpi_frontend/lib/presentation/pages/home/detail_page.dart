@@ -125,7 +125,72 @@ class DetailPage extends StatelessWidget {
               _buildDynamicForm(context, entity),
 
               const SizedBox(height: 24),
+              // ... código anterior ...
 
+              // Só exibe a seção se houver justificativas
+              if (entity.justifications.isNotEmpty) ...[
+                const SizedBox(height: 24),
+                _buildSectionTitle(context, "Justificativas"),
+                const SizedBox(height: 12),
+
+                // Usar Column com map é melhor que ListView dentro de SingleChildScrollView
+                Column(
+                  children: entity.justifications.map((justification) {
+                    return Container(
+                      width: double.infinity,
+                      margin: const EdgeInsets.only(bottom: 12),
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        // Fundo suave para destacar sem agredir
+                        color: Colors.amber.shade50,
+                        // Borda sutil para acabamento
+                        border: Border.all(color: Colors.amber.shade200),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Ícone para identificar visualmente
+                          Icon(
+                            Icons.sticky_note_2_outlined,
+                            color: Colors.amber.shade800,
+                            size: 20,
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Observação:",
+                                  style: TextStyle(
+                                    color: Colors.amber.shade900,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  justification.reason,
+                                  style: Theme.of(context).textTheme.bodyMedium
+                                      ?.copyWith(
+                                        color: Colors.black87,
+                                        height:
+                                            1.4, // Melhora leitura de textos longos
+                                      ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ],
+
+              // ... restante do código ...
+              const SizedBox(height: 24),
               _buildSectionTitle(context, "Anexos"),
               const SizedBox(height: 12),
               ElevatedButton(
@@ -142,7 +207,7 @@ class DetailPage extends StatelessWidget {
                   ),
                 ),
               ),
-SizedBox(height: 20,),
+              SizedBox(height: 20),
               FutureBuilder<String?>(
                 future: controller.getRole(),
                 builder: (context, snapshot) {
@@ -153,20 +218,39 @@ SizedBox(height: 20,),
                   }
                   final role = snapshot.data;
                   if (role == 'ADMIN') {
-                    return Row(crossAxisAlignment:CrossAxisAlignment.end,mainAxisAlignment: MainAxisAlignment.end,spacing: 5,children: [
-                      ElevatedButton(onPressed: (){}, child: Text("Aprovar", style: Theme.of(context).textTheme.bodyMedium
-                                    ?.copyWith(
-                                      color: Theme.of(
-                                        context,
-                                      ).colorScheme.onSecondary,
-                                    ),)),
-                      ElevatedButton(onPressed: (){}, child: Text("Correção", style: Theme.of(context).textTheme.bodyMedium
-                                    ?.copyWith(
-                                      color: Theme.of(
-                                        context,
-                                      ).colorScheme.onSecondary,
-                                    ),)),
-                    ],);
+                    return Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      spacing: 5,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {},
+                          child: Text(
+                            "Aprovar",
+                            style: Theme.of(context).textTheme.bodyMedium
+                                ?.copyWith(
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onSecondary,
+                                ),
+                          ),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            Get.toNamed("/home/process-detail/justification", arguments: entity.id);
+                          },
+                          child: Text(
+                            "Correção",
+                            style: Theme.of(context).textTheme.bodyMedium
+                                ?.copyWith(
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onSecondary,
+                                ),
+                          ),
+                        ),
+                      ],
+                    );
                   } else {
                     return SizedBox();
                   }

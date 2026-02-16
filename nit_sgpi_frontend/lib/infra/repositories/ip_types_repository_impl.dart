@@ -6,7 +6,7 @@ import 'package:nit_sgpi_frontend/infra/datasources/ip_types_remote_datasources.
 import '../../domain/core/errors/exceptions.dart';
 
 class IpTypesRepositoryImpl implements IipTypesRepository{
-  final IipTypesRemoteDataSource remoteDataSource;
+  final IIpTypesRemoteDataSource remoteDataSource;
 
   IpTypesRepositoryImpl({required this.remoteDataSource});
 

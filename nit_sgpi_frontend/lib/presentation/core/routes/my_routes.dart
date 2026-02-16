@@ -4,6 +4,8 @@ import 'package:nit_sgpi_frontend/presentation/pages/attachments/bindings/attach
 import 'package:nit_sgpi_frontend/presentation/pages/home/detail_page.dart';
 import 'package:nit_sgpi_frontend/presentation/pages/ip_types/bindings/ip_types_bindings.dart';
 import 'package:nit_sgpi_frontend/presentation/pages/ip_types/ip_types_page.dart';
+import 'package:nit_sgpi_frontend/presentation/pages/justifications/bindings/justification_bindings.dart';
+import 'package:nit_sgpi_frontend/presentation/pages/justifications/justification_page.dart';
 import 'package:nit_sgpi_frontend/presentation/pages/login/login_page.dart';
 import 'package:nit_sgpi_frontend/presentation/pages/process/bindings/user_bindings.dart';
 import 'package:nit_sgpi_frontend/presentation/pages/process/process_page.dart';
@@ -30,6 +32,8 @@ class MyRoutes {
     GetPage(name: "/home/process-detail", page:() =>  DetailPage()),
     
     GetPage(name: "/home/process-detail/attachments", page:() => AttachmentsPage(), binding: AttachmentsBindigs()),
+
+    GetPage(name: "/home/process-detail/justification", page:() => JustificationPage(), binding: JustificationBindings()),
 
     GetPage(
       name: '/process/ip_types',

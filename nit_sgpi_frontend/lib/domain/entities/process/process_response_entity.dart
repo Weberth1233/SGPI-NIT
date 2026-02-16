@@ -1,3 +1,4 @@
+import 'package:nit_sgpi_frontend/domain/entities/process/process_justification_entity.dart';
 import 'package:nit_sgpi_frontend/domain/entities/process/process_ip_type_entity.dart';
 
 import '../attachment_entity.dart';
@@ -13,7 +14,9 @@ class ProcessResponseEntity {
   final ProcessIpTypeEntity ipType;
   final List<ProcessUserEntity> authors;
   final List<AttachmentEntity> attachments;
+  final List<ProcessJustificationEntity> justifications;
   final ProcessUserEntity creator;
+
 
   ProcessResponseEntity({
     required this.id,
@@ -25,6 +28,7 @@ class ProcessResponseEntity {
     required this.ipType,
     required this.authors,
     required this.attachments,
+    required this.justifications,
     required this.creator,
   });
 }
