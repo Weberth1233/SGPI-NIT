@@ -13,7 +13,7 @@ class HomePage extends StatelessWidget {
   final processController = Get.find<ProcessController>();
 
   /*{
-  "email": "marialurdes123@gmail.com",
+  "email": "marialurdes1234@gmail.com",
   "password": "marialurdes123"
 }*/
   @override
