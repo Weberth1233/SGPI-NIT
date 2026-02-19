@@ -6,4 +6,5 @@ import '../entities/user/user_entity.dart';
 
 abstract class IUserRepository {
    Future<Either<Failure, PagedResultEntity<UserEntity>>> getUsers({String userName, String fullName, int page = 0, int size = 10});
+   Future<Either<Failure, UserEntity>> getUserLogged();
 }

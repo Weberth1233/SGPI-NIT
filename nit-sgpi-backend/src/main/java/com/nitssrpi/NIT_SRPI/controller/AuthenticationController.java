@@ -42,9 +42,8 @@ public class AuthenticationController implements GenericController{
         var auth = this.authenticationManager.authenticate(userNamePassword);
 
         var token = tokenService.generateToken((User) auth.getPrincipal());
-
-        return ResponseEntity.ok(new LoginResponseDTO(token));
-
+        System.out.println(((User) auth.getPrincipal()).getRole());
+        return ResponseEntity.ok(new LoginResponseDTO(token, ((User) auth.getPrincipal()).getRole()));
     }
 
     @PostMapping("/register")

@@ -24,12 +24,12 @@ class IpTypesBindings extends Bindings{
         Get.find<AuthLocalDataSource>(),
       ),
     );
-    Get.lazyPut<IipTypesRemoteDataSource>(
-      () => IipTypesRemoteDataSourceImpl(Get.find<ApiClient>()),
+    Get.lazyPut<IIpTypesRemoteDataSource>(
+      () => IpTypesRemoteDataSourceImpl(Get.find<ApiClient>()),
     );
     // Repository
     Get.lazyPut<IipTypesRepository>(
-      () => IpTypesRepositoryImpl(remoteDataSource: Get.find<IipTypesRemoteDataSource>()),
+      () => IpTypesRepositoryImpl(remoteDataSource: Get.find<IIpTypesRemoteDataSource>()),
     );
     // UseCase
     Get.lazyPut<GetIptypes>(

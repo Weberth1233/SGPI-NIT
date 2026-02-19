@@ -1,9 +1,12 @@
 package com.nitssrpi.NIT_SRPI.controller.mappers;
+import com.nitssrpi.NIT_SRPI.controller.dto.JustificationRequestDTO;
 import com.nitssrpi.NIT_SRPI.controller.dto.ProcessRequestDTO;
 import com.nitssrpi.NIT_SRPI.controller.dto.ProcessResponseDTO;
 import com.nitssrpi.NIT_SRPI.controller.dto.UserSummaryDTO;
+import com.nitssrpi.NIT_SRPI.model.Justification;
 import com.nitssrpi.NIT_SRPI.model.Process;
 import com.nitssrpi.NIT_SRPI.repository.IpTypesRepository;
+import com.nitssrpi.NIT_SRPI.repository.JustificationRepository;
 import com.nitssrpi.NIT_SRPI.repository.UserRepository;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -19,6 +22,7 @@ public abstract class ProcessMapper {
 
     @Mapping(target = "ipType", expression = "java( ipTypesRepository.findById(dto.ipTypeId()).orElse(null))")
     @Mapping(target = "authors", expression = "java(userRepository.findAllById(dto.authorIds()))")
+
 //    @Mapping(target = "creator", expression = "java(userRepository.findById(dto.creatorId()).orElse(null))")
     public abstract Process toEntity(ProcessRequestDTO dto);
 

@@ -8,8 +8,15 @@ import '../../shared/utils/responsive.dart';
 import '../../shared/utils/validators.dart';
 import 'package:flutter/services.dart';
 
+import '../users/controllers/user_logged_controller.dart';
+
 class RegisterPage extends StatefulWidget {
-  const RegisterPage({super.key});
+  final bool isEditMode;
+
+  const RegisterPage({
+    super.key,
+    this.isEditMode = false,
+  });
 
   @override
   State<RegisterPage> createState() => _RegisterPageState();
@@ -17,6 +24,9 @@ class RegisterPage extends StatefulWidget {
 
 class _RegisterPageState extends State<RegisterPage> {
   final _formKey = GlobalKey<FormState>();
+
+  final registerController = Get.find<RegisterController>();
+  final userControllerGet = Get.find<UserLoggedController>();
 
   final TextEditingController nameController = TextEditingController();
   final TextEditingController userController = TextEditingController();

@@ -6,13 +6,13 @@ import 'package:nit_sgpi_frontend/infra/models/ip_types/ip_types_model.dart';
 import '../../domain/core/errors/exceptions.dart';
 import '../core/network/api_client.dart';
 
-abstract class IipTypesRemoteDataSource{
+abstract class IIpTypesRemoteDataSource{
   Future<List<IpTypeModel>> getIpTypes();
 }
-class IipTypesRemoteDataSourceImpl implements IipTypesRemoteDataSource{
+class IpTypesRemoteDataSourceImpl implements IIpTypesRemoteDataSource{
    final ApiClient apiClient;
 
-  IipTypesRemoteDataSourceImpl(this.apiClient);
+  IpTypesRemoteDataSourceImpl(this.apiClient);
    
   @override
   Future<List<IpTypeModel>> getIpTypes() async{

@@ -1,4 +1,5 @@
 import 'package:nit_sgpi_frontend/infra/models/base_model.dart';
+import 'package:nit_sgpi_frontend/infra/models/process/process_justification_model.dart';
 
 import '../../../domain/entities/process/process_response_entity.dart';
 import '../attachment_model.dart';
@@ -16,6 +17,7 @@ class ProcessResponseModel implements BaseModel{
   final ProcessIpTypeModel ipType;
   final List<ProcessUserModel> authors;
   final List<AttachmentModel> attachments;
+  final List<ProcessJustificationModel> justifications;
   final ProcessUserModel creator;
 
   ProcessResponseModel({
@@ -28,6 +30,7 @@ class ProcessResponseModel implements BaseModel{
     required this.ipType,
     required this.authors,
     required this.attachments,
+    required this.justifications,
     required this.creator,
   });
 
@@ -46,6 +49,9 @@ class ProcessResponseModel implements BaseModel{
           .toList(),
       attachments: (json['attachments'] as List)
           .map((e) => AttachmentModel.fromJson(e))
+          .toList(),
+      justifications: (json['justifications'] as List)
+          .map((e) => ProcessJustificationModel.fromJson(e))
           .toList(),
       creator: ProcessUserModel.fromJson(json['creator']),
     );
@@ -68,6 +74,7 @@ class ProcessResponseModel implements BaseModel{
     );
   }
 */
+
   @override
   ProcessResponseEntity toEntity() {
     return ProcessResponseEntity(
@@ -81,6 +88,7 @@ class ProcessResponseModel implements BaseModel{
       authors: authors.map((e) => e.toEntity()).toList(),
       attachments: attachments.map((e) => e.toEntity()).toList(),
       creator: creator.toEntity(),
+      justifications: justifications.map((e) => e.toEntity(),).toList(),
     );
   }
 }

@@ -45,8 +45,10 @@ class CustomTextField extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Column(
+      spacing: 7, // Requer Flutter 3.24+
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+      
         Text(
           label,
           style: context.textTheme.bodyMedium!.copyWith(

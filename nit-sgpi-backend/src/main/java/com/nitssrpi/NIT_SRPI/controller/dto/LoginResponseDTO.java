@@ -1,4 +1,6 @@
 package com.nitssrpi.NIT_SRPI.controller.dto;
 
-public record LoginResponseDTO(String token) {
+import com.nitssrpi.NIT_SRPI.model.UserRole;
+
+public record LoginResponseDTO(String token, UserRole role) {
 }

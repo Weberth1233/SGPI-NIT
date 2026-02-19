@@ -5,14 +5,14 @@
 file:
   upload-dir: ./uploads
 
-# Configurações do Spring Framework
+# Configurações do Spring FrameworkprocessOptional
 spring:
   application:
     name: srpi
 
   # Banco de Dados PostgreSQL
   datasource:
-    #url: jdbc:postgresql://localhost:5432/nitsrpi
+   # url: jdbc:postgresql://localhost:5432/nitsrpi
     url: jdbc:postgresql://postgres:5432/nitsrpi
     username: postgres
     password: postgres

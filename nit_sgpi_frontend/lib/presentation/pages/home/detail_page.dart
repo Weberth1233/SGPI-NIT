@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:nit_sgpi_frontend/domain/entities/attachment_entity.dart';
 import 'package:nit_sgpi_frontend/domain/entities/process/process_response_entity.dart';
 import 'package:nit_sgpi_frontend/presentation/shared/utils/responsive.dart';
+
+import '../../../domain/entities/attachment_entity.dart';
+import '../../../infra/datasources/auth_local_datasource.dart';
 
 class DetailPage extends StatefulWidget {
   const DetailPage({super.key});
@@ -24,6 +26,9 @@ class _DetailPageState extends State<DetailPage> {
     // ===== Tema / cores do app
     final theme = Theme.of(context);
     final colors = theme.colorScheme;
+
+    final controller = Get.find<AuthLocalDataSource>();
+
 
     // ===== Data formatada para mostrar na barra
     final dateFormatted = DateFormat(
