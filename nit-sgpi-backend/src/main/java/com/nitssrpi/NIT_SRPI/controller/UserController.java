@@ -37,6 +37,7 @@ public class UserController  implements GenericController{
         }).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+
     @PutMapping("{id}")
     public ResponseEntity<Object> updateUser(@PathVariable("id") String id, @RequestBody @Valid UserRequestDTO dto){
         var idUser = Long.parseLong(id);
@@ -66,6 +67,13 @@ public class UserController  implements GenericController{
             return ResponseEntity.noContent().build();
         }).orElseGet(() -> ResponseEntity.notFound().build());
 
+    }
+
+    @GetMapping("/logged")
+    //logged-in user
+    public ResponseEntity<UserResponseDTO> getLoggedUser() {
+            UserResponseDTO dto = mapper.toDTO(service.getLoggedUser());
+            return ResponseEntity.ok(dto);
     }
 
     @GetMapping

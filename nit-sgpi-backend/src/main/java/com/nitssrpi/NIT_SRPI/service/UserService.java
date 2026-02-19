@@ -1,4 +1,5 @@
 package com.nitssrpi.NIT_SRPI.service;
+import com.nitssrpi.NIT_SRPI.Infra.security.SecurityService;
 import com.nitssrpi.NIT_SRPI.model.User;
 import com.nitssrpi.NIT_SRPI.repository.UserRepository;
 import com.nitssrpi.NIT_SRPI.repository.specs.UserSpecs;
@@ -7,6 +8,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +32,30 @@ public class UserService {
 //            user.setRole("USER");
 //        }
         return repository.save(user);
+    }
+
+//    public Optional<User> getLoggedUserData() {
+//        Authentication authentication =
+//                SecurityContextHolder.getContext().getAuthentication();
+//
+//        if (authentication == null || !authentication.isAuthenticated()) {
+//            return Optional.empty();
+//        }
+//
+//        String email = authentication.getName();
+//
+//        return repository.findByEmail(email);
+//    }
+
+    public User getLoggedUser() {
+        Authentication authentication =
+                SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new RuntimeException("Usuário não autenticado");
+        }
+
+        return (User) authentication.getPrincipal();
     }
 
     public Optional<User> getUserById(Long id){
