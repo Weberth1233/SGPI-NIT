@@ -1,5 +1,8 @@
 import 'dart:convert';
 
+import 'package:nit_sgpi_frontend/domain/entities/user/user_entity.dart';
+import 'package:nit_sgpi_frontend/infra/models/user/user_model.dart';
+
 import '../../domain/core/errors/exceptions.dart';
 import '../core/network/api_client.dart';
 import '../core/network/base_url.dart';
@@ -12,6 +15,8 @@ abstract class IUserRemoteDataSource {
     int page = 0,
     int size = 10,
   });
+
+  Future<UserEntity> getUserLogged();
 }
 
 class UserRemoteDatasourcesImpl implements IUserRemoteDataSource {
@@ -54,6 +59,24 @@ class UserRemoteDatasourcesImpl implements IUserRemoteDataSource {
       } else {
         throw ServerException(
           'Erro ${response.statusCode} ao buscar usuarios! - Detalhes: ${response.body}',
+        );
+      }
+    } catch (e) {
+      throw NetworkException('Erro de conexão com o servidor!');
+    }
+  }
+  
+  @override
+  Future<UserEntity> getUserLogged() async{
+    try {
+      final response = await apiClient.get(
+        "${BaseUrl.urlWithHttp}/users/logged",
+      );
+      if (response.statusCode == 200) {
+        return UserModel.fromJson(json.decode(response.body)).toEntity();  
+      } else {
+        throw ServerException(
+          'Erro ${response.statusCode} ao buscar processos! - Detalhes: ${response.body}',
         );
       }
     } catch (e) {

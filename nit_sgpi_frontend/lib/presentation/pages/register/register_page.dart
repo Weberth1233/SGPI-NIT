@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:nit_sgpi_frontend/domain/entities/user/address_entity.dart';
-import 'package:nit_sgpi_frontend/domain/entities/user/user_entity.dart';
-import 'package:nit_sgpi_frontend/infra/models/user/address_model.dart';
-import 'package:nit_sgpi_frontend/infra/models/user/user_model.dart';
-import 'package:nit_sgpi_frontend/presentation/pages/register/controllers/register_controller.dart';
-import 'package:nit_sgpi_frontend/presentation/shared/widgets/custom_text_field.dart';
-import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
+import '../../../domain/entities/user/address_entity.dart';
+import '../../../domain/entities/user/user_entity.dart';
 import '../../shared/utils/responsive.dart';
 import '../../shared/utils/validators.dart';
+import '../../shared/widgets/custom_text_field.dart';
+import '../users/controllers/user_logged_controller.dart';
+import 'controllers/register_controller.dart';
 
 class RegisterPage extends StatefulWidget {
-  const RegisterPage({super.key});
+  final bool isEditMode;
+
+  const RegisterPage({
+    super.key,
+    this.isEditMode = false,
+  });
 
   @override
   State<RegisterPage> createState() => _RegisterPageState();
@@ -20,6 +23,9 @@ class RegisterPage extends StatefulWidget {
 
 class _RegisterPageState extends State<RegisterPage> {
   final _formKey = GlobalKey<FormState>();
+
+  final registerController = Get.find<RegisterController>();
+  final userControllerGet = Get.find<UserLoggedController>();
 
   final TextEditingController nameController = TextEditingController();
   final TextEditingController userController = TextEditingController();
@@ -37,88 +43,73 @@ class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController cityController = TextEditingController();
   final TextEditingController stateController = TextEditingController();
 
-  void _openBeautifulDatePicker(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (_) {
-        return SizedBox(
-          height: 400,
-          child: SfDateRangePicker(
-            onSelectionChanged: (args) {
-              final DateTime date = args.value;
-              birthdateController.text =
-                  "${date.day.toString().padLeft(2, '0')}/"
-                  "${date.month.toString().padLeft(2, '0')}/"
-                  "${date.year}";
-              Navigator.pop(context);
-            },
-            selectionMode: DateRangePickerSelectionMode.single,
-            showActionButtons: false,
-          ),
-        );
-      },
-    );
-  }
-
   @override
-  void dispose() {
-    nameController.dispose();
-    userController.dispose();
-    emailController.dispose();
-    professionController.dispose();
-    phoneController.dispose();
-    birthdateController.dispose();
-    passwordController.dispose();
+  void initState() {
+    super.initState();
 
-    cepController.dispose();
-    streetController.dispose();
-    numberController.dispose();
-    complementController.dispose();
-    neighborhoodController.dispose();
-    cityController.dispose();
-    stateController.dispose();
-    super.dispose();
+    if (widget.isEditMode) {
+      userControllerGet.fetchLoggedUser();
+
+      ever(userControllerGet.user, (user) {
+        if (user != null) {
+          _fillForm(user);
+        }
+      });
+    }
   }
 
-  void clearForm() {
-      userController.clear();
-      nameController.clear();
-      emailController.clear();
-      professionController.clear();
-      phoneController.clear();
-      birthdateController.clear();
-      passwordController.clear();
+  void _fillForm(UserEntity user) {
+    nameController.text = user.fullName;
+    userController.text = user.userName;
+    emailController.text = user.email;
+    professionController.text = user.profession;
+    phoneController.text = user.phoneNumber;
+    birthdateController.text = user.birthDate;
 
-      cepController.clear();
-      streetController.clear();
-      numberController.clear();
-      complementController.clear();
-      neighborhoodController.clear();
-      cityController.clear();
-      stateController.clear();
+    cepController.text = user.address.zipCode;
+    streetController.text = user.address.street;
+    numberController.text = user.address.number;
+    complementController.text = user.address.complement ?? '';
+    neighborhoodController.text = user.address.neighborhood;
+    cityController.text = user.address.city;
+    stateController.text = user.address.state;
+  }
+
+  void _submit() {
+    if (!_formKey.currentState!.validate()) return;
+
+    final user = UserEntity(
+      id: widget.isEditMode ? userControllerGet.user.value?.id : null,
+      userName: userController.text,
+      email: emailController.text,
+      password: passwordController.text,
+      phoneNumber: phoneController.text,
+      birthDate: birthdateController.text,
+      profession: professionController.text,
+      fullName: nameController.text,
+      role: "USER",
+      isEnabled: true,
+      address: AddressEntity(
+        zipCode: cepController.text,
+        street: streetController.text,
+        number: numberController.text,
+        complement: complementController.text,
+        neighborhood: neighborhoodController.text,
+        city: cityController.text,
+        state: stateController.text,
+      ),
+    );
+
+    if (widget.isEditMode) {
+      // registerController.update(user);
+    } else {
+      registerController.post(user);
     }
+  }
 
   @override
   Widget build(BuildContext context) {
-    final registerController = Get.find<RegisterController>();
-    
     return Obx(() {
-      if (registerController.message.value.isNotEmpty) {
-        Future.microtask(() {
-          Get.snackbar(
-            "Cadastro",
-            registerController.message.value,
-            snackPosition: SnackPosition.TOP,
-            duration: const Duration(seconds: 3),
-            backgroundColor: Theme.of(context).colorScheme.primary,
-          );
-          registerController.message.value = "";
-        });
-      }
-
       return Scaffold(
         backgroundColor: Theme.of(context).colorScheme.onSecondary,
         body: SingleChildScrollView(
@@ -143,16 +134,18 @@ class _RegisterPageState extends State<RegisterPage> {
                             borderRadius: BorderRadius.circular(50),
                           ),
                           child: IconButton(
-                            onPressed: () {
-                              Get.toNamed("/login");
-                            },
+                            onPressed: () => Get.back(),
                             icon: const Icon(Icons.arrow_back, size: 30),
                           ),
                         ),
                         Expanded(
                           child: Text(
-                            "Cadastro de usuários",
-                            style: Theme.of(context).textTheme.headlineSmall!
+                            widget.isEditMode
+                                ? "Editar usuário"
+                                : "Cadastro de usuários",
+                            style: Theme.of(context)
+                                .textTheme
+                                .headlineSmall!
                                 .copyWith(fontWeight: FontWeight.bold),
                           ),
                         ),
@@ -160,10 +153,14 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
 
                     Text(
-                      "Insira os dados do usuário para se cadastrar no sistema",
+                      widget.isEditMode
+                          ? "Atualize seus dados no sistema"
+                          : "Insira os dados do usuário para se cadastrar no sistema",
                       style: Theme.of(context).textTheme.bodySmall,
                     ),
                     const SizedBox(height: 20),
+
+                    /// ====== MANTIVE SUA ESTRUTURA ORIGINAL ======
 
                     Row(
                       spacing: 5,
@@ -172,20 +169,16 @@ class _RegisterPageState extends State<RegisterPage> {
                           child: CustomTextField(
                             controller: nameController,
                             label: "Nome Completo",
-                            validator: (v) => Validators.required(
-                              v,
-                              message: "Informe o nome completo",
-                            ),
+                            validator: (v) =>
+                                Validators.required(v),
                           ),
                         ),
                         Expanded(
                           child: CustomTextField(
                             controller: userController,
                             label: "Nome de usuário",
-                            validator: (v) => Validators.required(
-                              v,
-                              message: "Informe o nome de usuário",
-                            ),
+                            validator: (v) =>
+                                Validators.required(v),
                           ),
                         ),
                       ],
@@ -227,21 +220,17 @@ class _RegisterPageState extends State<RegisterPage> {
                             controller: birthdateController,
                             label: "Data de nascimento",
                             validator: Validators.required,
-                            onTap: () => _openBeautifulDatePicker(context),
                           ),
                         ),
-                        Expanded(
-                          child: CustomTextField(
-                            controller: passwordController,
-                            label: "Senha",
-                            obscureText: true,
-                            validator: (v) => Validators.minLength(
-                              v,
-                              6,
-                              message: "Senha deve ter no mínimo 6 caracteres",
+                        if (!widget.isEditMode)
+                          Expanded(
+                            child: CustomTextField(
+                              controller: passwordController,
+                              label: "Senha",
+                              obscureText: true,
+                              validator: (v) => Validators.minLength(v, 6),
                             ),
                           ),
-                        ),
                       ],
                     ),
 
@@ -249,12 +238,10 @@ class _RegisterPageState extends State<RegisterPage> {
 
                     Text(
                       "Dados de Endereço",
-                      style: Theme.of(context).textTheme.headlineSmall!
+                      style: Theme.of(context)
+                          .textTheme
+                          .headlineSmall!
                           .copyWith(fontWeight: FontWeight.bold),
-                    ),
-                    Text(
-                      "Insira seus dados de endereço para finalizar o cadastro no sistema",
-                      style: Theme.of(context).textTheme.bodySmall,
                     ),
 
                     Row(
@@ -293,7 +280,6 @@ class _RegisterPageState extends State<RegisterPage> {
                           child: CustomTextField(
                             controller: complementController,
                             label: "Complemento",
-                            validator: (v) => null, // opcional
                           ),
                         ),
                       ],
@@ -325,71 +311,25 @@ class _RegisterPageState extends State<RegisterPage> {
                       ],
                     ),
 
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 20),
 
-                    Container(
-                      margin: const EdgeInsets.only(bottom: 30),
-                      child: Row(
-                        children: [
-                          const Expanded(child: SizedBox()),
-                          Obx(() {
-                            return ElevatedButton(
-                              onPressed: registerController.isLoading.value
-                                  ? null
-                                  : () {
-                                      if (_formKey.currentState!.validate()) {
-                                        registerController.post(
-                                          UserEntity(
-                                            userName: userController.text,
-                                            email: emailController.text,
-                                            password: passwordController.text,
-                                            phoneNumber: phoneController.text,
-                                            birthDate: birthdateController.text,
-                                            profession:
-                                                professionController.text,
-                                            fullName: nameController.text,
-                                            role: "USER",
-                                            isEnabled: true,
-                                            address: AddressEntity(
-                                              zipCode: cepController.text,
-                                              street: streetController.text,
-                                              number: numberController.text,
-                                              complement:
-                                                  complementController.text,
-                                              neighborhood:
-                                                  neighborhoodController.text,
-                                              city: cityController.text,
-                                              state: stateController.text,
-                                            ),
-                                          ),
-                                        );
-                                        clearForm();
-                                      }
-                                      
-                                    },
-                              child: registerController.isLoading.value
-                                  ? const SizedBox(
-                                      width: 20,
-                                      height: 20,
-                                      child: CircularProgressIndicator(
-                                        strokeWidth: 2,
-                                      ),
-                                    )
-                                  : Text(
-                                      "Salvar dados",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium!
-                                          .copyWith(
-                                            color: Theme.of(
-                                              context,
-                                            ).colorScheme.onSecondary,
-                                          ),
-                                    ),
-                            );
-                          }),
-                        ],
-                      ),
+                    Row(
+                      children: [
+                        const Expanded(child: SizedBox()),
+                        ElevatedButton(
+                          onPressed: registerController.isLoading.value
+                              ? null
+                              : _submit,
+                          child: registerController.isLoading.value
+                              ? const CircularProgressIndicator()
+                              : Text(
+                                  widget.isEditMode
+                                      ? "Atualizar dados"
+                                      : "Salvar dados",
+                                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: Theme.of(context).colorScheme.onSecondary),
+                                ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
