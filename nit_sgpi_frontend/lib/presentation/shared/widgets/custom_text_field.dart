@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nit_sgpi_frontend/presentation/shared/extensions/context_extensions.dart';
+import 'package:flutter/services.dart';
 
 class CustomTextField extends StatelessWidget {
   final TextEditingController controller;
@@ -12,9 +13,13 @@ class CustomTextField extends StatelessWidget {
   final bool readOnly;
   final bool textWhiteColor;
   final void Function(String)? onFieldSubmitted;
-  
-  // Nova propriedade para controlar as linhas (TextArea)
-  final int? maxLines;
+  final List<TextInputFormatter>? inputFormatters;
+
+  //  Novos parâmetros adicionados para suporte completo
+  final Widget? prefixIcon;
+  final Widget? suffixIcon;
+  final String? hintText; // <--- Adicionado
+  final void Function(String)? onChanged; // <--- Adicionado
 
   const CustomTextField({
     super.key,
@@ -28,23 +33,28 @@ class CustomTextField extends StatelessWidget {
     this.readOnly = false,
     this.textWhiteColor = false,
     this.onFieldSubmitted,
-    // Define 1 como padrão para manter o comportamento original.
-    // Para virar TextArea, passe um número maior ou null.
-    this.maxLines = 1, 
+    this.prefixIcon,
+    this.suffixIcon,
+    this.inputFormatters,
+    this.hintText, // <--- Adicionado
+    this.onChanged, // <--- Adicionado
   });
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Column(
       spacing: 7, // Requer Flutter 3.24+
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+      
         Text(
           label,
           style: context.textTheme.bodyMedium!.copyWith(
             color: textWhiteColor
-                ? Theme.of(context).colorScheme.onSecondary
-                : Theme.of(context).colorScheme.tertiary,
+                ? theme.colorScheme.onSecondary
+                : theme.colorScheme.tertiary,
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -57,12 +67,59 @@ class CustomTextField extends StatelessWidget {
             validator: validator,
             onTap: onTap,
             readOnly: readOnly,
-            maxLines: maxLines, // 👈 Aqui a mágica acontece
-            style: context.textTheme.bodyMedium!.copyWith(
-              color: Theme.of(context).colorScheme.tertiary,
-            ),
-            decoration: const InputDecoration(border: OutlineInputBorder()),
             onFieldSubmitted: onFieldSubmitted,
+            inputFormatters: inputFormatters,
+            onChanged: onChanged, // ✅ Repassado para o widget nativo
+
+            style: context.textTheme.bodyMedium!.copyWith(
+              color: theme.colorScheme.tertiary,
+            ),
+
+            decoration: InputDecoration(
+              prefixIcon: prefixIcon,
+              suffixIcon: suffixIcon,
+              hintText: hintText,
+              hintStyle: TextStyle(
+                color: theme.colorScheme.tertiary.withOpacity(0.5),
+                fontSize: 14,
+              ),
+
+              // 1. A borda padrão (visível o tempo todo)
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(
+                  color: theme.colorScheme.tertiary.withOpacity(
+                    0.2,
+                  ), // Cor suave para não poluir
+                  width: 1.5,
+                ),
+              ),
+
+              // 2. A borda quando o usuário clica no campo (destaque)
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(
+                  color: theme.colorScheme.primary, // Cor principal do seu app
+                  width: 2.0,
+                ),
+              ),
+
+              // 3. A borda quando houver erro de validação
+              errorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: const BorderSide(color: Colors.red, width: 1.5),
+              ),
+
+              focusedErrorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: const BorderSide(color: Colors.red, width: 2.0),
+              ),
+
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 14,
+                vertical: 14,
+              ),
+            ),
           ),
         ),
       ],
