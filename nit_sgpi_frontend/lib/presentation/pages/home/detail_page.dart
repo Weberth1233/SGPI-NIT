@@ -29,7 +29,6 @@ class _DetailPageState extends State<DetailPage> {
 
     final controller = Get.find<AuthLocalDataSource>();
 
-
     // ===== Data formatada para mostrar na barra
     final dateFormatted = DateFormat(
       "d 'de' MMM 'de' y",
@@ -118,12 +117,13 @@ class _DetailPageState extends State<DetailPage> {
 
                 const SizedBox(height: 20),
 
-                // ================= CONTEÚDO CENTRALIZADO =================
+                // ================= CONTEÚDO  =================
                 Padding(
                   padding: const EdgeInsets.only(
                     left: 16,
                     right: 16,
                   ), // Mantém um respiro da borda
+
                   child: Align(
                     alignment: Alignment
                         .topLeft, // Garante alinhamento à esquerda e no topo
@@ -179,7 +179,10 @@ class _DetailPageState extends State<DetailPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // ================= MENU LATERAL (FIXO) =================
-                SizedBox(width: menuWidth, child: _buildSideMenu(context)),
+                SizedBox(
+                  width: menuWidth,
+                  child: _buildSideMenu(context, entity),
+                ),
 
                 const SizedBox(width: gap),
 
@@ -213,7 +216,8 @@ class _DetailPageState extends State<DetailPage> {
   // ============================================================
   // ✅ MENU LATERAL
   // ============================================================
-  Widget _buildSideMenu(BuildContext context) {
+
+  Widget _buildSideMenu(BuildContext context, ProcessResponseEntity entity) {
     final theme = Theme.of(context);
     final colors = theme.colorScheme;
 
@@ -230,6 +234,8 @@ class _DetailPageState extends State<DetailPage> {
           ),
         ],
       ),
+
+      // BLOCO SEÇOES
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -242,6 +248,37 @@ class _DetailPageState extends State<DetailPage> {
             ),
           ),
           const SizedBox(height: 12),
+          // ===== Tipo da Propriedade Intelectual
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: colors.primary.withOpacity(0.05),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: colors.primary.withOpacity(0.15)),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Tipo da Propriedade Intelectual",
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: colors.secondary,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  entity.ipType.name,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: colors.tertiary,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          const SizedBox(height: 16),
 
           // ===== Itens do menu
           _buildMenuItem(
