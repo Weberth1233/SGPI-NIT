@@ -9,4 +9,5 @@ abstract class IProcessRepository {
   Future<Either<Failure, PagedResultEntity<ProcessResponseEntity>>> getProcesses({String title,String statusGenero, int page = 0, int size = 10});
   Future<Either<Failure, List<ProcessStatusCountEntity>>> getProcessesStatus();
   Future<Either<Failure, String>> postProcess(ProcessRequestEntity entity);
+  Future<Either<Failure, ProcessResponseEntity>> getProcessById(int processId); 
 }
