@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:nit_sgpi_frontend/domain/entities/process/process_response_entity.dart';
-import 'package:nit_sgpi_frontend/presentation/shared/utils/responsive.dart';
 
 import '../../../domain/entities/attachment_entity.dart';
 import '../../../infra/datasources/auth_local_datasource.dart';
@@ -38,22 +37,11 @@ class _DetailPageState extends State<DetailPage> {
     return Scaffold(
       // ================= AppBar (topo) - estilo do print =================
       appBar: AppBar(
-        // ===== Visual clean (sem sombra dura)
         elevation: 0,
-
-        // ===== Fundo azul (igual ao print)
         backgroundColor: colors.primary,
-
-        // ===== Não deixa o Flutter colocar leading padrão
         automaticallyImplyLeading: false,
-
-        // ===== Altura fixa (não “estica” botão)
         toolbarHeight: 70,
-
-        // ===== Título alinhado à esquerda
         centerTitle: false,
-
-        // ===== Botão voltar (branco arredondado, tamanho fixo)
         leading: Padding(
           padding: const EdgeInsets.only(left: 12),
           child: Align(
@@ -315,6 +303,29 @@ class _DetailPageState extends State<DetailPage> {
             title: "ANEXOS",
             subtitle: "Arquivos do processo",
           ),
+          const SizedBox(height: 10),
+          _buildMenuItem(
+            context,
+            index: 4,
+            icon: Icons.approval,
+            title: "CORREÇÃO",
+            subtitle: "Correções do processo",
+          ),
+          SizedBox(height: 10,),
+
+          Wrap(
+            spacing: 10,
+            children: [
+              ElevatedButton(onPressed: () {}, child: Text("Aprovar", style: theme.textTheme.bodyMedium!.copyWith(
+                color: colors.onSecondary,
+              ),)),
+              ElevatedButton(onPressed: () {
+                Get.toNamed('/home/process-detail/justification', arguments: entity.id);
+              }, child: Text("Correção", style: theme.textTheme.bodyMedium!.copyWith(
+                color: colors.onSecondary,))),
+            ],
+          ),
+          
         ],
       ),
     );
@@ -418,6 +429,11 @@ class _DetailPageState extends State<DetailPage> {
         subtitle = "Arquivos relacionados ao processo.";
         content = _buildAttachmentsList(context, entity);
         break;
+      case 4:
+        title = "CORREÇÕES";
+        subtitle = "Correções relacionadas ao processo.";
+        content = _buildFixesList(context, entity);
+        break;
       default:
         title = "SEÇÃO";
         subtitle = "";
@@ -470,6 +486,61 @@ class _DetailPageState extends State<DetailPage> {
         );
       },
     );
+  }
+
+  Widget _buildFixesList(BuildContext context, ProcessResponseEntity entity) {
+    final theme = Theme.of(context);
+    final colors = theme.colorScheme;
+
+    return entity.justifications.isEmpty
+        ? const SizedBox(
+            child: Text("Não há correções relacionadas a esse processo!"),
+          )
+        : ListView.separated(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: entity.justifications.length,
+            separatorBuilder: (_, _) => const SizedBox(height: 12),
+            itemBuilder: (context, index) {
+              final procesJustification = entity.justifications[index];
+              return MouseRegion(
+                cursor: SystemMouseCursors.click,
+                child: InkWell(
+                  onTap: () {},
+                  child: _buildSimpleCard(
+                    context,
+                    child: Row(
+                      children: [
+                        Icon(Icons.check_circle, color: colors.secondary),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                procesJustification.id.toString(),
+                                style: theme.textTheme.bodyLarge?.copyWith(
+                                  fontWeight: FontWeight.w700,
+                                  color: colors.tertiary,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                procesJustification.reason,
+                                style: theme.textTheme.bodySmall?.copyWith(
+                                  color: colors.secondary,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            },
+          );
   }
 
   // ============================================================
