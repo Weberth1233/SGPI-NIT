@@ -71,5 +71,17 @@ class ProcessRepositoryImpl implements IProcessRepository {
     }
   }
   
-
+  @override
+  Future<Either<Failure, ProcessResponseEntity>> getProcessById(int processId) async{
+     try {
+      final result = await remoteDataSource.getProcessById(processId);
+      return Right(result);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(e.message));
+    } on NetworkException catch (e) {
+      return Left(NetworkFailure(e.message));
+    } catch (e) {
+      return Left(ServerFailure("Erro inesperado!"));
+    }
+  }
 }

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:nit_sgpi_frontend/domain/entities/process/process_request_entity.dart';
+import 'package:nit_sgpi_frontend/domain/entities/process/process_response_entity.dart';
 import 'package:nit_sgpi_frontend/infra/core/network/api_client.dart';
 import 'package:nit_sgpi_frontend/infra/core/network/base_url.dart';
 import 'package:nit_sgpi_frontend/infra/models/process/proces_status_count_model.dart';
@@ -8,6 +9,7 @@ import 'package:nit_sgpi_frontend/infra/models/process/process_request_model.dar
 
 import '../../domain/core/errors/exceptions.dart';
 import '../models/process/paged_result_model.dart';
+import '../models/process/process_response_model.dart';
 
 abstract class IProcessRemoteDataSource {
   Future<PagedProcessResultModel> getProcesses({
@@ -20,6 +22,8 @@ abstract class IProcessRemoteDataSource {
   Future<List<ProcessStatusCountModel>> getProcessesStatusCount();
 
   Future<String> postProcess(ProcessRequestEntity entity);
+
+  Future<ProcessResponseEntity> getProcessById(int processId);
 }
 
 class ProcessRemoteDataSourceImpl implements IProcessRemoteDataSource {
@@ -113,6 +117,27 @@ class ProcessRemoteDataSourceImpl implements IProcessRemoteDataSource {
       } else {
         throw ServerException(
           'Erro ${response.statusCode} erro no cadastro! - Detalhes: ${response.body}',
+        );
+      }
+    } catch (e) {
+      print(e);
+      throw NetworkException('Erro de conexão com o servidor!');
+    }
+  }
+
+  @override
+  Future<ProcessResponseEntity> getProcessById(int processId) async {
+    try {
+      final response = await apiClient.get(
+        "${BaseUrl.urlWithHttp}/process/$processId",
+      );
+      if (response.statusCode == 200) {
+        ProcessResponseEntity processRequestEntity =
+            ProcessResponseModel.fromJson(json.decode(response.body)).toEntity();
+        return processRequestEntity;
+      } else {
+        throw ServerException(
+          'Erro ${response.statusCode} ao buscar processos! - Detalhes: ${response.body}',
         );
       }
     } catch (e) {

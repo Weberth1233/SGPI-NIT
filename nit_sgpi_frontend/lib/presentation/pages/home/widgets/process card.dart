@@ -13,25 +13,25 @@ class ProcessCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const backgroundColor = Color(0XFF004093);
-    const contentColor = Colors.white;    
-   
+    const contentColor = Colors.white;
+
     final date = item.createdAt.toLocal();
-    final dateFormatted = "${date.day.toString().padLeft(2,'0')}/${date.month.toString().padLeft(2,'0')}/${date.year}";
+    final dateFormatted =
+        "${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}";
 
     return SizedBox(
-      width: 400, 
-      height: 190, 
+      width: 400,
+      height: 190,
       child: Card(
         elevation: 6,
         shadowColor: Colors.black26,
         color: backgroundColor,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
-        clipBehavior: Clip.antiAlias, // Garante que o efeito de clique respeite a borda
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        clipBehavior:
+            Clip.antiAlias, // Garante que o efeito de clique respeite a borda
         child: InkWell(
           onTap: () {
-            Get.toNamed("/home/process-detail", arguments: item);
+            Get.toNamed('/home/process-detail/${item.id}');
           },
           // Efeito de clique sutil na cor branca
           splashColor: Colors.white.withOpacity(0.1),
@@ -48,7 +48,7 @@ class ProcessCard extends StatelessWidget {
                   color: Colors.white.withOpacity(0.05),
                 ),
               ),
-              
+
               // Conteúdo Principal
               Padding(
                 padding: const EdgeInsets.all(20),
@@ -65,9 +65,9 @@ class ProcessCard extends StatelessWidget {
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: const Icon(
-                            Icons.assignment_outlined, 
-                            color: contentColor, 
-                            size: 18
+                            Icons.assignment_outlined,
+                            color: contentColor,
+                            size: 18,
                           ),
                         ),
                         const SizedBox(width: 10),
@@ -88,7 +88,8 @@ class ProcessCard extends StatelessWidget {
                     Text(
                       item.title,
                       maxLines: 2,
-                      overflow: TextOverflow.ellipsis, // Evita quebra de layout se o texto for grande
+                      overflow: TextOverflow
+                          .ellipsis, // Evita quebra de layout se o texto for grande
                       style: context.textTheme.titleLarge!.copyWith(
                         fontWeight: FontWeight.bold,
                         color: contentColor,
@@ -98,18 +99,20 @@ class ProcessCard extends StatelessWidget {
                     ),
 
                     const Spacer(), // Empurra o conteúdo abaixo para o fundo do card
-
                     // --- Rodapé: Status e Data ---
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         // Badge de Status
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 6,
+                          ),
                           decoration: BoxDecoration(
-                            color: _getStatusColor(item.status), 
+                            color: _getStatusColor(item.status),
                             borderRadius: BorderRadius.circular(20),
-                            border: Border.all(color: Colors.white24)
+                            border: Border.all(color: Colors.white24),
                           ),
                           child: Text(
                             item.status,
@@ -124,7 +127,11 @@ class ProcessCard extends StatelessWidget {
                         // Data
                         Row(
                           children: [
-                            Icon(Icons.calendar_today, size: 14, color: contentColor.withOpacity(0.7)),
+                            Icon(
+                              Icons.calendar_today,
+                              size: 14,
+                              color: contentColor.withOpacity(0.7),
+                            ),
                             const SizedBox(width: 6),
                             Text(
                               dateFormatted,
@@ -134,7 +141,7 @@ class ProcessCard extends StatelessWidget {
                               ),
                             ),
                           ],
-                        )
+                        ),
                       ],
                     ),
                   ],

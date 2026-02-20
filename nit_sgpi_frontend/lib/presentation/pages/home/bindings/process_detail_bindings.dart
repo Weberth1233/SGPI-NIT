@@ -1,17 +1,20 @@
 import 'package:get/get.dart';
-import 'package:http/http.dart' as http show Client;
-import 'package:nit_sgpi_frontend/domain/usecases/get_process.dart';
-import 'package:nit_sgpi_frontend/domain/usecases/get_process_by_id.dart';
-import 'package:nit_sgpi_frontend/domain/usecases/get_process_status_count.dart';
-import 'package:nit_sgpi_frontend/infra/datasources/process_remote_datasource.dart';
-import 'package:nit_sgpi_frontend/presentation/pages/home/controllers/home_controller.dart';
+import 'package:http/http.dart' as http;
+import 'package:nit_sgpi_frontend/presentation/pages/home/controllers/process_detail_controller.dart';
+
 import '../../../../domain/repositories/iprocess_repository.dart';
+import '../../../../domain/usecases/get_process_by_id.dart';
 import '../../../../infra/core/network/api_client.dart';
 import '../../../../infra/datasources/auth_local_datasource.dart';
+import '../../../../infra/datasources/process_remote_datasource.dart';
 import '../../../../infra/repositories/process_repository_impl.dart';
-class HomeBindings extends Bindings {
+
+class ProcessDetailBindings extends Bindings{
+  
   @override
   void dependencies() {
+    // TODO: implement dependencies
+
     // Http client puro
     Get.lazyPut<http.Client>(() => http.Client());
 
@@ -37,27 +40,19 @@ class HomeBindings extends Bindings {
         remoteDataSource: Get.find<IProcessRemoteDataSource>(),
       ),
     );
-
+    
     // UseCase
-    Get.lazyPut<GetProcesses>(
-      () => GetProcesses(
+    Get.lazyPut<GetProcessById>(
+      () => GetProcessById(
         repository: Get.find<IProcessRepository>(),
       ),
     );
 
-    Get.lazyPut<GetProcessStatusCount>(
-      () => GetProcessStatusCount(
-        repository: Get.find<IProcessRepository>(),
-      ),
+  // Controller
+    Get.lazyPut<ProcessDetailController>(
+      () => ProcessDetailController(Get.find<GetProcessById>(), Get.find<AuthLocalDataSource>()),
     );
-
-    // Controller
-    Get.lazyPut<ProcessController>(
-      () => ProcessController(Get.find<GetProcesses>(), Get.find<GetProcessStatusCount>()),
-    );
-
-
-
 
   }
+
 }

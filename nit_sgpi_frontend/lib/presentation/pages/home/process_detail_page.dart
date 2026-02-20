@@ -1,0 +1,526 @@
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:intl/intl.dart';
+import 'package:nit_sgpi_frontend/presentation/shared/utils/responsive.dart';
+import '../../../domain/entities/process/process_response_entity.dart';
+import 'controllers/process_detail_controller.dart'; 
+
+class ProcessDetailPage extends GetView<ProcessDetailController> {
+  const ProcessDetailPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colors = theme.colorScheme;
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Detalhes do Processo"),
+        backgroundColor: colors.primary,
+        foregroundColor: colors.onSecondary,
+        elevation: 0,
+      ),
+      backgroundColor: colors.onSecondary,
+      body: Obx(() {
+        if (controller.isLoading.value) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        if (controller.errorMessage.value.isNotEmpty) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.error_outline, size: 60, color: colors.error),
+                const SizedBox(height: 16),
+                Text(controller.errorMessage.value),
+                TextButton(
+                  onPressed: () {
+                     if(controller.process.value?.id != null) {
+                        controller.fetchProcess(controller.process.value!.id);
+                     }
+                  }, 
+                  child: const Text("Tentar novamente")
+                )
+              ],
+            ),
+          );
+        }
+
+        if (controller.process.value == null) {
+          return const Center(child: Text("Processo não encontrado."));
+        }
+
+        final entity = controller.process.value!;
+        
+        final dateFormatted = DateFormat(
+          "d 'de' MMM 'de' y",
+          "pt_BR",
+        ).format(DateTime.parse(entity.createdAt.toString()));
+
+        return SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+          child: Container(
+            margin: Responsive.getPadding(context),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildHeader(context, entity, dateFormatted),
+
+                const SizedBox(height: 24),
+
+                _buildSectionTitle(context, "Solicitante"),
+                const SizedBox(height: 12),
+                _buildCreatorCard(context, entity),
+
+                const SizedBox(height: 24),
+                _buildSectionTitle(context, "Membros"),
+                const SizedBox(height: 12),
+
+                // Lista de Membros
+                ListView.separated(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: entity.authors.length,
+                  separatorBuilder: (_, __) => const SizedBox(height: 12),
+                  itemBuilder: (context, index) {
+                    final author = entity.authors[index];
+                    return _buildMemberCard(context, author);
+                  },
+                ),
+
+                const SizedBox(height: 24),
+
+                _buildSectionTitle(context, "Dados do Processo"),
+                const SizedBox(height: 12),
+                _buildDynamicForm(context, entity),
+
+                // Seção de Justificativas
+                if (entity.justifications.isNotEmpty) ...[
+                  const SizedBox(height: 24),
+                  _buildSectionTitle(context, "Justificativas"),
+                  const SizedBox(height: 12),
+                  Column(
+                    children: entity.justifications.map((justification) {
+                      return _buildJustificationCard(context, justification);
+                    }).toList(),
+                  ),
+                ],
+
+                const SizedBox(height: 24),
+                _buildSectionTitle(context, "Anexos"),
+                const SizedBox(height: 12),
+                
+                ElevatedButton(
+                  onPressed: () {
+                    // Navegação usando argumentos ou URL
+                    Get.toNamed(
+                      "/process-detail/attachments",
+                      arguments: entity.id,
+                    );
+                  },
+                  child: Text(
+                    "Visualizar documentos",
+                    style: theme.textTheme.bodyMedium!.copyWith(
+                      color: colors.onSecondary,
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 20),
+
+                // Botões de Admin (Agora reativo, sem FutureBuilder)
+                if (controller.isAdmin) 
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                           // Lógica de aprovar
+                        },
+                        child: Text(
+                          "Aprovar",
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: colors.onSecondary,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      ElevatedButton(
+                        onPressed: () {
+                          Get.toNamed("/process-detail/justification", arguments: entity.id);
+                        },
+                        child: Text(
+                          "Correção",
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: colors.onSecondary,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+              ],
+            ),
+          ),
+        );
+      }),
+    );
+  }
+
+  // ================= WIDGETS AUXILIARES =================
+
+  // Extraí o Card de membro para limpar o build principal
+  Widget _buildMemberCard(BuildContext context, dynamic author) {
+     return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 8,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          CircleAvatar(
+            radius: 22,
+            backgroundColor: Theme.of(context).colorScheme.primary,
+            child: Text(
+              author.fullName.substring(0, 1).toUpperCase(),
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onSecondary,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  author.fullName,
+                  style: Theme.of(context).textTheme.bodyLarge
+                      ?.copyWith(fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  author.email,
+                  style: Theme.of(context).textTheme.bodySmall
+                      ?.copyWith(
+                        color: Theme.of(context).colorScheme.secondary,
+                      ),
+                ),
+              ],
+            ),
+          ),
+          Icon(
+            Icons.person_outline,
+            color: Theme.of(context).colorScheme.secondary,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildJustificationCard(BuildContext context, dynamic justification) {
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.amber.shade50,
+        border: Border.all(color: Colors.amber.shade200),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(
+            Icons.sticky_note_2_outlined,
+            color: Colors.amber.shade800,
+            size: 20,
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Observação:",
+                  style: TextStyle(
+                    color: Colors.amber.shade900,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  justification.reason,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: Colors.black87,
+                        height: 1.4,
+                      ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildHeader(
+    BuildContext context,
+    ProcessResponseEntity entity,
+    String date,
+  ) {
+    final theme = Theme.of(context);
+    final colors = theme.colorScheme;
+    final title = entity.title.isNotEmpty ? entity.title : entity.ipType.name;
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: colors.primary,
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.15),
+            blurRadius: 12,
+            offset: const Offset(0, 6),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              _buildStatusBadge(context, entity.status),
+              Text(
+                "ID #${entity.id}",
+                style: theme.textTheme.bodySmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: colors.onSecondary,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          Text(
+            title,
+            style: theme.textTheme.headlineSmall?.copyWith(
+              fontWeight: FontWeight.w800,
+              color: colors.onSecondary,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              Icon(
+                Icons.calendar_month_outlined,
+                size: 16,
+                color: colors.onSecondary,
+              ),
+              const SizedBox(width: 6),
+              Text(
+                date,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: colors.onSecondary,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStatusBadge(BuildContext context, String status) {
+    final colors = Theme.of(context).colorScheme;
+
+    Color color;
+    IconData icon;
+    String label = status.replaceAll('_', ' ');
+
+    switch (status) {
+      case 'EM_ANDAMENTO':
+        color = Colors.orange;
+        icon = Icons.hourglass_top_rounded;
+        break;
+      case 'CONCLUIDO':
+        color = Colors.green;
+        icon = Icons.check_circle_outline;
+        break;
+      case 'CANCELADO':
+        color = Colors.red;
+        icon = Icons.cancel_outlined;
+        break;
+      default:
+        color = colors.secondary;
+        icon = Icons.info_outline;
+    }
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.15),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 14, color: color),
+          const SizedBox(width: 6),
+          Text(
+            label.toUpperCase(),
+            style: TextStyle(
+              color: color,
+              fontSize: 11,
+              fontWeight: FontWeight.w700,
+              letterSpacing: 0.5,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCreatorCard(BuildContext context, ProcessResponseEntity entity) {
+    final theme = Theme.of(context);
+    final colors = theme.colorScheme;
+
+    return Card(
+      elevation: 2,
+      color: Colors.white,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      child: ListTile(
+        contentPadding: const EdgeInsets.all(12),
+        leading: CircleAvatar(
+          radius: 24,
+          backgroundColor: colors.primary,
+          child: Text(
+            entity.creator.fullName.substring(0, 1).toUpperCase(),
+            style: TextStyle(
+              color: colors.onSecondary,
+              fontWeight: FontWeight.bold,
+              fontSize: 18,
+            ),
+          ),
+        ),
+        title: Text(
+          entity.creator.fullName,
+          style: theme.textTheme.bodyLarge?.copyWith(
+            fontWeight: FontWeight.bold,
+            color: colors.tertiary,
+          ),
+        ),
+        subtitle: Text(
+          entity.creator.email,
+          style: theme.textTheme.bodySmall?.copyWith(color: colors.secondary),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDynamicForm(BuildContext context, ProcessResponseEntity entity) {
+    // Garanta que ipType e formStructure não sejam nulos no seu Model/Entity
+    final fieldsStructure = entity.ipType.formStructure.fields;
+
+    return ListView.separated(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: fieldsStructure.length,
+      separatorBuilder: (_, __) => const SizedBox(height: 12),
+      itemBuilder: (context, index) {
+        final fieldDef = fieldsStructure[index];
+        final value = entity.formData[fieldDef.name];
+
+        return _buildFieldItem(
+          context,
+          label: fieldDef.name,
+          value: value != null ? value.toString() : 'N/A',
+          type: fieldDef.type,
+        );
+      },
+    );
+  }
+
+  Widget _buildFieldItem(
+    BuildContext context, {
+    required String label,
+    required String value,
+    required String type,
+  }) {
+    final theme = Theme.of(context);
+    final colors = theme.colorScheme;
+    final isTextArea = type == 'textArea';
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 8,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(
+                isTextArea ? Icons.description_outlined : Icons.short_text,
+                size: 16,
+                color: colors.primary,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                label.toUpperCase(),
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: colors.primary,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: 0.8,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Text(
+            value,
+            style: theme.textTheme.bodyMedium?.copyWith(
+              height: isTextArea ? 1.5 : 1.2,
+              color: colors.tertiary,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSectionTitle(BuildContext context, String title) {
+    final theme = Theme.of(context);
+    final colors = theme.colorScheme;
+
+    return Text(
+      title,
+      style: theme.textTheme.bodyLarge?.copyWith(
+        fontWeight: FontWeight.bold,
+        color: colors.tertiary,
+      ),
+    );
+  }
+}

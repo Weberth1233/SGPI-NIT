@@ -1,7 +1,8 @@
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:nit_sgpi_frontend/presentation/pages/attachments/attachments_page.dart';
 import 'package:nit_sgpi_frontend/presentation/pages/attachments/bindings/attachments_bindigs.dart';
-import 'package:nit_sgpi_frontend/presentation/pages/home/detail_page.dart';
+import 'package:nit_sgpi_frontend/presentation/pages/home/bindings/process_detail_bindings.dart';
+import 'package:nit_sgpi_frontend/presentation/pages/home/process_detail_page.dart';
 import 'package:nit_sgpi_frontend/presentation/pages/ip_types/bindings/ip_types_bindings.dart';
 import 'package:nit_sgpi_frontend/presentation/pages/ip_types/ip_types_page.dart';
 import 'package:nit_sgpi_frontend/presentation/pages/justifications/bindings/justification_bindings.dart';
@@ -29,11 +30,11 @@ class MyRoutes {
     ),
     GetPage(name: "/home", page: () => HomePage(), binding: HomeBindings()),
     GetPage(name: "/process", page: () => ProcessPage(), binding: UserBindings()),
-    GetPage(name: "/home/process-detail", page:() =>  DetailPage()),
+    GetPage(name: "/home/process-detail/:id", page:() =>  ProcessDetailPage(), binding: ProcessDetailBindings()),
     
-    GetPage(name: "/home/process-detail/attachments", page:() => AttachmentsPage(), binding: AttachmentsBindigs()),
+    GetPage(name: "/process-detail/attachments", page:() => AttachmentsPage(), binding: AttachmentsBindigs()),
 
-    GetPage(name: "/home/process-detail/justification", page:() => JustificationPage(), binding: JustificationBindings()),
+    GetPage(name: "/process-detail/justification", page:() => JustificationPage(), binding: JustificationBindings()),
 
     GetPage(
       name: '/process/ip_types',
