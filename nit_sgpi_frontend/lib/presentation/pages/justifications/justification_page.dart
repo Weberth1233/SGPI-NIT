@@ -37,7 +37,7 @@ class JustificationPage extends GetView<JustificationController> {
                 CustomTextField(
                   controller: controller.reasonController, // Usa o controller do GetX
                   label: "Justificativa",
-                  maxLines: 15,
+                  // maxLines: 15,
                   keyboardType: TextInputType.multiline,
                   // Validação simples
                   validator: (value) {

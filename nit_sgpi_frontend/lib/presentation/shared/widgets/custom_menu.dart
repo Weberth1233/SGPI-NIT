@@ -6,7 +6,7 @@ class CustomMenu extends StatelessWidget {
   final Widget child;
 
   const CustomMenu({super.key, required this.child});
-
+ 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -129,7 +129,9 @@ class _UserSection extends StatelessWidget {
         CircleAvatar(
           radius: 26,
           backgroundColor: theme.colorScheme.tertiary,
-          child: const Icon(Icons.person, color: Colors.white),
+          child:  IconButton(onPressed: (){
+Get.toNamed("/user-logged");
+          },icon: Icon(Icons.person), color: Colors.white),
         ),
         const SizedBox(height: 8),
         

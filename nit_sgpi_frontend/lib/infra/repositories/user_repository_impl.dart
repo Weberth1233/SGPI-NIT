@@ -28,6 +28,21 @@ class UserRepositoryImpl implements IUserRepository{
       return Left(ServerFailure("Erro inesperado!"));
     }
   }
+  
+  @override
+  Future<Either<Failure, UserEntity>> getUserLogged() async{
+   try {
+      final result = await remoteDataSource.getUserLogged();
+      return Right(result);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(e.message));
+    } on NetworkException catch (e) {
+      return Left(NetworkFailure(e.message));
+    } catch (e) {
+      return Left(ServerFailure("Erro inesperado!"));
+    }
+  }
+  
 
 
 }
