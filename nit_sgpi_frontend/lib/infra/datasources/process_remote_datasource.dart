@@ -23,6 +23,8 @@ abstract class IProcessRemoteDataSource {
 
   Future<String> postProcess(ProcessRequestEntity entity);
 
+  Future<String> deleteProcess(int idProcess);
+
   Future<ProcessResponseEntity> getProcessById(int processId);
 }
 
@@ -143,6 +145,25 @@ class ProcessRemoteDataSourceImpl implements IProcessRemoteDataSource {
     } catch (e) {
       print(e);
       throw NetworkException('Erro de conexão com o servidor!');
+    }
+  }
+  
+  @override
+  Future<String> deleteProcess(int idProcess) async{
+     try{
+      final response = await apiClient.delete("${BaseUrl.urlWithHttp}/process/$idProcess");
+      if(response.statusCode == 204){
+        return "Removido com sucesso!";
+      }else if(response.statusCode == 404){
+        return "Não encontrou justificativa na base de dados!";
+      }else {
+        throw ServerException(
+          'Erro ${response.statusCode} erro na deleção! - Detalhes: ${response.body}',
+        );
+      }
+    }catch(e){
+      print(e);
+      throw NetworkException("Erro de conexão com o servidor!");
     }
   }
 }

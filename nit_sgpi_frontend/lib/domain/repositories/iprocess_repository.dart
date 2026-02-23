@@ -10,4 +10,5 @@ abstract class IProcessRepository {
   Future<Either<Failure, List<ProcessStatusCountEntity>>> getProcessesStatus();
   Future<Either<Failure, String>> postProcess(ProcessRequestEntity entity);
   Future<Either<Failure, ProcessResponseEntity>> getProcessById(int processId); 
+  Future<Either<Failure, String>> deleteProcessById(int processId); 
 }
