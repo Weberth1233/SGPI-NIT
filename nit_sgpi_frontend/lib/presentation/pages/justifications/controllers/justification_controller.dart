@@ -2,17 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nit_sgpi_frontend/domain/entities/justification_request_entity.dart';
 import 'package:nit_sgpi_frontend/domain/usecases/post_justification.dart';
+import 'package:nit_sgpi_frontend/domain/usecases/put_justification.dart';
 import '../../../../domain/core/errors/failures.dart';
 
 class JustificationController extends GetxController {
-  final PostJustification postJustification;
+  final PostJustification _postJustification;
+  final PutJustification _putJustification;
 
-  JustificationController(this.postJustification);
+  JustificationController(
+    this._postJustification,
+    this._putJustification,
+  );
+
+  // Controllers
   final TextEditingController reasonController = TextEditingController();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
-  RxBool isLoading = false.obs;
-  RxString message = "".obs;
+  // States
+  final RxBool isLoading = false.obs;
+  final RxString message = ''.obs;
 
   @override
   void onClose() {
@@ -20,53 +28,113 @@ class JustificationController extends GetxController {
     super.onClose();
   }
 
+  // ===============================
+  // CREATE
+  // ===============================
   Future<void> post(int idProcess) async {
+    await _executeAction(
+      action: () => _postJustification(
+        JustificationRequestEntity(
+          idProcess: idProcess,
+          reason: reasonController.text.trim(),
+        ),
+      ),
+      successMessage: 'Justificativa enviada com sucesso!',
+      onSuccess: () async {
+        reasonController.clear();
+        await Future.delayed(const Duration(milliseconds: 800));
+        Get.offAllNamed('/home');
+      },
+    );
+  }
+
+  // ===============================
+  // UPDATE
+  // ===============================
+  Future<void> put(int justificationId, int idProcess) async {
+    await _executeAction(
+      action: () => _putJustification(
+        justificationId,
+        JustificationRequestEntity(
+          idProcess: idProcess,
+          reason: reasonController.text.trim(),
+        ),
+      ),
+      successMessage: 'Justificativa atualizada com sucesso!',
+      onSuccess: () async {
+        await Future.delayed(const Duration(milliseconds: 800));
+        Get.offAllNamed('/home');
+      },
+    );
+  }
+
+  // ===============================
+  // CORE EXECUTION METHOD
+  // ===============================
+  Future<void> _executeAction({
+    required Future<dynamic> Function() action,
+    required String successMessage,
+    required Future<void> Function() onSuccess,
+  }) async {
     if (!formKey.currentState!.validate()) return;
     if (isLoading.value) return;
 
-    isLoading.value = true;
-    message.value = '';
+    try {
+      isLoading.value = true;
+      message.value = '';
 
-    final result = await postJustification(
-      JustificationRequestEntity(
-        idProcess: idProcess,
-        reason: reasonController.text,
-      ),
+      final result = await action();
+
+      result.fold(
+        (Failure failure) {
+          message.value = failure.message;
+          _showErrorSnackbar(failure.message);
+        },
+        (success) async {
+          message.value = successMessage;
+          _showSuccessSnackbar(successMessage);
+          await onSuccess();
+        },
+      );
+    } catch (e) {
+      _showErrorSnackbar(
+        'Ocorreu um erro inesperado. Tente novamente.',
+      );
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  // ===============================
+  // SNACKBARS
+  // ===============================
+  void _showSuccessSnackbar(String text) {
+    final colors = Get.theme.colorScheme;
+
+    Get.snackbar(
+      'Sucesso',
+      text,
+      backgroundColor: colors.primary,
+      colorText: colors.onPrimary,
+      snackPosition: SnackPosition.TOP,
+      margin: const EdgeInsets.all(12),
+      borderRadius: 12,
+      duration: const Duration(seconds: 2),
     );
+  }
 
-    result.fold(
-      (Failure failure) {
-        isLoading.value = false; // Para o loading em caso de erro
-        message.value = failure.message;
+  void _showErrorSnackbar(String text) {
+    final colors = Get.theme.colorScheme;
 
-        Get.snackbar(
-          'Erro',
-          failure.message,
-          backgroundColor: Colors.redAccent,
-          colorText: Colors.white,
-          snackPosition:
-              SnackPosition.TOP, // Aparece embaixo para não cobrir tudo
-        );
-      },
-      (success) async {
-        // 👈 Adicione async aqui
-        isLoading.value = false; // Para o loading
-        message.value = success;
-        reasonController.clear(); // Limpa o campo
-
-        // 1. Mostra a mensagem
-        Get.snackbar(
-          'Sucesso',
-          'Justificativa enviada com sucesso!',
-          backgroundColor: Colors.green,
-          colorText: Colors.white,
-          snackPosition: SnackPosition.TOP,
-        );
-        await Future.delayed(const Duration(seconds: 2));
-
-        // Caso não tenha para onde voltar, talvez você queira ir para a Home?
-        Get.offAllNamed('/home');
-      },
+    Get.snackbar(
+      'Erro',
+      text,
+      backgroundColor: colors.error,
+      colorText: colors.onError,
+      snackPosition: SnackPosition.TOP,
+      margin: const EdgeInsets.all(12),
+      borderRadius: 12,
+      duration: const Duration(seconds: 3),
     );
   }
 }

@@ -4,4 +4,10 @@ import '../core/errors/failures.dart';
 
 abstract class IJustificationRepository {
    Future<Either<Failure, String>> postJustification(JustificationRequestEntity entity);
+   Future<Either<Failure, String>> deleteJustification(int idJustification);
+
+   Future<Either<Failure, String>> putJustification(int idJustification, JustificationRequestEntity justification);
+
+
+
 }

@@ -36,7 +36,7 @@ class MyTheme {
       ),
     ),
     scrollbarTheme: ScrollbarThemeData(
-      thumbColor: WidgetStateProperty.all(ThemeColor.primaryColor), // cor da "alça" do scroll
+      thumbColor: WidgetStateProperty.all(ThemeColor.greyColor), // cor da "alça" do scroll
       trackColor: WidgetStateProperty.all(ThemeColor.greyColor), // fundo da barra
       trackBorderColor: WidgetStateProperty.all(ThemeColor.greyColor),
       thickness: WidgetStateProperty.all(8), // espessura

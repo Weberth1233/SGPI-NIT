@@ -178,7 +178,7 @@ class HomePage extends StatelessWidget {
                   Obx(() {
                     final list = processController.processes.toList();
 
-                    if (processController.isLoading.value) {
+                    if (processController.isLoadingList.value) {
                       return const Center(child: CircularProgressIndicator());
                     }
 
@@ -208,7 +208,7 @@ class HomePage extends StatelessWidget {
 
                         Obx(() {
                           final isLoadingMore =
-                              processController.isLoading.value;
+                              processController.isLoadingMore.value;
 
                           return ElevatedButton(
                             onPressed: isLoadingMore

@@ -2,11 +2,15 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:nit_sgpi_frontend/presentation/pages/home/controllers/process_detail_controller.dart';
 
+import '../../../../domain/repositories/ijustification_repository.dart';
 import '../../../../domain/repositories/iprocess_repository.dart';
+import '../../../../domain/usecases/delete_justification.dart';
 import '../../../../domain/usecases/get_process_by_id.dart';
 import '../../../../infra/core/network/api_client.dart';
 import '../../../../infra/datasources/auth_local_datasource.dart';
+import '../../../../infra/datasources/justiification_remote_datasource.dart';
 import '../../../../infra/datasources/process_remote_datasource.dart';
+import '../../../../infra/repositories/justification_repository_impl.dart';
 import '../../../../infra/repositories/process_repository_impl.dart';
 
 class ProcessDetailBindings extends Bindings{
@@ -34,13 +38,31 @@ class ProcessDetailBindings extends Bindings{
       () => ProcessRemoteDataSourceImpl(Get.find<ApiClient>()),
     );
 
+     Get.lazyPut<IJustificationRemoteDataSource>(
+      () => JustificationRemoteDatasourceImpl(Get.find<ApiClient>()),
+    );
+
+
     // Repository
     Get.lazyPut<IProcessRepository>(
       () => ProcessRepositoryImpl(
         remoteDataSource: Get.find<IProcessRemoteDataSource>(),
       ),
     );
+
+    Get.lazyPut<IJustificationRepository>(
+      () => JustificationRepositoryImpl(
+        remoteDataSource: Get.find<IJustificationRemoteDataSource>(),
+      ),
+    );
     
+Get.lazyPut<DeleteJustification>(
+      () => DeleteJustification(
+        repository: Get.find<IJustificationRepository>(),
+      ),
+    );
+
+
     // UseCase
     Get.lazyPut<GetProcessById>(
       () => GetProcessById(
@@ -50,7 +72,7 @@ class ProcessDetailBindings extends Bindings{
 
   // Controller
     Get.lazyPut<ProcessDetailController>(
-      () => ProcessDetailController(Get.find<GetProcessById>(), Get.find<AuthLocalDataSource>()),
+      () => ProcessDetailController(Get.find<GetProcessById>(), Get.find<AuthLocalDataSource>(), Get.find<DeleteJustification>()),
     );
 
   }
