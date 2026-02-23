@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:nit_sgpi_frontend/domain/usecases/delete_justification.dart';
 import 'package:nit_sgpi_frontend/domain/usecases/get_process_by_id.dart';
 import '../../../../domain/core/errors/failures.dart';
 import '../../../../domain/entities/process/process_response_entity.dart';
@@ -6,13 +7,21 @@ import '../../../../infra/datasources/auth_local_datasource.dart';
 
 class ProcessDetailController extends GetxController {
   final GetProcessById _getProcessById;
+  final DeleteJustification _deleteJustification;
+
   final AuthLocalDataSource _authLocal;
 
-  ProcessDetailController(this._getProcessById, this._authLocal);
+  ProcessDetailController(
+    this._getProcessById,
+    this._authLocal,
+    this._deleteJustification,
+  );
 
   final RxBool isLoading = false.obs;
   final RxString errorMessage = ''.obs;
-  
+
+  final RxString message = ''.obs;
+
   final Rxn<ProcessResponseEntity> process = Rxn<ProcessResponseEntity>();
 
   final RxString userRole = ''.obs;
@@ -21,7 +30,7 @@ class ProcessDetailController extends GetxController {
 
   @override
   void onInit() {
-    super.onInit();   
+    super.onInit();
     _checkRole();
     _loadProcessId();
   }
@@ -34,8 +43,8 @@ class ProcessDetailController extends GetxController {
   }
 
   void _loadProcessId() {
-    String? idStr = Get.parameters['id']; 
-    var argId = Get.arguments;           
+    String? idStr = Get.parameters['id'];
+    var argId = Get.arguments;
 
     int? finalId;
 
@@ -50,7 +59,7 @@ class ProcessDetailController extends GetxController {
     } else {
       errorMessage.value = "ID do processo não encontrado.";
       Get.snackbar(
-        "Erro", 
+        "Erro",
         "Não foi possível identificar o ID do processo.",
         backgroundColor: Get.theme.colorScheme.error,
         colorText: Get.theme.colorScheme.onError,
@@ -69,10 +78,10 @@ class ProcessDetailController extends GetxController {
         // Falha
         isLoading.value = false;
         errorMessage.value = failure.message;
-        process.value = null; 
+        process.value = null;
 
         Get.snackbar(
-          "Erro", 
+          "Erro",
           "Falha ao carregar processo: ${failure.message}",
           backgroundColor: Get.theme.colorScheme.error,
           colorText: Get.theme.colorScheme.onError,
@@ -85,5 +94,54 @@ class ProcessDetailController extends GetxController {
         process.value = success;
       },
     );
+  }
+
+  Future<void> deleteJustificationProcess(int id) async {
+    try {
+      isLoading.value = true;
+      message.value = '';
+
+      final result = await _deleteJustification(id);
+
+      result.fold(
+        (failure) {
+          message.value = failure.message;
+
+          Get.snackbar(
+            "Erro",
+            message.value,
+            backgroundColor: Get.theme.colorScheme.error,
+            colorText: Get.theme.colorScheme.onError,
+            snackPosition: SnackPosition.TOP,
+          );
+        },
+        (successMessage) async {
+          message.value = successMessage;
+
+          Get.snackbar(
+            "Sucesso",
+            message.value,
+            backgroundColor: Get.theme.colorScheme.primary,
+            colorText: Get.theme.colorScheme.onPrimary,
+            snackPosition: SnackPosition.TOP,
+          );
+
+          // 🔥 Recarrega o processo atualizado
+          if (process.value != null) {
+            await fetchProcess(process.value!.id);
+          }
+        },
+      );
+    } catch (e) {
+      Get.snackbar(
+        "Erro inesperado",
+        "Ocorreu um erro ao tentar remover a justificativa.",
+        backgroundColor: Get.theme.colorScheme.error,
+        colorText: Get.theme.colorScheme.onError,
+        snackPosition: SnackPosition.TOP,
+      );
+    } finally {
+      isLoading.value = false;
+    }
   }
 }

@@ -37,7 +37,26 @@ class ApiClient {
       body: body == null ? null : jsonEncode(body),
     );
   }
-Future<http.Response> upload(
+
+  // ===== ADICIONADO AQUI =====
+  Future<http.Response> put(String url, {Object? body}) async {
+    return client.put(
+      Uri.parse(url),
+      headers: await _headers(),
+      body: body == null ? null : jsonEncode(body),
+    );
+  }
+
+  // ===== ADICIONADO AQUI =====
+  Future<http.Response> delete(String url, {Object? body}) async {
+    return client.delete(
+      Uri.parse(url),
+      headers: await _headers(),
+      body: body == null ? null : jsonEncode(body),
+    );
+  }
+
+  Future<http.Response> upload(
     String url, {
     String? filePath,       // Caminho (Para Mobile)
     List<int>? fileBytes,   // Bytes (Para Web)
@@ -46,7 +65,6 @@ Future<http.Response> upload(
   }) async {
     final request = http.MultipartRequest('POST', Uri.parse(url));
 
-  
     final token = await local.getToken();
     if (token != null && token.isNotEmpty) {
       request.headers['Authorization'] = 'Bearer $token';
