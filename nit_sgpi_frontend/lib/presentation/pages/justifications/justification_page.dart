@@ -9,9 +9,21 @@ class JustificationPage extends GetView<JustificationController> {
 
   @override
   Widget build(BuildContext context) {
-    final idProcess = Get.arguments as int;
+    final args = Get.arguments as Map<String, dynamic>;
+
+    final int idProcess = args['processId'];
+    final int? justificationId = args['justificationId'];
+    final String? reason = args['reason'];
+
+    final bool isEditMode = justificationId != null;
+
     final theme = Theme.of(context);
     final colors = theme.colorScheme;
+
+    // Preenche campo automaticamente no modo edição
+    if (isEditMode && reason != null && controller.reasonController.text.isEmpty) {
+      controller.reasonController.text = reason;
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -42,7 +54,7 @@ class JustificationPage extends GetView<JustificationController> {
           ),
         ),
         title: Text(
-          "Justificativa",
+          isEditMode ? "Editar Justificativa" : "Justificativa",
           style: theme.textTheme.headlineSmall?.copyWith(
             color: colors.onSecondary,
             fontWeight: FontWeight.w700,
@@ -61,8 +73,6 @@ class JustificationPage extends GetView<JustificationController> {
               ),
             ),
           ),
-
-          // Scroll para teclado e telas menores
           SingleChildScrollView(
             padding: EdgeInsets.fromLTRB(
               Responsive.getPadding(context).left,
@@ -101,13 +111,14 @@ class JustificationPage extends GetView<JustificationController> {
                         ),
                         const SizedBox(height: 6),
                         Text(
-                          "Explique o motivo da correção para o processo #$idProcess.",
+                          isEditMode
+                              ? "Atualize a justificativa do processo #$idProcess."
+                              : "Explique o motivo da correção para o processo #$idProcess.",
                           style: theme.textTheme.bodySmall?.copyWith(
                             color: colors.secondary,
                           ),
                         ),
                         const SizedBox(height: 18),
-
                         CustomTextField(
                           controller: controller.reasonController,
                           label: "Justificativa",
@@ -117,26 +128,31 @@ class JustificationPage extends GetView<JustificationController> {
                             if (value == null || value.trim().isEmpty) {
                               return 'Por favor, insira uma justificativa.';
                             }
-                            if (value.length < 10) {
+                            if (value.trim().length < 10) {
                               return 'A justificativa deve ter pelo menos 10 caracteres.';
                             }
                             return null;
                           },
                         ),
-
                         const SizedBox(height: 18),
-
                         Obx(() {
                           return SizedBox(
                             height: 52,
                             child: ElevatedButton(
                               onPressed: controller.isLoading.value
                                   ? null
-                                  : () => controller.post(idProcess),
+                                  : () {
+                                      if (!controller.formKey.currentState!.validate()) return;
+                                      if (isEditMode) {
+                                        controller.put(justificationId, idProcess);
+                                      } else {
+                                        controller.post(idProcess);
+                                      }
+                                    },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: colors.primary,
-                                disabledBackgroundColor: colors.primary
-                                    .withOpacity(0.55),
+                                disabledBackgroundColor:
+                                    colors.primary.withOpacity(0.55),
                                 elevation: 0,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(16),
@@ -152,7 +168,7 @@ class JustificationPage extends GetView<JustificationController> {
                                       ),
                                     )
                                   : Text(
-                                      "Enviar",
+                                      isEditMode ? "Atualizar" : "Enviar",
                                       style: theme.textTheme.bodyMedium!
                                           .copyWith(
                                             color: colors.onSecondary,

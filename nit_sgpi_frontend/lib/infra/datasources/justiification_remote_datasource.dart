@@ -62,9 +62,27 @@ class JustificationRemoteDatasourceImpl implements IJustificationRemoteDataSourc
   }
   
   @override
-  Future<String> putJustificattion(int idJustification, JustificationRequestEntity justification) {
-    // TODO: implement putJustificattion
-    throw UnimplementedError();
+  Future<String> putJustificattion(int idJustification, JustificationRequestEntity justification) async{
+   try{
+      final model = JustificationRequestModel.fromEntity(justification);
+
+      final response = await apiClient.put("${BaseUrl.urlWithHttp}/justification/$idJustification",
+      body: model.toJson(),
+      );
+      
+      if (response.statusCode == 204) {
+        return "Atualizo com sucesso!";
+      } else if (response.statusCode == 422) {
+        return response.body;
+      } else {
+        throw ServerException(
+          'Erro ${response.statusCode} erro no cadastro! - Detalhes: ${response.body}',
+        );
+      }
+    }catch(e){
+      print(e);
+      throw NetworkException("Erro de conexão com o servidor!");
+    }
   }
 
   
