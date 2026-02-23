@@ -7,14 +7,14 @@ import '../../../../domain/entities/process/process_response_entity.dart';
 import '../../../../domain/usecases/get_process.dart';
 
 class ProcessController extends GetxController {
-  final GetProcesses getProcesses;
-  final GetProcessStatusCount getProcessStatusCount;
-  final DeleteProcess deleteProcess;
+  final GetProcesses _getProcesses;
+  final GetProcessStatusCount _getProcessStatusCount;
+  final DeleteProcess _deleteProcess;
 
   ProcessController(
-    this.getProcesses,
-    this.getProcessStatusCount,
-    this.deleteProcess,
+    this._getProcesses,
+    this._getProcessStatusCount,
+    this._deleteProcess,
   );
 
   // ===================== STATES =====================
@@ -60,7 +60,7 @@ class ProcessController extends GetxController {
       processes.clear();
     }
 
-    final result = await getProcesses(
+    final result = await _getProcesses(
       title: title.value,
       statusGenero: status.value,
       page: page.value,
@@ -101,7 +101,7 @@ class ProcessController extends GetxController {
 
     isLoadingProcessCount.value = true;
 
-    final result = await getProcessStatusCount();
+    final result = await _getProcessStatusCount();
 
     result.fold(
       (Failure failure) {
@@ -120,23 +120,17 @@ class ProcessController extends GetxController {
 
     isDeleting.value = true;
 
-    final result = await deleteProcess(id);
+    final result = await _deleteProcess(id);
 
     await result.fold(
       (Failure failure) async {
         Get.snackbar("Erro", failure.message);
       },
       (message) async {
-        // 🔥 RESET COMPLETO DA LISTA
         page.value = 0;
         processes.clear();
-
-        // 🔥 BUSCA DO ZERO
         await fetchProcesses(loadMore: false);
-
-        // 🔥 ATUALIZA OS CARDS DE STATUS
         await processStatusCount();
-
         Get.snackbar("Sucesso", message);
       },
     );

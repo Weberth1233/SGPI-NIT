@@ -192,7 +192,7 @@ class ProcessCard extends StatelessWidget {
       buttonColor: Colors.red,
       onConfirm: () async {
         Get.back(); // fecha o diálogo
-        await processController.deleteProcess(item.id);
+        await processController.deleteProcessById(item.id);
       },
     );
   }
