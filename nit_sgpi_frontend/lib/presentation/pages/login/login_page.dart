@@ -154,9 +154,9 @@ class _LoginPageState extends State<LoginPage> {
                   const SizedBox(height: 30),
 
                   Center(
-                    child: Row(
-                      mainAxisSize:
-                          MainAxisSize.min, // não estica a Row inteira
+                    child: Wrap(
+                      spacing: 10,
+                      runSpacing: 10,
                       children: [
                         OutlinedButton(
                           onPressed: () => Get.toNamed("/register"),
