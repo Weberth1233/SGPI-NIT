@@ -458,38 +458,88 @@ class _ProcessDetailPageState extends State<ProcessDetailPage> {
   }
 
   Widget _buildFixesList(BuildContext context, ProcessResponseEntity entity) {
-    return entity.justifications.isEmpty
-        ? const Padding(padding: EdgeInsets.all(16), child: Text("Não há correções ou justificativas."))
-        : ListView.separated(
-            shrinkWrap: true, physics: const NeverScrollableScrollPhysics(),
-            itemCount: entity.justifications.length,
-            separatorBuilder: (_, _) => const SizedBox(height: 12),
-            itemBuilder: (context, index) {
-              final justification = entity.justifications[index];
-              return Container(
-                width: double.infinity, padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(color: Colors.amber.shade50, border: Border.all(color: Colors.amber.shade200), borderRadius: BorderRadius.circular(12)),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Icon(Icons.sticky_note_2_outlined, color: Colors.amber.shade800, size: 20),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text("Observação #${justification.id}", style: TextStyle(color: Colors.amber.shade900, fontWeight: FontWeight.bold, fontSize: 12)),
-                          const SizedBox(height: 4),
-                          Text(justification.reason, style: TextStyle(color: Colors.black87, height: 1.4)),
-                        ],
-                      ),
+  // ===== 1. Instancia o controller para ter acesso à flag isAdmin
+  final controller = Get.find<ProcessDetailController>();
+
+  return entity.justifications.isEmpty
+      ? const Padding(padding: EdgeInsets.all(16), child: Text("Não há correções ou justificativas."))
+      : ListView.separated(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: entity.justifications.length,
+          separatorBuilder: (_, _) => const SizedBox(height: 12),
+          itemBuilder: (context, index) {
+            final justification = entity.justifications[index];
+            
+            return Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.amber.shade50,
+                border: Border.all(color: Colors.amber.shade200),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(Icons.sticky_note_2_outlined, color: Colors.amber.shade800, size: 20),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Row(
+                      // Mantém os ícones alinhados no topo junto com o título
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Observação #${justification.id}",
+                                style: TextStyle(color: Colors.amber.shade900, fontWeight: FontWeight.bold, fontSize: 12)
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                justification.reason,
+                                style: TextStyle(color: Colors.black87, height: 1.4)
+                              ),
+                            ],
+                          ),
+                        ),
+                        
+                        // ===== 2. Regra de negócio: Apenas Admins veem isso =====
+                        if (controller.isAdmin)
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              IconButton(
+                                onPressed: () {
+                                  // Lógica de edição aqui
+                                  
+                                },
+                                icon: const Icon(Icons.edit, color: Colors.green, size: 22),
+                                padding: EdgeInsets.zero,
+                                constraints: const BoxConstraints(), // Remove o espaçamento extra nativo
+                              ),
+                              const SizedBox(width: 12),
+                              IconButton(
+                                onPressed: () {
+                                  controller.deleteJustificationProcess(justification.id);
+                                },
+                                icon: const Icon(Icons.delete_outline, color: Colors.red, size: 24),
+                                padding: EdgeInsets.zero,
+                                constraints: const BoxConstraints(), // Remove o espaçamento extra nativo
+                              ),
+                            ],
+                          ),
+                      ],
                     ),
-                  ],
-                ),
-              );
-            },
-          );
-  }
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+}
 
   Widget _buildAttachmentsList(BuildContext context, ProcessResponseEntity entity) {
     final colors = Theme.of(context).colorScheme;
@@ -502,7 +552,7 @@ class _ProcessDetailPageState extends State<ProcessDetailPage> {
         final isSigned = attachment.signedFilePath.isNotEmpty;
 
         return InkWell(
-          onTap: () => Get.toNamed("/home/process-detail/attachments", arguments: attachment),
+          onTap: () => Get.toNamed("process-detail/attachments", arguments: entity.id),
           child: _buildSimpleCard(
             context,
             child: Row(

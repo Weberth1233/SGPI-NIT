@@ -6,6 +6,8 @@ import '../core/network/api_client.dart';
 
 abstract class IJustificationRemoteDataSource{
   Future<String> postJustification(JustificationRequestEntity justification);
+  Future<String> deleteJustification(int idJustification);
+  Future<String> putJustificattion(int idJustification, JustificationRequestEntity justification);
 }
 
 class JustificationRemoteDatasourceImpl implements IJustificationRemoteDataSource {
@@ -38,6 +40,31 @@ class JustificationRemoteDatasourceImpl implements IJustificationRemoteDataSourc
       print(e);
       throw NetworkException("Erro de conexão com o servidor!");
     }
+  }
+  
+  @override
+  Future<String> deleteJustification(int idJustification) async{
+    try{
+      final response = await apiClient.delete("${BaseUrl.urlWithHttp}/justification/$idJustification");
+      if(response.statusCode == 204){
+        return "Removido com sucesso!";
+      }else if(response.statusCode == 404){
+        return "Não encontrou justificativa na base de dados!";
+      }else {
+        throw ServerException(
+          'Erro ${response.statusCode} erro na deleção! - Detalhes: ${response.body}',
+        );
+      }
+    }catch(e){
+      print(e);
+      throw NetworkException("Erro de conexão com o servidor!");
+    }
+  }
+  
+  @override
+  Future<String> putJustificattion(int idJustification, JustificationRequestEntity justification) {
+    // TODO: implement putJustificattion
+    throw UnimplementedError();
   }
 
   

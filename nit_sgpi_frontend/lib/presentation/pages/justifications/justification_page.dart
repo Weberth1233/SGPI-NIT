@@ -9,8 +9,6 @@ class JustificationPage extends GetView<JustificationController> {
 
   @override
   Widget build(BuildContext context) {
-    // Se o controller já foi injetado antes, o GetView já fornece a variável 'controller'
-    // Caso contrário, garanta que o binding foi feito ou use Get.find() aqui.
     
     final idProcess = Get.arguments as int;
     final theme = Theme.of(context);

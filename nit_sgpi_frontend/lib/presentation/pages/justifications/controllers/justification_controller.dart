@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:nit_sgpi_frontend/domain/entities/justification_request_entity.dart';
 import 'package:nit_sgpi_frontend/domain/usecases/post_justification.dart';
 import '../../../../domain/core/errors/failures.dart';
+import '../../../../domain/usecases/delete_justification.dart';
 
 class JustificationController extends GetxController {
   final PostJustification postJustification;
