@@ -15,7 +15,8 @@ class ProcessRepositoryImpl implements IProcessRepository {
   ProcessRepositoryImpl({required this.remoteDataSource});
 
   @override
-  Future<Either<Failure, PagedResultEntity<ProcessResponseEntity>>> getProcesses({
+  Future<Either<Failure, PagedResultEntity<ProcessResponseEntity>>>
+  getProcesses({
     String title = "",
     String statusGenero = "",
     int page = 0,
@@ -58,7 +59,9 @@ class ProcessRepositoryImpl implements IProcessRepository {
   }
 
   @override
-  Future<Either<Failure, String>> postProcess(ProcessRequestEntity entity) async{
+  Future<Either<Failure, String>> postProcess(
+    ProcessRequestEntity entity,
+  ) async {
     try {
       final result = await remoteDataSource.postProcess(entity);
       return Right(result);
@@ -70,11 +73,27 @@ class ProcessRepositoryImpl implements IProcessRepository {
       return Left(ServerFailure("Erro inesperado!"));
     }
   }
-  
+
   @override
-  Future<Either<Failure, ProcessResponseEntity>> getProcessById(int processId) async{
-     try {
+  Future<Either<Failure, ProcessResponseEntity>> getProcessById(
+    int processId,
+  ) async {
+    try {
       final result = await remoteDataSource.getProcessById(processId);
+      return Right(result);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(e.message));
+    } on NetworkException catch (e) {
+      return Left(NetworkFailure(e.message));
+    } catch (e) {
+      return Left(ServerFailure("Erro inesperado!"));
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> deleteProcessById(int processId) async {
+    try {
+      final result = await remoteDataSource.deleteProcess(processId);
       return Right(result);
     } on ServerException catch (e) {
       return Left(ServerFailure(e.message));

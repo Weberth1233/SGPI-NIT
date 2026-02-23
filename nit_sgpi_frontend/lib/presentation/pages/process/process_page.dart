@@ -105,10 +105,24 @@ class _ProcessPageState extends State<ProcessPage> {
                               .contains(item.id);
 
                           return CheckboxListTile(
-                            title: Text(
-                              item.fullName,
-                              style: Theme.of(context).textTheme.bodySmall!
-                                  .copyWith(fontWeight: FontWeight.bold),
+                            title: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                
+                                Text(
+                                  item.fullName,
+                                  style: Theme.of(context).textTheme.bodySmall!
+                                      .copyWith(fontWeight: FontWeight.bold),
+                                ),
+
+                                Text(
+                                  item.email,
+                                  style: Theme.of(context).textTheme.bodySmall!
+                                      .copyWith(fontWeight: FontWeight.bold),
+                                ),
+                                
+
+                              ],
                             ),
                             value: isChecked,
                             onChanged: (value) {

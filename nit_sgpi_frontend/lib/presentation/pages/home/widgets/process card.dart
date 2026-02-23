@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:get/route_manager.dart';
-import 'package:nit_sgpi_frontend/presentation/shared/extensions/context_extensions.dart'; // Mantive sua extensão
-import 'package:intl/intl.dart'; // Recomendo adicionar o pacote intl para formatar datas
-
+import 'package:get/get.dart';
 import '../../../../domain/entities/process/process_response_entity.dart';
+import '../controllers/home_controller.dart';
 
 class ProcessCard extends StatelessWidget {
   final ProcessResponseEntity item;
 
-  const ProcessCard({super.key, required this.item});
+  ProcessCard({super.key, required this.item});
+
+  final ProcessController processController = Get.find<ProcessController>();
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +17,9 @@ class ProcessCard extends StatelessWidget {
 
     final date = item.createdAt.toLocal();
     final dateFormatted =
-        "${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}";
+        "${date.day.toString().padLeft(2, '0')}/"
+        "${date.month.toString().padLeft(2, '0')}/"
+        "${date.year}";
 
     return SizedBox(
       width: 400,
@@ -26,19 +28,19 @@ class ProcessCard extends StatelessWidget {
         elevation: 6,
         shadowColor: Colors.black26,
         color: backgroundColor,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        clipBehavior:
-            Clip.antiAlias, // Garante que o efeito de clique respeite a borda
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        clipBehavior: Clip.antiAlias,
         child: InkWell(
           onTap: () {
             Get.toNamed('/home/process-detail/${item.id}');
           },
-          // Efeito de clique sutil na cor branca
           splashColor: Colors.white.withOpacity(0.1),
           highlightColor: Colors.white.withOpacity(0.05),
           child: Stack(
             children: [
-              // Decoração de Fundo (Ícone grande e transparente)
+              // Ícone decorativo de fundo
               Positioned(
                 right: -20,
                 top: -20,
@@ -49,13 +51,39 @@ class ProcessCard extends StatelessWidget {
                 ),
               ),
 
-              // Conteúdo Principal
+              // BOTÃO DE DELETE
+              Positioned(
+                top: 10,
+                right: 10,
+                child: Tooltip(
+                  message: "Excluir processo",
+                  child: InkWell(
+                    onTap: () {
+                      _showDeleteDialog(context);
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(6),
+                      decoration: BoxDecoration(
+                        color: Colors.red.withOpacity(0.20),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: const Icon(
+                        Icons.delete_outline,
+                        color: Colors.white,
+                        size: 20,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+
+              // Conteúdo principal
               Padding(
                 padding: const EdgeInsets.all(20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // --- Cabeçalho: Tipo e Ícone ---
+                    // Tipo de IP
                     Row(
                       children: [
                         Container(
@@ -84,12 +112,11 @@ class ProcessCard extends StatelessWidget {
 
                     const SizedBox(height: 16),
 
-                    // --- Título Principal ---
+                    // Título
                     Text(
                       item.title,
                       maxLines: 2,
-                      overflow: TextOverflow
-                          .ellipsis, // Evita quebra de layout se o texto for grande
+                      overflow: TextOverflow.ellipsis,
                       style: context.textTheme.titleLarge!.copyWith(
                         fontWeight: FontWeight.bold,
                         color: contentColor,
@@ -98,12 +125,12 @@ class ProcessCard extends StatelessWidget {
                       ),
                     ),
 
-                    const Spacer(), // Empurra o conteúdo abaixo para o fundo do card
-                    // --- Rodapé: Status e Data ---
+                    const Spacer(),
+
+                    // Status + Data
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        // Badge de Status
                         Container(
                           padding: const EdgeInsets.symmetric(
                             horizontal: 12,
@@ -124,7 +151,6 @@ class ProcessCard extends StatelessWidget {
                           ),
                         ),
 
-                        // Data
                         Row(
                           children: [
                             Icon(
@@ -154,11 +180,25 @@ class ProcessCard extends StatelessWidget {
     );
   }
 
-  // Função auxiliar para dar uma cor diferente ao fundo do status se você quiser
-  // (No momento está retornando transparente com opacidade, mas pode ser condicional)
+  // DIALOG DE CONFIRMAÇÃO
+  void _showDeleteDialog(BuildContext context) {
+    Get.defaultDialog(
+      title: "Confirmar exclusão",
+      middleText:
+          "Tem certeza que deseja excluir o processo \"${item.title}\"?",
+      textConfirm: "Excluir",
+      textCancel: "Cancelar",
+      confirmTextColor: Colors.white,
+      buttonColor: Colors.red,
+      onConfirm: () async {
+        Get.back(); // fecha o diálogo
+        await processController.deleteProcess(item.id);
+      },
+    );
+  }
+
+  // Cor do status (pode personalizar)
   Color _getStatusColor(String status) {
-    // Exemplo: se status for "CONCLUIDO" retorna verde transparente
-    // return status == "CONCLUIDO" ? Colors.green.withOpacity(0.3) : Colors.white.withOpacity(0.1);
     return Colors.white.withOpacity(0.15);
   }
 }

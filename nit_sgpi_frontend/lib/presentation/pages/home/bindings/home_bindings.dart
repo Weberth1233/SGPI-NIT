@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http show Client;
+import 'package:nit_sgpi_frontend/domain/usecases/delete_process.dart';
 import 'package:nit_sgpi_frontend/domain/usecases/get_process.dart';
 import 'package:nit_sgpi_frontend/domain/usecases/get_process_by_id.dart';
 import 'package:nit_sgpi_frontend/domain/usecases/get_process_status_count.dart';
@@ -51,9 +52,15 @@ class HomeBindings extends Bindings {
       ),
     );
 
+     Get.lazyPut<DeleteProcess>(
+      () => DeleteProcess(
+        repository: Get.find<IProcessRepository>(),
+      ),
+    );
+
     // Controller
     Get.lazyPut<ProcessController>(
-      () => ProcessController(Get.find<GetProcesses>(), Get.find<GetProcessStatusCount>()),
+      () => ProcessController(Get.find<GetProcesses>(), Get.find<GetProcessStatusCount>(), Get.find<DeleteProcess>()),
     );
 
 
