@@ -2,27 +2,22 @@ import 'package:get/get.dart';
 import 'package:nit_sgpi_frontend/domain/entities/user/user_entity.dart';
 import 'package:nit_sgpi_frontend/domain/usecases/get_users.dart';
 
-import '../../../../domain/core/errors/failures.dart';
-
 class ProcessUserController extends GetxController {
   final GetUsers getUsers;
+  ProcessUserController(this.getUsers);
 
-  ProcessUserController( this.getUsers);
-   var selectedUserIds = <int>{}.obs;
-
-  // Observables
+  // ✅ Observables: Usamos um mapa de <ID, UserEntity> para eliminar o cache da View.
+  final RxMap<int, UserEntity> selectedUsers = <int, UserEntity>{}.obs;
+  
   final RxBool isLoading = false.obs;
-  final RxBool isLoadingProcessCount = false.obs;
-
-  final RxString errorMessage = ''.obs;
   final RxList<UserEntity> users = <UserEntity>[].obs;
-
-  final RxString userName = ''.obs;
-  final RxString fullName = ''.obs; // 👈 novo filtro de status
-
-  // Paginação
+  final RxString errorMessage = ''.obs;
+  
+  // Filtros e Paginação
+  final RxString fullNameFilter = ''.obs;
   final RxInt page = 0.obs;
-  final int size = 10;
+  final int size = 9;
+  final RxBool hasMore = true.obs;
 
   @override
   void onInit() {
@@ -30,8 +25,29 @@ class ProcessUserController extends GetxController {
     fetchUsers();
   }
 
+  // ✅ Adiciona ou remove recebendo a entidade inteira
+  void toggleUser(UserEntity user) {
+    if (user.id == null) return;
+    
+    if (selectedUsers.containsKey(user.id)) {
+      selectedUsers.remove(user.id);
+    } else {
+      selectedUsers[user.id!] = user;
+    }
+  }
+
+  // ✅ Método de conveniência para remover do painel lateral apenas pelo ID
+  void removeUserById(int id) {
+    selectedUsers.remove(id);
+  }
+
+  void searchByFullName(String query) {
+    fullNameFilter.value = query;
+    fetchUsers(loadMore: false);
+  }
+
   Future<void> fetchUsers({bool loadMore = false}) async {
-    if (isLoading.value) return;
+    if (isLoading.value || (loadMore && !hasMore.value)) return;
 
     isLoading.value = true;
     errorMessage.value = '';
@@ -41,45 +57,57 @@ class ProcessUserController extends GetxController {
     } else {
       page.value = 0;
       users.clear();
+      hasMore.value = true;
     }
 
     final result = await getUsers(
-      fullName: fullName.value,
-      userName: userName.value, // 👈 agora manda o status também
+      fullName: fullNameFilter.value,
       page: page.value,
       size: size,
     );
 
     result.fold(
-      (Failure failure) {
+      (failure) {
         errorMessage.value = failure.message;
-        if (loadMore) {
-          page.value--; // rollback da página se deu erro
-        }
+        // ✅ Blindagem contra página negativa
+        if (loadMore && page.value > 0) page.value--;
       },
       (pagedResult) {
-        users.addAll(pagedResult.content);
+        users.assignAll(pagedResult.content);
+        hasMore.value = pagedResult.content.length >= size;
       },
     );
 
     isLoading.value = false;
   }
 
-   void toggleUser(int userId) {
-    if (selectedUserIds.contains(userId)) {
-      selectedUserIds.remove(userId);
-    } else {
-      selectedUserIds.add(userId);
-    }
+Future<void> fetchPreviousPage() async {
+    // Se está carregando ou já está na primeira página (0), não faz nada
+    if (isLoading.value || page.value == 0) return;
+
+    isLoading.value = true;
+    errorMessage.value = '';
+    
+    page.value--; // Volta o contador da página
+
+    final result = await getUsers(
+      fullName: fullNameFilter.value,
+      page: page.value,
+      size: size,
+    );
+
+    result.fold(
+      (failure) {
+        errorMessage.value = failure.message;
+        page.value++; // Desfaz a volta se der erro na conexão
+      },
+      (pagedResult) {
+        users.assignAll(pagedResult.content); // Substitui pelos itens antigos
+        hasMore.value = true; // Se conseguimos voltar, sabemos que há páginas para frente
+      },
+    );
+
+    isLoading.value = false;
   }
 
-  void searchByFullName(String value) {
-    fullName.value = value;
-    fetchUsers(loadMore: false);
-  }
-
-  void filterByUserName(String value) {
-    userName.value = value;
-    fetchUsers(loadMore: false);
-  }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:nit_sgpi_frontend/domain/entities/user/user_entity.dart';
 import 'package:nit_sgpi_frontend/presentation/pages/process/controllers/process_user_controller.dart';
-
 import '../../shared/utils/responsive.dart';
 import '../../shared/widgets/custom_text_field.dart';
 
@@ -21,12 +21,12 @@ class ProcessPage extends StatefulWidget {
 }
 
 class _ProcessPageState extends State<ProcessPage> {
-  final TextEditingController titlecontroller = TextEditingController();
+  final TextEditingController titleController = TextEditingController();
   final TextEditingController searchController = TextEditingController();
 
   @override
   void dispose() {
-    titlecontroller.dispose();
+    titleController.dispose();
     searchController.dispose();
     super.dispose();
   }
@@ -64,20 +64,15 @@ class _ProcessPageState extends State<ProcessPage> {
             ),
             const SizedBox(width: 12),
             Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Cadastro de Processo",
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: theme.textTheme.titleLarge?.copyWith(
-                      color: colors.onSecondary,
-                      fontWeight: FontWeight.w800,
-                      letterSpacing: -0.2,
-                    ),
-                  ),
-                ],
+              child: Text(
+                "Cadastro de Processo",
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: theme.textTheme.titleLarge?.copyWith(
+                  color: colors.onSecondary,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: -0.2,
+                ),
               ),
             ),
           ],
@@ -93,7 +88,6 @@ class _ProcessPageState extends State<ProcessPage> {
               ),
             ),
           ),
-
           SingleChildScrollView(
             padding: EdgeInsets.fromLTRB(
               Responsive.getPadding(context).left,
@@ -133,7 +127,6 @@ class _ProcessPageState extends State<ProcessPage> {
                               letterSpacing: -0.3,
                             ),
                           ),
-
                           Text(
                             "Inserir as informações necessárias para cadastrar seu processo no sistema",
                             maxLines: 1,
@@ -146,11 +139,10 @@ class _ProcessPageState extends State<ProcessPage> {
                           ),
                           const SizedBox(height: 20),
 
-                          // ===== Linha: Título do processo
                           _LabeledFieldRow(
                             label: "Título do processo :",
                             field: CustomTextField(
-                              controller: titlecontroller,
+                              controller: titleController,
                               label: "",
                               hintText: "",
                             ),
@@ -158,7 +150,6 @@ class _ProcessPageState extends State<ProcessPage> {
 
                           const SizedBox(height: 18),
 
-                          // ===== Linha: Pesquisa de membros
                           _LabeledFieldRow(
                             label: "Membros :",
                             field: CustomTextField(
@@ -172,11 +163,11 @@ class _ProcessPageState extends State<ProcessPage> {
 
                           const SizedBox(height: 22),
 
-                          // ===== Conteúdo principal (grade + painel selecionados)
+                          // ===== Conteúdo principal (grade + botão + selecionados)
                           Obx(() {
-                            final list = userController.users.toList();
-
-                            if (userController.isLoading.value) {
+                            // loading primeiro
+                            if (userController.isLoading.value &&
+                                userController.users.isEmpty) {
                               return const Padding(
                                 padding: EdgeInsets.symmetric(vertical: 40),
                                 child: Center(
@@ -185,49 +176,114 @@ class _ProcessPageState extends State<ProcessPage> {
                               );
                             }
 
-                            if (list.isEmpty) {
-                              return Center(
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 20,
-                                  ),
-                                  child: Text(
-                                    "Sem resultados!",
-                                    style: theme.textTheme.bodyLarge?.copyWith(
-                                      color: theme.colorScheme.error,
-                                      fontWeight: FontWeight.w700,
-                                    ),
+                            if (userController.errorMessage.isNotEmpty) {
+                              return Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 20,
+                                ),
+                                child: Text(
+                                  userController.errorMessage.value,
+                                  style: theme.textTheme.bodyLarge?.copyWith(
+                                    color: theme.colorScheme.error,
+                                    fontWeight: FontWeight.w700,
                                   ),
                                 ),
                               );
                             }
 
-                            // selecionados (com base na lista atual)
-                            final selectedUsers = list.where((u) {
-                              final id = _safeId(u);
-                              return id != null &&
-                                  userController.selectedUserIds.contains(id);
-                            }).toList();
+                            final list = userController.users.toList();
+                            final selectedUsersList = userController
+                                .selectedUsers
+                                .values
+                                .toList();
+
+                            final Widget grid = list.isEmpty
+                                ? Center(
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 20,
+                                      ),
+                                      child: Text(
+                                        "Sem resultados!",
+                                        style: theme.textTheme.bodyLarge
+                                            ?.copyWith(
+                                              color: theme.colorScheme.error,
+                                              fontWeight: FontWeight.w700,
+                                            ),
+                                      ),
+                                    ),
+                                  )
+                                : _MembersGrid(
+                                    users: list,
+                                    selectedUsersMap:
+                                        userController.selectedUsers,
+                                    onToggle: userController.toggleUser,
+                                  );
+
+                            // 3. Botões de Paginação (Anterior e Próxima)
+                            final Widget paginationButtons =
+                                userController.errorMessage.isEmpty
+                                ? Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 16,
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        // Botão Anterior
+                                        OutlinedButton(
+                                          onPressed:
+                                              userController.isLoading.value ||
+                                                  userController.page.value == 0
+                                              ? null
+                                              : () => userController
+                                                    .fetchPreviousPage(),
+                                          child: const Text("Anterior"),
+                                        ),
+
+                                        const SizedBox(width: 24),
+
+                                        // Indicador de página (ajuda o usuário a saber onde está)
+                                        Text(
+                                          "Página ${userController.page.value + 1}",
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+
+                                        const SizedBox(width: 24),
+
+                                        // Botão Próxima
+                                        OutlinedButton(
+                                          onPressed:
+                                              userController.isLoading.value ||
+                                                  !userController.hasMore.value
+                                              ? null
+                                              : () => userController.fetchUsers(
+                                                  loadMore: true,
+                                                ),
+                                          child: const Text("Próxima"),
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                : const SizedBox.shrink();
 
                             if (!isDesktop) {
-                              // Mobile: painel selecionados fica abaixo
                               return Column(
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: [
-                                  _MembersGrid(
-                                    users: list,
-                                    selectedIds: userController.selectedUserIds,
-                                    onToggle: (id) =>
-                                        userController.toggleUser(id),
-                                  ),
+                                  grid,
+                                  const SizedBox(height: 12),
+                                  paginationButtons, 
                                   const SizedBox(height: 16),
                                   _SelectedMembersPanel(
                                     title: "Membros Selecionados :",
-                                    selectedUsers: selectedUsers,
+                                    selectedUsers: selectedUsersList,
                                     selectedIdsCount:
-                                        userController.selectedUserIds.length,
-                                    onRemove: (id) =>
-                                        userController.toggleUser(id),
+                                        userController.selectedUsers.length,
+                                    onRemove: userController.removeUserById,
                                   ),
                                 ],
                               );
@@ -237,11 +293,14 @@ class _ProcessPageState extends State<ProcessPage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Expanded(
-                                  child: _MembersGrid(
-                                    users: list,
-                                    selectedIds: userController.selectedUserIds,
-                                    onToggle: (id) =>
-                                        userController.toggleUser(id),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.stretch,
+                                    children: [
+                                      grid,
+                                      const SizedBox(height: 12),
+                                      paginationButtons,
+                                    ],
                                   ),
                                 ),
                                 const SizedBox(width: 18),
@@ -249,11 +308,10 @@ class _ProcessPageState extends State<ProcessPage> {
                                   width: 300,
                                   child: _SelectedMembersPanel(
                                     title: "Membros Selecionados :",
-                                    selectedUsers: selectedUsers,
+                                    selectedUsers: selectedUsersList,
                                     selectedIdsCount:
-                                        userController.selectedUserIds.length,
-                                    onRemove: (id) =>
-                                        userController.toggleUser(id),
+                                        userController.selectedUsers.length,
+                                    onRemove: userController.removeUserById,
                                   ),
                                 ),
                               ],
@@ -262,39 +320,39 @@ class _ProcessPageState extends State<ProcessPage> {
 
                           const SizedBox(height: 26),
 
-                          // ===== Botão central "Próximo"
                           Align(
                             alignment: Alignment.center,
                             child: SizedBox(
                               width: 220,
                               height: 44,
                               child: ElevatedButton(
-                                onPressed: () {
-                                  if (titlecontroller.text == "" ||
-                                      userController.selectedUserIds
-                                          .toList()
-                                          .isEmpty) {
+                                onPressed: () async {
+                                  if (titleController.text.trim().isEmpty ||
+                                      userController.selectedUsers.isEmpty) {
                                     Get.snackbar(
                                       "Campos inválidos!",
-                                      "Necessário inserir os campos abaixo para prosseguir com o cadastro do processo!",
-                                      backgroundColor: Theme.of(
-                                        context,
-                                      ).colorScheme.error,
+                                      "Necessário inserir os campos abaixo para prosseguir...",
+                                      backgroundColor: theme.colorScheme.error,
                                       colorText: colors.onSecondary,
                                     );
-                                  } else {
-                                    final auxProcess = FirstStageProcess(
-                                      title: titlecontroller.text,
-                                      idsUser: userController.selectedUserIds
-                                          .toList(),
-                                    );
-                                    Get.toNamed(
-                                      "/process/ip_types",
-                                      arguments: auxProcess,
-                                    );
-                                    titlecontroller.clear();
-                                    userController.selectedUserIds.clear();
+                                    return;
                                   }
+
+                                  final auxProcess = FirstStageProcess(
+                                    title: titleController.text.trim(),
+                                    idsUser: userController.selectedUsers.keys
+                                        .toList(),
+                                  );
+
+                                  await Get.toNamed(
+                                    "/process/ip_types",
+                                    arguments: auxProcess,
+                                  );
+
+                                  // Se quiser manter o estado ao voltar da tela seguinte,
+                                  // deixe estas duas linhas abaixo comentadas.
+                                  // titleController.clear();
+                                  // userController.selectedUsers.clear();
                                 },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: colors.primary,
@@ -385,13 +443,13 @@ class _LabeledFieldRow extends StatelessWidget {
 }
 
 class _MembersGrid extends StatelessWidget {
-  final List<dynamic> users;
-  final Set<int> selectedIds;
-  final void Function(int id) onToggle;
+  final List<UserEntity> users;
+  final Map<int, UserEntity> selectedUsersMap;
+  final void Function(UserEntity user) onToggle;
 
   const _MembersGrid({
     required this.users,
-    required this.selectedIds,
+    required this.selectedUsersMap,
     required this.onToggle,
   });
 
@@ -402,39 +460,38 @@ class _MembersGrid extends StatelessWidget {
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        final w = constraints.maxWidth;
-
-        int cols = 2;
-        if (w >= 1100)
-          cols = 4;
-        else if (w >= 820)
-          cols = 3;
+        int crossAxisCount = 1;
+        if (constraints.maxWidth >= 600) crossAxisCount = 2;
+        if (constraints.maxWidth >= 900) crossAxisCount = 3;
 
         return GridView.builder(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
-          itemCount: users.length,
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: cols,
-            crossAxisSpacing: 18,
-            mainAxisSpacing: 18,
-            childAspectRatio: 2.25, //  (card retangular)
+            crossAxisCount: crossAxisCount,
+            crossAxisSpacing: 12,
+            mainAxisSpacing: 12,
+            childAspectRatio: 2.8,
           ),
+          itemCount: users.length,
           itemBuilder: (context, index) {
             final u = users[index];
-            final id = _safeId(u);
-            final selected = id != null && selectedIds.contains(id);
+            final id = u.id;
+
+            final selected = id != null && selectedUsersMap.containsKey(id);
 
             final fullName = _safeString(() => u.fullName, fallback: "Nome");
             final email = _safeString(() => u.email, fallback: "Email");
 
             return InkWell(
+              key: ValueKey(id ?? index),
               borderRadius: BorderRadius.circular(10),
-              onTap: id == null ? null : () => onToggle(id),
+              onTap: id == null ? null : () => onToggle(u),
               child: Container(
                 padding: const EdgeInsets.all(14),
                 decoration: BoxDecoration(
-                  color: colors.primary,
+                  color: colors
+                      .primary, // Corrigido erro de digitação de "color" para "colors"
                   borderRadius: BorderRadius.circular(10),
                   border: Border.all(
                     color: selected
@@ -452,7 +509,6 @@ class _MembersGrid extends StatelessWidget {
                 ),
                 child: Row(
                   children: [
-                    // avatar tipo mock
                     Container(
                       height: 56,
                       width: 56,
@@ -467,7 +523,6 @@ class _MembersGrid extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: 12),
-
                     Expanded(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -478,7 +533,6 @@ class _MembersGrid extends StatelessWidget {
                         ],
                       ),
                     ),
-
                     if (selected) ...[
                       const SizedBox(width: 10),
                       Icon(
@@ -529,7 +583,7 @@ class _WhiteInfoPill extends StatelessWidget {
 
 class _SelectedMembersPanel extends StatelessWidget {
   final String title;
-  final List<dynamic> selectedUsers;
+  final List<UserEntity> selectedUsers;
   final int selectedIdsCount;
   final void Function(int id) onRemove;
 
@@ -590,11 +644,12 @@ class _SelectedMembersPanel extends StatelessWidget {
                 separatorBuilder: (_, __) => const SizedBox(height: 10),
                 itemBuilder: (context, i) {
                   final u = selectedUsers[i];
-                  final id = _safeId(u);
+                  final int id = u.id!;
 
                   final name = _safeString(() => u.fullName, fallback: "Nome");
 
                   return Container(
+                    key: ValueKey(id),
                     padding: const EdgeInsets.symmetric(
                       horizontal: 10,
                       vertical: 10,
@@ -616,17 +671,17 @@ class _SelectedMembersPanel extends StatelessWidget {
                             ),
                           ),
                         ),
-                        if (id != null)
-                          IconButton(
-                            tooltip: "Remover",
-                            visualDensity: VisualDensity.compact,
-                            onPressed: () => onRemove(id),
-                            icon: Icon(
-                              Icons.close,
-                              size: 18,
-                              color: colors.primary.withOpacity(0.85),
-                            ),
+
+                        IconButton(
+                          tooltip: "Remover",
+                          visualDensity: VisualDensity.compact,
+                          onPressed: () => onRemove(id),
+                          icon: Icon(
+                            Icons.close,
+                            size: 18,
+                            color: colors.primary.withOpacity(0.85),
                           ),
+                        ),
                       ],
                     ),
                   );
@@ -642,17 +697,6 @@ class _SelectedMembersPanel extends StatelessWidget {
 // =====================
 // Helpers seguros
 // =====================
-
-int? _safeId(dynamic u) {
-  try {
-    final v = u.id;
-    if (v == null) return null;
-    if (v is int) return v;
-    return int.tryParse(v.toString());
-  } catch (_) {
-    return null;
-  }
-}
 
 String _safeString(String Function() getter, {required String fallback}) {
   try {
