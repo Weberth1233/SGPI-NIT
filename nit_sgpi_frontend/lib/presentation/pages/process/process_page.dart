@@ -120,11 +120,12 @@ class _ProcessPageState extends State<ProcessPage> {
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           Text(
-                            "CADASTRE SEU PROCESSO",
+                            "Cadastre seu Processo",
                             style: theme.textTheme.headlineSmall?.copyWith(
                               fontWeight: FontWeight.w900,
-                              color: colors.tertiary,
-                              letterSpacing: -0.3,
+                              color: colors.primary,
+                              letterSpacing: -0.1,
+                              fontSize: 35,
                             ),
                           ),
                           Text(
@@ -134,7 +135,7 @@ class _ProcessPageState extends State<ProcessPage> {
                             style: theme.textTheme.bodySmall?.copyWith(
                               color: colors.tertiary.withOpacity(0.75),
                               fontWeight: FontWeight.w500,
-                              fontSize: 15,
+                              fontSize: 20,
                             ),
                           ),
                           const SizedBox(height: 20),
@@ -276,7 +277,7 @@ class _ProcessPageState extends State<ProcessPage> {
                                 children: [
                                   grid,
                                   const SizedBox(height: 12),
-                                  paginationButtons, 
+                                  paginationButtons,
                                   const SizedBox(height: 16),
                                   _SelectedMembersPanel(
                                     title: "Membros Selecionados :",
@@ -415,28 +416,40 @@ class _LabeledFieldRow extends StatelessWidget {
                   color: colors.tertiary,
                 ),
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 8),
               field,
             ],
           );
         }
 
         return Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SizedBox(
               width: 180,
-              child: Text(
-                label,
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  fontWeight: FontWeight.w700,
-                  color: colors.tertiary,
+              child: Padding(
+                padding: const EdgeInsets.only(
+                  top: 25,
+                ), // 👈 O "nudge" milimétrico aqui
+                child: Text(
+                  label,
+                  textAlign: TextAlign.end,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    fontSize: 18.9,
+                    fontWeight: FontWeight.w700,
+                    color: colors.tertiary.withOpacity(0.8),
+                    letterSpacing: -0.4,
+                  ),
                 ),
               ),
             ),
-            const SizedBox(width: 12),
-            Expanded(child: field),
+            const SizedBox(width: 15),
+            Expanded(
+              child: field, // O field já deve vir estilizado do CustomTextField
+            ),
           ],
         );
+        
       },
     );
   }
@@ -490,8 +503,7 @@ class _MembersGrid extends StatelessWidget {
               child: Container(
                 padding: const EdgeInsets.all(14),
                 decoration: BoxDecoration(
-                  color: colors
-                      .primary, // Corrigido erro de digitação de "color" para "colors"
+                  color: colors.primary,
                   borderRadius: BorderRadius.circular(10),
                   border: Border.all(
                     color: selected
@@ -499,14 +511,23 @@ class _MembersGrid extends StatelessWidget {
                         : Colors.white.withOpacity(0.12),
                     width: selected ? 2 : 1,
                   ),
+
                   boxShadow: [
+                    // Brilho na borda superior (Inner Highlight)
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.10),
-                      blurRadius: 10,
-                      offset: const Offset(0, 6),
+                      color: Colors.white.withOpacity(0.10),
+                      offset: const Offset(0, 1),
+                      blurRadius: 0,
+                    ),
+                    // Sombra real do card
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.30),
+                      blurRadius: 12,
+                      offset: const Offset(0, 8),
                     ),
                   ],
                 ),
+
                 child: Row(
                   children: [
                     Container(
@@ -516,13 +537,16 @@ class _MembersGrid extends StatelessWidget {
                         color: Colors.white.withOpacity(0.95),
                         shape: BoxShape.circle,
                       ),
+
                       child: Icon(
                         Icons.person,
                         color: colors.primary.withOpacity(0.7),
                         size: 34,
                       ),
                     ),
+
                     const SizedBox(width: 12),
+
                     Expanded(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,

@@ -65,6 +65,7 @@ class CustomTextField extends StatelessWidget {
         SizedBox(
           width: size,
           child: TextFormField(
+            textAlignVertical: TextAlignVertical.center,
             controller: controller,
             obscureText: obscureText,
             keyboardType: keyboardType,
@@ -84,6 +85,12 @@ class CustomTextField extends StatelessWidget {
             ),
 
             decoration: InputDecoration(
+              isDense: true,
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical:
+                    16, // Garanta que este valor seja simétrico (igual em cima e embaixo)
+              ),
               prefixIcon: prefixIcon,
               suffixIcon: suffixIcon,
               hintText: hintText,
@@ -110,24 +117,14 @@ class CustomTextField extends StatelessWidget {
 
               errorBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
-                borderSide: const BorderSide(
-                  color: Colors.red,
-                  width: 1.5,
-                ),
+                borderSide: const BorderSide(color: Colors.red, width: 1.5),
               ),
 
               focusedErrorBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
-                borderSide: const BorderSide(
-                  color: Colors.red,
-                  width: 2.0,
-                ),
+                borderSide: const BorderSide(color: Colors.red, width: 2.0),
               ),
 
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: 14,
-                vertical: 14,
-              ),
             ),
           ),
         ),
