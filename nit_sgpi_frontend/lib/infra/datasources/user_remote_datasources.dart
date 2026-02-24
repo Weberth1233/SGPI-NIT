@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:nit_sgpi_frontend/domain/entities/user/user_entity.dart';
 import 'package:nit_sgpi_frontend/infra/models/user/user_model.dart';
-
 import '../../domain/core/errors/exceptions.dart';
 import '../core/network/api_client.dart';
 import '../core/network/base_url.dart';
@@ -17,6 +16,8 @@ abstract class IUserRemoteDataSource {
   });
 
   Future<UserEntity> getUserLogged();
+  Future<String> updateUser(int idUser, UserEntity user);
+
 }
 
 class UserRemoteDatasourcesImpl implements IUserRemoteDataSource {
@@ -80,6 +81,30 @@ class UserRemoteDatasourcesImpl implements IUserRemoteDataSource {
         );
       }
     } catch (e) {
+      print(e);
+      throw NetworkException('Erro de conexão com o servidor!');
+    }
+  }
+  
+  @override
+  Future<String> updateUser(int idUser, UserEntity user) async{
+    try {
+      final model = UserModel.fromEntity(user);
+      final response = await apiClient.put(
+        "${BaseUrl.urlWithHttp}/users/$idUser",
+        body: model.toJson()
+      );
+      print(response.statusCode);
+      print(response.body);
+      if (response.statusCode == 204) {
+        return "Atualizado com sucesso!";
+      } else {
+        throw ServerException(
+          'Erro ${response.statusCode} ao buscar processos! - Detalhes: ${response.body}',
+        );
+      }
+    } catch (e) {
+      print(e);
       throw NetworkException('Erro de conexão com o servidor!');
     }
   }

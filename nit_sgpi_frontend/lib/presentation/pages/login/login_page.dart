@@ -12,9 +12,13 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final _emailController = TextEditingController(
-    text: 'marialurdes1234@gmail.com',
+    text: 'marialurdes123@gmail.com',
+    //text: "joaosilva@gmail.com"
   );
-  final _passwordController = TextEditingController(text: 'marialurdes123');
+  final _passwordController = TextEditingController(
+    text: 'marialurdes123'
+    //text: "joao1234"
+  );
   final loginController = Get.find<LoginController>();
 
   @override

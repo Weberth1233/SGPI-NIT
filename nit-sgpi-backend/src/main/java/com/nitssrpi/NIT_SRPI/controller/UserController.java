@@ -1,13 +1,16 @@
 package com.nitssrpi.NIT_SRPI.controller;
 import com.nitssrpi.NIT_SRPI.controller.dto.UserRequestDTO;
 import com.nitssrpi.NIT_SRPI.controller.dto.UserResponseDTO;
+import com.nitssrpi.NIT_SRPI.controller.dto.UserUpdateDTO;
 import com.nitssrpi.NIT_SRPI.controller.mappers.UserMapper;
+import com.nitssrpi.NIT_SRPI.controller.mappers.UserUpdateMapper;
 import com.nitssrpi.NIT_SRPI.model.User;
 import com.nitssrpi.NIT_SRPI.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 
@@ -17,6 +20,7 @@ import java.net.URI;
 public class UserController  implements GenericController{
     private final UserService service;
     private final UserMapper mapper;
+    private final UserUpdateMapper userUpdateMapper;
 
     @PostMapping
     public ResponseEntity<Object> save(@RequestBody @Valid UserRequestDTO dto) {
@@ -39,17 +43,25 @@ public class UserController  implements GenericController{
 
 
     @PutMapping("{id}")
-    public ResponseEntity<Object> updateUser(@PathVariable("id") String id, @RequestBody @Valid UserRequestDTO dto){
+    public ResponseEntity<Object> updateUser(@PathVariable("id") String id, @RequestBody @Valid UserUpdateDTO dto){
         var idUser = Long.parseLong(id);
 
         return service.getUserById(idUser).map(user -> {
             //Pegando o usuario do dto e criando um user
-            User auxUser = mapper.toEntity(dto);
+            User auxUser = userUpdateMapper.toEntity(dto);
 
             //Passando novos valores para o usuario encontrado com o id passado como parametro
             user.setUserName(auxUser.getUsername());
             user.setEmail(auxUser.getEmail());
-            user.setPassword(auxUser.getPassword());
+
+            //Salvar a senha criptorafada de novo
+
+            if (auxUser.getPassword() != null && !auxUser.getPassword().trim().isEmpty()) {
+                // Se veio uma senha nova, criptografa e atualiza
+                String encryptedPassword = new BCryptPasswordEncoder().encode(auxUser.getPassword());
+                user.setPassword(encryptedPassword);
+            }
+
             user.setPhoneNumber(auxUser.getPhoneNumber());
             user.setBirthDate(auxUser.getBirthDate());
             user.setProfession(auxUser.getProfession());

@@ -43,6 +43,20 @@ class UserRepositoryImpl implements IUserRepository{
     }
   }
   
+  @override
+  Future<Either<Failure, String>> updateUser(int idUser, UserEntity user) async{
+    try {
+      final result = await remoteDataSource.updateUser(idUser, user);
+      return Right(result);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(e.message));
+    } on NetworkException catch (e) {
+      return Left(NetworkFailure(e.message));
+    } catch (e) {
+      return Left(ServerFailure("Erro inesperado!"));
+    }
+  }
+  
 
 
 }

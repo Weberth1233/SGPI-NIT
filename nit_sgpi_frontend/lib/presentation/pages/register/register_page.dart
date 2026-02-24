@@ -49,9 +49,61 @@ class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController birthYearController = TextEditingController();
 
   bool _showPassword = false;
+  Worker? _userWorker;
+
+
+  @override
+  void initState() {
+    super.initState();
+    // Se for modo de edição, carrega os dados do usuário logado nos controllers
+    if (widget.isEditMode) {
+      if(userControllerGet.user.value != null){
+        _loadUserData();
+
+      }
+      _userWorker =  ever(userControllerGet.user, (user) {
+        if(user != null){
+          _loadUserData();
+        }
+      },);
+    }
+  }
+
+  void _loadUserData() {
+    final user = userControllerGet.user.value;
+    if (user != null) {
+      nameController.text = user.fullName;
+      userController.text = user.userName;
+      emailController.text = user.email;
+      professionController.text = user.profession;
+      phoneController.text = user.phoneNumber;
+
+      // Tratando a data de nascimento assumindo formato YYYY-MM-DD
+      if (user.birthDate.isNotEmpty) {
+        final parts = user.birthDate.split('-');
+        if (parts.length == 3) {
+          birthYearController.text = parts[0];
+          birthMonthController.text = parts[1];
+          birthDayController.text = parts[2];
+        }
+      }
+
+      // Tratando o endereço
+      if (user.address != null) {
+        cepController.text = user.address!.zipCode;
+        streetController.text = user.address!.street;
+        numberController.text = user.address!.number;
+        complementController.text = user.address!.complement ?? '';
+        neighborhoodController.text = user.address!.neighborhood;
+        cityController.text = user.address!.city;
+        stateController.text = user.address!.state;
+      }
+    }
+  }
 
   @override
   void dispose() {
+    _userWorker?.dispose();
     nameController.dispose();
     userController.dispose();
     emailController.dispose();
@@ -138,14 +190,13 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   Widget build(BuildContext context) {
-    final registerController = Get.find<RegisterController>();
     final theme = Theme.of(context);
 
     return Obx(() {
       if (registerController.message.value.isNotEmpty) {
         Future.microtask(() {
           Get.snackbar(
-            "Cadastro",
+            widget.isEditMode ? "Atualização" : "Cadastro",
             registerController.message.value,
             snackPosition: SnackPosition.TOP,
             duration: const Duration(seconds: 3),
@@ -181,7 +232,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             borderRadius: BorderRadius.circular(16),
                           ),
                           child: IconButton(
-                            onPressed: () => Get.toNamed("/login"),
+                            onPressed: () => Get.back(),
                             icon: Icon(
                               Icons.arrow_back,
                               size: 26,
@@ -192,7 +243,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         const SizedBox(width: 12),
                         Expanded(
                           child: Text(
-                            "Cadastro de usuários",
+                            widget.isEditMode ? "Editar Perfil" : "Cadastro de usuários",
                             style: theme.textTheme.headlineSmall?.copyWith(
                               color: theme.colorScheme.surface,
                               fontWeight: FontWeight.w900,
@@ -214,7 +265,9 @@ class _RegisterPageState extends State<RegisterPage> {
                           _sectionHeader(
                             context,
                             "Dados do usuário",
-                            "Preencha as informações para criar sua conta.",
+                            widget.isEditMode 
+                                ? "Atualize suas informações pessoais." 
+                                : "Preencha as informações para criar sua conta.",
                           ),
 
                           const SizedBox(height: 20),
@@ -381,15 +434,21 @@ class _RegisterPageState extends State<RegisterPage> {
                           // ===== Senha
                           CustomTextField(
                             controller: passwordController,
-                            label: "Senha",
+                            label: widget.isEditMode ? "Nova Senha (deixe em branco para manter)" : "Senha",
                             hintText: "********",
                             size: 270,
                             obscureText: !_showPassword,
-                            validator: (v) => Validators.minLength(
-                              v,
-                              6,
-                              message: "Senha deve ter no mínimo 6 caracteres",
-                            ),
+                            validator: (v) {
+                              // Se estiver editando e o campo estiver vazio, não valida a senha
+                              if (widget.isEditMode && (v == null || v.isEmpty)) {
+                                return null;
+                              }
+                              return Validators.minLength(
+                                v,
+                                6,
+                                message: "Senha deve ter no mínimo 6 caracteres",
+                              );
+                            },
                             prefixIcon: const Icon(Icons.lock_outline),
                             suffixIcon: IconButton(
                               onPressed: () => setState(() {
@@ -417,7 +476,9 @@ class _RegisterPageState extends State<RegisterPage> {
                           _sectionHeader(
                             context,
                             "Endereço",
-                            "Informe seu endereço para concluir o cadastro.",
+                            widget.isEditMode 
+                                ? "Atualize seu endereço." 
+                                : "Informe seu endereço para concluir o cadastro.",
                           ),
 
                           const SizedBox(height: 14),
@@ -540,12 +601,9 @@ class _RegisterPageState extends State<RegisterPage> {
                           height: 52,
                           child: ElevatedButton.icon(
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white, // Fundo branco
-                              foregroundColor: theme
-                                  .colorScheme
-                                  .primary, // Texto e ícone azul )
-                              elevation:
-                                  5,
+                              backgroundColor: Colors.white,
+                              foregroundColor: theme.colorScheme.primary,
+                              elevation: 5,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),
@@ -556,9 +614,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                     height: 18,
                                     child: CircularProgressIndicator(
                                       strokeWidth: 2,
-                                      color: theme
-                                  .colorScheme
-                                  .primary,
+                                      color: theme.colorScheme.primary,
                                     ),
                                   )
                                 : const Icon(Icons.save_outlined),
@@ -566,41 +622,46 @@ class _RegisterPageState extends State<RegisterPage> {
                                 ? null
                                 : () {
                                     if (_formKey.currentState!.validate()) {
-                                      registerController.post(
-                                        UserEntity(
-                                          userName: userController.text,
-                                          email: emailController.text,
-                                          password: passwordController.text,
-                                          phoneNumber: phoneController.text,
-                                          birthDate:
-                                              "${birthYearController.text}-"
-                                              "${birthMonthController.text.padLeft(2, '0')}-"
-                                              "${birthDayController.text.padLeft(2, '0')}",
-                                          profession: professionController.text,
-                                          fullName: nameController.text,
-                                          role: "USER",
-                                          isEnabled: true,
-                                          address: AddressEntity(
-                                            zipCode: cepController.text,
-                                            street: streetController.text,
-                                            number: numberController.text,
-                                            complement:
-                                                complementController.text,
-                                            neighborhood:
-                                                neighborhoodController.text,
-                                            city: cityController.text,
-                                            state: stateController.text,
-                                          ),
+                                      final userEntityToSave = UserEntity(
+                                        userName: userController.text,
+                                        email: emailController.text,
+                                        password: passwordController.text,
+                                        phoneNumber: phoneController.text,
+                                        birthDate:
+                                            "${birthYearController.text}-"
+                                            "${birthMonthController.text.padLeft(2, '0')}-"
+                                            "${birthDayController.text.padLeft(2, '0')}",
+                                        profession: professionController.text,
+                                        fullName: nameController.text,
+                                        role: userControllerGet.user.value != null ? userControllerGet.user.value!.role: 'USER',
+                                        isEnabled: true,
+                                        address: AddressEntity(
+                                          zipCode: cepController.text,
+                                          street: streetController.text,
+                                          number: numberController.text,
+                                          complement: complementController.text,
+                                          neighborhood: neighborhoodController.text,
+                                          city: cityController.text,
+                                          state: stateController.text,
                                         ),
                                       );
-                                      clearForm();
+
+                                      if (widget.isEditMode) {
+                                         print(userControllerGet.user.value!.id!);
+                                        // Chamar método de Update (certifique-se de que ele existe no seu RegisterController)
+                                        registerController.updateUserLogged(userControllerGet.user.value!.id!, userEntityToSave); 
+                                        
+                                      } else {
+                                        registerController.post(userEntityToSave);
+                                        clearForm();
+                                      }
                                     }
                                   },
 
                             label: Text(
                               registerController.isLoading.value
-                                  ? "Salvando..."
-                                  : "Salvar cadastro",
+                                  ? (widget.isEditMode ? "Atualizando..." : "Salvando...")
+                                  : (widget.isEditMode ? "Atualizar Perfil" : "Salvar cadastro"),
                               style: theme.textTheme.bodyMedium?.copyWith(
                                 color: theme.colorScheme.primary,
                                 fontWeight: FontWeight.w700,

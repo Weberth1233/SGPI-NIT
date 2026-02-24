@@ -1,16 +1,19 @@
 import 'package:get/get.dart';
 import 'package:nit_sgpi_frontend/domain/usecases/get_user_logged.dart';
+import 'package:nit_sgpi_frontend/domain/usecases/put_user.dart';
 
 import '../../../../domain/entities/user/user_entity.dart';
 
 class UserLoggedController extends GetxController {
-  final GetUserLogged getUserLogged;
+  final GetUserLogged _getUserLogged;
+ 
 
-  UserLoggedController(this.getUserLogged);
+  UserLoggedController(this._getUserLogged);
 
   var user = Rxn<UserEntity>();
   var isLoading = false.obs;
   var errorMessage = ''.obs;
+  var message = ''.obs;
 
   @override
   void onInit() {
@@ -22,7 +25,7 @@ class UserLoggedController extends GetxController {
     isLoading.value = true;
     errorMessage.value = '';
 
-    final result = await getUserLogged();
+    final result = await _getUserLogged();
 
     result.fold(
       (failure) {
@@ -35,4 +38,6 @@ class UserLoggedController extends GetxController {
 
     isLoading.value = false;
   }
+
+
 }

@@ -9,6 +9,7 @@ import 'package:nit_sgpi_frontend/presentation/pages/users/controllers/user_logg
 
 import '../../../../domain/repositories/iuser_repository.dart';
 import '../../../../domain/usecases/get_user_logged.dart';
+import '../../../../domain/usecases/put_user.dart';
 import '../../../../infra/core/network/api_client.dart';
 import '../../../../infra/datasources/auth_local_datasource.dart';
 import '../../../../infra/datasources/user_remote_datasources.dart';
@@ -29,10 +30,7 @@ class RegisterBindings extends Bindings {
     Get.lazyPut<PostUser>(
       () => PostUser(repository: Get.find<IRegisterRepository>()),
     );
-    Get.lazyPut<RegisterController>(
-      () => RegisterController(Get.find<PostUser>()),
-    );
-
+   
     //uPDTAE
       // TODO: implement dependencies
     // Http client puro
@@ -66,9 +64,20 @@ class RegisterBindings extends Bindings {
         repository: Get.find<IUserRepository>(),
       ),
     );
+    
+    Get.lazyPut<PutUser>(
+      () => PutUser(
+        repository: Get.find<IUserRepository>(),
+      ),
+    );
     // Controller
     Get.lazyPut<UserLoggedController>(
       () => UserLoggedController(Get.find<GetUserLogged>()),
     );
+    
+     Get.lazyPut<RegisterController>(
+      () => RegisterController(Get.find<PostUser>(), Get.find<PutUser>()),
+    );
+   
   }
 }
