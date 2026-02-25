@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:nit_sgpi_frontend/domain/usecases/post_process.dart';
+import 'package:nit_sgpi_frontend/domain/usecases/put_process.dart';
 import 'package:nit_sgpi_frontend/presentation/pages/ip_types/ip_types_page.dart';
 import '../../../../domain/repositories/iprocess_repository.dart';
 import '../../../../infra/core/network/api_client.dart';
@@ -45,9 +46,15 @@ class IpTypesFormBinding extends Bindings {
         repository: Get.find<IProcessRepository>(),
       ),
     );
-    // Controller
+
+    Get.lazyPut<PutProcess>(
+      () => PutProcess(
+        repository: Get.find<IProcessRepository>(),
+      ),
+    );
+
     Get.lazyPut<ProcessPostController>(
-      () => ProcessPostController(Get.find<PostProcess>()),
+      () => ProcessPostController(Get.find<PostProcess>(), Get.find<PutProcess>()),
     );
 
     Get.lazyPut<IpTypesFormController>(() {

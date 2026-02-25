@@ -6,14 +6,12 @@ class ProcessUserController extends GetxController {
   final GetUsers getUsers;
   ProcessUserController(this.getUsers);
 
-  // ✅ Observables: Usamos um mapa de <ID, UserEntity> para eliminar o cache da View.
   final RxMap<int, UserEntity> selectedUsers = <int, UserEntity>{}.obs;
   
   final RxBool isLoading = false.obs;
   final RxList<UserEntity> users = <UserEntity>[].obs;
   final RxString errorMessage = ''.obs;
   
-  // Filtros e Paginação
   final RxString fullNameFilter = ''.obs;
   final RxInt page = 0.obs;
   final int size = 9;
@@ -25,7 +23,6 @@ class ProcessUserController extends GetxController {
     fetchUsers();
   }
 
-  // ✅ Adiciona ou remove recebendo a entidade inteira
   void toggleUser(UserEntity user) {
     if (user.id == null) return;
     
@@ -36,7 +33,6 @@ class ProcessUserController extends GetxController {
     }
   }
 
-  // ✅ Método de conveniência para remover do painel lateral apenas pelo ID
   void removeUserById(int id) {
     selectedUsers.remove(id);
   }
@@ -69,7 +65,6 @@ class ProcessUserController extends GetxController {
     result.fold(
       (failure) {
         errorMessage.value = failure.message;
-        // ✅ Blindagem contra página negativa
         if (loadMore && page.value > 0) page.value--;
       },
       (pagedResult) {
@@ -82,13 +77,12 @@ class ProcessUserController extends GetxController {
   }
 
 Future<void> fetchPreviousPage() async {
-    // Se está carregando ou já está na primeira página (0), não faz nada
     if (isLoading.value || page.value == 0) return;
 
     isLoading.value = true;
     errorMessage.value = '';
     
-    page.value--; // Volta o contador da página
+    page.value--;
 
     final result = await getUsers(
       fullName: fullNameFilter.value,
@@ -99,11 +93,11 @@ Future<void> fetchPreviousPage() async {
     result.fold(
       (failure) {
         errorMessage.value = failure.message;
-        page.value++; // Desfaz a volta se der erro na conexão
+        page.value++; 
       },
       (pagedResult) {
-        users.assignAll(pagedResult.content); // Substitui pelos itens antigos
-        hasMore.value = true; // Se conseguimos voltar, sabemos que há páginas para frente
+        users.assignAll(pagedResult.content); 
+        hasMore.value = true; 
       },
     );
 

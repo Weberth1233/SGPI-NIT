@@ -2,35 +2,75 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nit_sgpi_frontend/domain/entities/user/user_entity.dart';
 import 'package:nit_sgpi_frontend/presentation/pages/process/controllers/process_user_controller.dart';
+import '../../../domain/entities/process/process_response_entity.dart';
 import '../../shared/utils/responsive.dart';
 import '../../shared/widgets/custom_text_field.dart';
 
-// first stage of the process
 class FirstStageProcess {
+  final int? idProcess;
   final String title;
   final List<int> idsUser;
+  final bool isEdit;
+  final String? originalIpTypeId;
+  final Map<String, dynamic>? originalFormData;
 
-  FirstStageProcess({required this.title, required this.idsUser});
+  FirstStageProcess({this.idProcess,required this.title, required this.idsUser, this.isEdit = false, this.originalIpTypeId,
+    this.originalFormData,});
 }
 
 class ProcessPage extends StatefulWidget {
-  const ProcessPage({super.key});
+  final bool isEditMode;
+  
+  const ProcessPage({super.key, this.isEditMode = false,});
 
   @override
   State<ProcessPage> createState() => _ProcessPageState();
 }
 
 class _ProcessPageState extends State<ProcessPage> {
+
+final ProcessResponseEntity? process = Get.arguments is ProcessResponseEntity ? Get.arguments : null;
+
   final TextEditingController titleController = TextEditingController();
   final TextEditingController searchController = TextEditingController();
+  final userController = Get.find<ProcessUserController>();
+  Worker? _usersWorker;
+
+  @override
+  void initState() {
+    super.initState();
+    if (process != null) {
+      titleController.text = process!.title;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        final userController = Get.find<ProcessUserController>();
+        final Set<int> pendingIds = process!.authors
+                .map((u) => u.id)
+                .whereType<int>()
+                .toSet();
+        _usersWorker = ever(userController.users, (List<UserEntity> loadedUsers) {
+          if (pendingIds.isEmpty) return;
+          for (var user in loadedUsers) {
+            if (pendingIds.contains(user.id)) {
+              userController.selectedUsers[user.id!] = user;
+                            pendingIds.remove(user.id); 
+            }
+          }
+        });
+        if (userController.users.isEmpty) {
+          userController.fetchUsers();
+        }
+      });
+    }
+  }
 
   @override
   void dispose() {
     titleController.dispose();
     searchController.dispose();
+    _usersWorker?.dispose(); 
     super.dispose();
   }
-
+  
   @override
   Widget build(BuildContext context) {
     final userController = Get.find<ProcessUserController>();
@@ -65,7 +105,7 @@ class _ProcessPageState extends State<ProcessPage> {
             const SizedBox(width: 12),
             Expanded(
               child: Text(
-                "Cadastro de Processo",
+                widget.isEditMode ? "Editar do Processo" :"Cadastro de Processo",
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: theme.textTheme.titleLarge?.copyWith(
@@ -120,7 +160,7 @@ class _ProcessPageState extends State<ProcessPage> {
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           Text(
-                            "Cadastre seu Processo",
+                            widget.isEditMode ? "Editar seu Processo" : "Cadastre seu Processo",
                             style: theme.textTheme.headlineSmall?.copyWith(
                               fontWeight: FontWeight.w900,
                               color: colors.primary,
@@ -129,7 +169,7 @@ class _ProcessPageState extends State<ProcessPage> {
                             ),
                           ),
                           Text(
-                            "Inserir as informações necessárias para cadastrar seu processo no sistema",
+                           widget.isEditMode ?"Inserir as informações necessárias para atualizar seu processo no sistema": "Inserir as informações necessárias para cadastrar seu processo no sistema",
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: theme.textTheme.bodySmall?.copyWith(
@@ -161,12 +201,8 @@ class _ProcessPageState extends State<ProcessPage> {
                                   .searchByFullName(searchController.text),
                             ),
                           ),
-
                           const SizedBox(height: 22),
-
-                          // ===== Conteúdo principal (grade + botão + selecionados)
                           Obx(() {
-                            // loading primeiro
                             if (userController.isLoading.value &&
                                 userController.users.isEmpty) {
                               return const Padding(
@@ -338,22 +374,21 @@ class _ProcessPageState extends State<ProcessPage> {
                                     );
                                     return;
                                   }
-
+                            
                                   final auxProcess = FirstStageProcess(
+                                    idProcess: process?.id,
                                     title: titleController.text.trim(),
                                     idsUser: userController.selectedUsers.keys
                                         .toList(),
+                                    isEdit: widget.isEditMode,
+                                    originalIpTypeId: process?.ipType.id.toString(),
+                                    originalFormData: process?.formData,
                                   );
 
                                   await Get.toNamed(
                                     "/process/ip_types",
                                     arguments: auxProcess,
                                   );
-
-                                  // Se quiser manter o estado ao voltar da tela seguinte,
-                                  // deixe estas duas linhas abaixo comentadas.
-                                  // titleController.clear();
-                                  // userController.selectedUsers.clear();
                                 },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: colors.primary,
@@ -385,10 +420,6 @@ class _ProcessPageState extends State<ProcessPage> {
     );
   }
 }
-
-// =====================
-// Widgets UI (somente design)
-// =====================
 
 class _LabeledFieldRow extends StatelessWidget {
   final String label;
@@ -445,7 +476,7 @@ class _LabeledFieldRow extends StatelessWidget {
             ),
             const SizedBox(width: 15),
             Expanded(
-              child: field, // O field já deve vir estilizado do CustomTextField
+              child: field,
             ),
           ],
         );
@@ -718,9 +749,6 @@ class _SelectedMembersPanel extends StatelessWidget {
   }
 }
 
-// =====================
-// Helpers seguros
-// =====================
 
 String _safeString(String Function() getter, {required String fallback}) {
   try {
@@ -731,10 +759,6 @@ String _safeString(String Function() getter, {required String fallback}) {
     return fallback;
   }
 }
-
-// =====================
-// Background painter
-// =====================
 
 class _DiagonalLinesPainter extends CustomPainter {
   final Color color;

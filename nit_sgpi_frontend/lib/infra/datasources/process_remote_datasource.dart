@@ -23,6 +23,8 @@ abstract class IProcessRemoteDataSource {
 
   Future<String> postProcess(ProcessRequestEntity entity);
 
+  Future<String> putProcess(int processId, ProcessRequestEntity entity);
+
   Future<String> deleteProcess(int idProcess);
 
   Future<ProcessResponseEntity> getProcessById(int processId);
@@ -176,22 +178,45 @@ class ProcessRemoteDataSourceImpl implements IProcessRemoteDataSource {
   @override
   Future<String> updateStatusProcess(int processId, String newStatus) async {
     try {
-      // Ajuste aqui se mudou o nome para .patch no ApiClient
       final response = await apiClient.patch(
         "${BaseUrl.urlWithHttp}/process/$processId/status",
         body: {"status": newStatus},
       );
-
       if (response.statusCode == 204 || response.statusCode == 200) {
         return "Status atualizado com sucesso!";
       } else {
-        // Isso vai te mostrar exatamente o que o servidor não gostou
-        print("Erro do Servidor: ${response.body}");
         throw ServerException('Erro ${response.statusCode}: ${response.body}');
       }
     } catch (e) {
-      print("Erro na requisição: $e");
       throw NetworkException('Erro de conexão!');
+    }
+  }
+  
+  @override
+  Future<String> putProcess(int processId, ProcessRequestEntity entity) async{
+    try {
+      final model = ProcessRequestModel.fromEntity(entity);
+
+      final response = await apiClient.put(
+        "${BaseUrl.urlWithHttp}/process/$processId",
+        body: model.toJson(),
+      );
+
+      print('STATUS: ${response.statusCode}');
+      print('BODY: ${response.body}');
+
+      if (response.statusCode == 204) {
+        return "Atualizado com sucesso!";
+      } else if (response.statusCode == 422) {
+        return response.body;
+      } else {
+        throw ServerException(
+          'Erro ${response.statusCode} erro no cadastro! - Detalhes: ${response.body}',
+        );
+      }
+    } catch (e) {
+      print(e);
+      throw NetworkException('Erro de conexão com o servidor!');
     }
   }
 }

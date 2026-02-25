@@ -1,13 +1,15 @@
 import 'package:get/get.dart';
 import 'package:nit_sgpi_frontend/domain/entities/process/process_request_entity.dart';
 import 'package:nit_sgpi_frontend/domain/usecases/post_process.dart';
+import 'package:nit_sgpi_frontend/domain/usecases/put_process.dart';
 
 import '../../../../domain/core/errors/failures.dart';
 
 class ProcessPostController extends GetxController{
-  final PostProcess postProcess;
+  final PostProcess _postProcess;
+  final PutProcess _putProcess;
 
-  ProcessPostController(this.postProcess);
+  ProcessPostController(this._postProcess, this._putProcess);
   RxBool isLoading = false.obs;
   RxString message = "".obs;
 
@@ -15,12 +17,32 @@ class ProcessPostController extends GetxController{
     if (isLoading.value) return;
     isLoading.value = true;
     message.value = '';
-    final result = await postProcess(
+    final result = await _postProcess(
       entity
     );
     result.fold(
       (Failure failure) {
         
+        message.value = failure.message;
+      },
+      (sucess) {
+        Get.snackbar('Sucesso', 'Formulário enviado com sucesso!');
+        message.value = sucess;
+      },
+    );
+    isLoading.value = false;
+  }
+
+  Future<void> put(int processId, ProcessRequestEntity entity) async {
+    if (isLoading.value) return;
+    isLoading.value = true;
+    message.value = '';
+    final result = await _putProcess(
+      processId,
+      entity
+    );
+    result.fold(
+      (Failure failure) {
         message.value = failure.message;
       },
       (sucess) {

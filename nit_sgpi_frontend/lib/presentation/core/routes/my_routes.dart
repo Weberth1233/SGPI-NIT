@@ -33,6 +33,11 @@ class MyRoutes {
     GetPage(name: "/user-logged", page: () => RegisterPage(isEditMode: true,), binding: RegisterBindings()),
 
     GetPage(name: "/process", page: () => ProcessPage(), binding: UserBindings()),
+
+    
+    GetPage(name: "/process-edit", page: () => ProcessPage(isEditMode: true,), binding: UserBindings()),
+    
+
     GetPage(name: "/home/process-detail/:id", page:() =>  ProcessDetailPage(), binding: ProcessDetailBindings()),
     
     GetPage(name: "/process-detail/attachments", page:() => AttachmentsPage(), binding: AttachmentsBindigs()),

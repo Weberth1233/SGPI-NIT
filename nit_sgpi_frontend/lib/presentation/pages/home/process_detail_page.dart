@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:nit_sgpi_frontend/domain/entities/process/process_request_entity.dart';
 import 'package:nit_sgpi_frontend/domain/entities/process/process_response_entity.dart';
 import 'controllers/process_detail_controller.dart';
 
