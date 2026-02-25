@@ -8,14 +8,14 @@ import 'package:nit_sgpi_frontend/presentation/shared/utils/responsive.dart';
 class SecondStageProcess {
   final FirstStageProcess firstStageProcess;
   final IpTypeEntity item;
+  final bool isEdit;
 
-  SecondStageProcess({required this.firstStageProcess, required this.item});
+  SecondStageProcess({required this.firstStageProcess, required this.item, this.isEdit =false});
 }
 
 class IpTypesPage extends StatelessWidget {
   const IpTypesPage({super.key});
 
-  // Cor base do azul escuro (extraída do protótipo)
   static const Color _backgroundColor = Color(0xFF004294);
 
   @override
@@ -42,7 +42,7 @@ class IpTypesPage extends StatelessWidget {
               ),
               const SizedBox(height: 80),
 
-              // Conteúdo
+  
               Expanded(
                 child: Obx(() {
                   if (ipTypesController.isLoading.value) {

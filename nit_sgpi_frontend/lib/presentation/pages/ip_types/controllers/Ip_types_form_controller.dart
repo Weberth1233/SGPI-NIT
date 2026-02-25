@@ -50,15 +50,11 @@ class IpTypesFormController extends GetxController {
 
   Future<void> submit() async {
     if (!validate()) return;
-
     final processController = Get.find<ProcessPostController>();
-
     final Map<String, dynamic> result = {};
-
     controllers.forEach((key, controller) {
       result[key] = controller.text;
     });
-
     try {
       await processController.post(
         ProcessRequestEntity(
@@ -69,14 +65,8 @@ class IpTypesFormController extends GetxController {
           formData: result,
         ),
       );
-
-      // ✅ Sucesso
       Get.snackbar('Sucesso', 'Processo enviado com sucesso!');
-
-      // ✅ Limpa os campos
       clearForm();
-
-      // ✅ Volta pra Home limpando a pilha
       Get.offAllNamed('/home');
     } catch (e) {
       Get.snackbar('Erro', 'Erro ao enviar processo');

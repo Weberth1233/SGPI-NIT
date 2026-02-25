@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nit_sgpi_frontend/domain/entities/attachment_entity.dart';
 import 'package:nit_sgpi_frontend/presentation/shared/utils/responsive.dart';
-// Importe seus ícones ou bibliotecas de ícones se necessário
-// import 'package:lucide_icons/lucide_icons.dart';
 
 import 'controllers/attachments_controller.dart';
 
@@ -57,13 +55,8 @@ class _AttachmentsPageState extends State<AttachmentsPage> {
               ),
             ),
             
-            // Lista Reativa com Obx
             Expanded(
               child: Obx(() {
-                // 1. Estado de Carregamento (opcional, se seu controller tiver isLoading)
-                // if (controller.isLoading.value) return Center(child: CircularProgressIndicator());
-      
-                // 2. Estado Vazio
                 if (controller.attachmentList.isEmpty) {
                   return Center(
                     child: Column(

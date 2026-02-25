@@ -12,6 +12,8 @@ class ProcessCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    
     const backgroundColor = Color(0XFF004093);
     const contentColor = Colors.white;
 
@@ -69,6 +71,32 @@ class ProcessCard extends StatelessWidget {
                       ),
                       child: const Icon(
                         Icons.delete_outline,
+                        color: Colors.white,
+                        size: 20,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+
+              Positioned(
+                top: 10,
+                right: 45,
+                child: Tooltip(
+                  message: "Editar processo",
+                  child: InkWell(
+                    onTap: () {
+                      Get.toNamed("/process-edit", arguments: item);
+                      // _showDeleteDialog(context);
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(6),
+                      decoration: BoxDecoration(
+                        color: Colors.red.withOpacity(0.20),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: const Icon(
+                        Icons.edit_outlined,
                         color: Colors.white,
                         size: 20,
                       ),
