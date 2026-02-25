@@ -13,6 +13,7 @@ class SecondStageProcess {
 }
 
 class IpTypesPage extends StatelessWidget {
+
   const IpTypesPage({super.key});
 
   // Cor base do azul escuro (extraída do protótipo)
@@ -66,7 +67,7 @@ class IpTypesPage extends StatelessWidget {
                           ? 4
                           : w >= 840
                           ? 3
-                          : w >= 600 // Ajuste leve no breakpoint
+                          : w >= 600 
                           ? 2
                           : 1;
 
