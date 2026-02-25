@@ -1076,11 +1076,11 @@ class _ProcessDetailPageState extends State<ProcessDetailPage> {
         color = Colors.orange;
         icon = Icons.hourglass_top_rounded;
         break;
-      case 'CONCLUIDO':
+      case 'FINALIZADO':
         color = Colors.green;
         icon = Icons.check_circle_outline;
         break;
-      case 'CANCELADO':
+      case 'CORRECAO':
         color = Colors.red;
         icon = Icons.cancel_outlined;
         break;
