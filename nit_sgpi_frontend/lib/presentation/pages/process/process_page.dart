@@ -6,7 +6,6 @@ import '../../../domain/entities/process/process_response_entity.dart';
 import '../../shared/utils/responsive.dart';
 import '../../shared/widgets/custom_text_field.dart';
 
-// first stage of the process
 class FirstStageProcess {
   final String title;
   final List<int> idsUser;
@@ -198,12 +197,8 @@ final ProcessResponseEntity? process = Get.arguments is ProcessResponseEntity ? 
                                   .searchByFullName(searchController.text),
                             ),
                           ),
-
                           const SizedBox(height: 22),
-
-                          // ===== Conteúdo principal (grade + botão + selecionados)
                           Obx(() {
-                            // loading primeiro
                             if (userController.isLoading.value &&
                                 userController.users.isEmpty) {
                               return const Padding(
@@ -387,11 +382,6 @@ final ProcessResponseEntity? process = Get.arguments is ProcessResponseEntity ? 
                                     "/process/ip_types",
                                     arguments: auxProcess,
                                   );
-
-                                  // Se quiser manter o estado ao voltar da tela seguinte,
-                                  // deixe estas duas linhas abaixo comentadas.
-                                  // titleController.clear();
-                                  // userController.selectedUsers.clear();
                                 },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: colors.primary,
@@ -423,10 +413,6 @@ final ProcessResponseEntity? process = Get.arguments is ProcessResponseEntity ? 
     );
   }
 }
-
-// =====================
-// Widgets UI (somente design)
-// =====================
 
 class _LabeledFieldRow extends StatelessWidget {
   final String label;
@@ -483,7 +469,7 @@ class _LabeledFieldRow extends StatelessWidget {
             ),
             const SizedBox(width: 15),
             Expanded(
-              child: field, // O field já deve vir estilizado do CustomTextField
+              child: field,
             ),
           ],
         );
@@ -756,9 +742,6 @@ class _SelectedMembersPanel extends StatelessWidget {
   }
 }
 
-// =====================
-// Helpers seguros
-// =====================
 
 String _safeString(String Function() getter, {required String fallback}) {
   try {
@@ -769,10 +752,6 @@ String _safeString(String Function() getter, {required String fallback}) {
     return fallback;
   }
 }
-
-// =====================
-// Background painter
-// =====================
 
 class _DiagonalLinesPainter extends CustomPainter {
   final Color color;
