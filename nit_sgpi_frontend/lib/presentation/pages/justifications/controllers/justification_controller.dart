@@ -14,11 +14,9 @@ class JustificationController extends GetxController {
     this._putJustification,
   );
 
-  // Controllers
+
   final TextEditingController reasonController = TextEditingController();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-
-  // States
   final RxBool isLoading = false.obs;
   final RxString message = ''.obs;
 
@@ -28,9 +26,6 @@ class JustificationController extends GetxController {
     super.onClose();
   }
 
-  // ===============================
-  // CREATE
-  // ===============================
   Future<void> post(int idProcess) async {
     await _executeAction(
       action: () => _postJustification(
@@ -42,15 +37,13 @@ class JustificationController extends GetxController {
       successMessage: 'Justificativa enviada com sucesso!',
       onSuccess: () async {
         reasonController.clear();
-        await Future.delayed(const Duration(milliseconds: 800));
-        Get.offAllNamed('/home');
+        /*await Future.delayed(const Duration(milliseconds: 800));
+        Get.offAllNamed('/home');*/
       },
     );
   }
 
-  // ===============================
-  // UPDATE
-  // ===============================
+
   Future<void> put(int justificationId, int idProcess) async {
     await _executeAction(
       action: () => _putJustification(
@@ -62,15 +55,12 @@ class JustificationController extends GetxController {
       ),
       successMessage: 'Justificativa atualizada com sucesso!',
       onSuccess: () async {
-        await Future.delayed(const Duration(milliseconds: 800));
-        Get.offAllNamed('/home');
+        /*await Future.delayed(const Duration(milliseconds: 800));
+        Get.offAllNamed('/home');*/
       },
     );
   }
 
-  // ===============================
-  // CORE EXECUTION METHOD
-  // ===============================
   Future<void> _executeAction({
     required Future<dynamic> Function() action,
     required String successMessage,
@@ -105,9 +95,6 @@ class JustificationController extends GetxController {
     }
   }
 
-  // ===============================
-  // SNACKBARS
-  // ===============================
   void _showSuccessSnackbar(String text) {
     final colors = Get.theme.colorScheme;
 

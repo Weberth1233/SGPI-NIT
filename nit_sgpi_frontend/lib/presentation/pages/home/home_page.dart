@@ -409,11 +409,9 @@ class _FilterHeaderState extends State<FilterHeader> {
 Widget _buildSearch(BuildContext context, TextEditingController controller) {
   return TextFormField(
     controller: controller,
-    // Define o tamanho da fonte do texto que o usuário digita
     style: const TextStyle(fontSize: 17), 
     decoration: InputDecoration(
       hintText: "Pesquisar..",
-      // Define o tamanho da fonte do texto de dica (placeholder)
       hintStyle: const TextStyle(fontSize: 20),
       prefixIcon: Icon(
         Icons.search,
@@ -425,7 +423,7 @@ Widget _buildSearch(BuildContext context, TextEditingController controller) {
       fillColor: Colors.white,
       isDense: true,
       contentPadding: const EdgeInsets.symmetric(
-        vertical: 10, // Ajuste leve no vertical para manter a proporção
+        vertical: 10,
         horizontal: 12,
       ),
       border: OutlineInputBorder(

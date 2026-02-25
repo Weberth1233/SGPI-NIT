@@ -38,7 +38,15 @@ class ApiClient {
     );
   }
 
-  // ===== ADICIONADO AQUI =====
+
+Future<http.Response> patch(String url, {Object? body}) async {
+    return client.patch(
+      Uri.parse(url),
+      headers: await _headers(),
+      body: body == null ? null : jsonEncode(body),
+    );
+  }
+
   Future<http.Response> put(String url, {Object? body}) async {
     return client.put(
       Uri.parse(url),
@@ -47,7 +55,6 @@ class ApiClient {
     );
   }
 
-  // ===== ADICIONADO AQUI =====
   Future<http.Response> delete(String url, {Object? body}) async {
     return client.delete(
       Uri.parse(url),
@@ -58,9 +65,9 @@ class ApiClient {
 
   Future<http.Response> upload(
     String url, {
-    String? filePath,       // Caminho (Para Mobile)
-    List<int>? fileBytes,   // Bytes (Para Web)
-    required String fileName, // Nome do arquivo é obrigatório na Web
+    String? filePath,       
+    List<int>? fileBytes,   
+    required String fileName, 
     String fieldName = 'file',
   }) async {
     final request = http.MultipartRequest('POST', Uri.parse(url));

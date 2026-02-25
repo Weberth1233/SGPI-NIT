@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:nit_sgpi_frontend/domain/usecases/delete_justification.dart';
 import 'package:nit_sgpi_frontend/domain/usecases/get_process_by_id.dart';
+import 'package:nit_sgpi_frontend/domain/usecases/update_status_process.dart';
 import '../../../../domain/core/errors/failures.dart';
 import '../../../../domain/entities/process/process_response_entity.dart';
 import '../../../../infra/datasources/auth_local_datasource.dart';
@@ -8,6 +9,8 @@ import '../../../../infra/datasources/auth_local_datasource.dart';
 class ProcessDetailController extends GetxController {
   final GetProcessById _getProcessById;
   final DeleteJustification _deleteJustification;
+  final UpdateStatusProcess _updateStatusProcess;
+
 
   final AuthLocalDataSource _authLocal;
 
@@ -15,6 +18,7 @@ class ProcessDetailController extends GetxController {
     this._getProcessById,
     this._authLocal,
     this._deleteJustification,
+    this._updateStatusProcess
   );
 
   final RxBool isLoading = false.obs;
@@ -144,4 +148,54 @@ class ProcessDetailController extends GetxController {
       isLoading.value = false;
     }
   }
+
+  Future<void> uploadStatusProcess(int processId, String newStatus) async {
+    try {
+      isLoading.value = true;
+      message.value = '';
+
+      final result = await _updateStatusProcess(processId, newStatus);
+
+      result.fold(
+        (failure) {
+          message.value = failure.message;
+
+          Get.snackbar(
+            "Erro",
+            message.value,
+            backgroundColor: Get.theme.colorScheme.error,
+            colorText: Get.theme.colorScheme.onError,
+            snackPosition: SnackPosition.TOP,
+          );
+        },
+        (successMessage) async {
+          message.value = successMessage;
+
+          Get.snackbar(
+            "Sucesso",
+            message.value,
+            backgroundColor: Get.theme.colorScheme.primary,
+            colorText: Get.theme.colorScheme.onPrimary,
+            snackPosition: SnackPosition.TOP,
+          );
+
+          // 🔥 Recarrega o processo atualizado
+          if (process.value != null) {
+            await fetchProcess(process.value!.id);
+          }
+        },
+      );
+    } catch (e) {
+      Get.snackbar(
+        "Erro inesperado",
+        "Ocorreu um erro ao tentar atualizar o status do processo.",
+        backgroundColor: Get.theme.colorScheme.error,
+        colorText: Get.theme.colorScheme.onError,
+        snackPosition: SnackPosition.TOP,
+      );
+    } finally {
+      isLoading.value = false;
+    }
+  }
+  
 }

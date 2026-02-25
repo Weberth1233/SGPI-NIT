@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:nit_sgpi_frontend/domain/usecases/update_status_process.dart';
 import 'package:nit_sgpi_frontend/presentation/pages/home/controllers/process_detail_controller.dart';
 
 import '../../../../domain/repositories/ijustification_repository.dart';
@@ -70,9 +71,15 @@ Get.lazyPut<DeleteJustification>(
       ),
     );
 
+    Get.lazyPut<UpdateStatusProcess>(
+      () => UpdateStatusProcess(
+        repository: Get.find<IProcessRepository>(),
+      ),
+    );
+
   // Controller
     Get.lazyPut<ProcessDetailController>(
-      () => ProcessDetailController(Get.find<GetProcessById>(), Get.find<AuthLocalDataSource>(), Get.find<DeleteJustification>()),
+      () => ProcessDetailController(Get.find<GetProcessById>(), Get.find<AuthLocalDataSource>(), Get.find<DeleteJustification>(), Get.find<UpdateStatusProcess>()),
     );
 
   }

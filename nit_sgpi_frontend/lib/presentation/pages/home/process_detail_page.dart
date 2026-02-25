@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:nit_sgpi_frontend/domain/entities/process/process_request_entity.dart';
 import 'package:nit_sgpi_frontend/domain/entities/process/process_response_entity.dart';
 import 'controllers/process_detail_controller.dart';
 
@@ -19,6 +20,8 @@ class _ProcessDetailPageState extends State<ProcessDetailPage> {
     final controller = Get.find<ProcessDetailController>();
     final theme = Theme.of(context);
     final colors = theme.colorScheme;
+
+
 
     return Scaffold(
       appBar: AppBar(
@@ -123,12 +126,9 @@ class _ProcessDetailPageState extends State<ProcessDetailPage> {
               ),
             ),
 
-            // ============================================================
-            // 📐 LAYOUT BUILDER PARA RESPONSIVIDADE
-            // ============================================================
+          
             LayoutBuilder(
               builder: (context, constraints) {
-                // Definimos 900 de largura como o limite entre Mobile/Tablet e Desktop
                 final isDesktop = constraints.maxWidth >= 900;
 
                 return SingleChildScrollView(
@@ -175,12 +175,9 @@ class _ProcessDetailPageState extends State<ProcessDetailPage> {
           ],
         );
       }),
-    );
+    );  
   }
 
-  // ============================================================
-  // 🧭 LAYOUT DESKTOP (Telas Largas)
-  // ============================================================
   Widget _buildWideMasterDetail(
     BuildContext context,
     ProcessResponseEntity entity,
@@ -234,6 +231,25 @@ class _ProcessDetailPageState extends State<ProcessDetailPage> {
     ProcessResponseEntity entity,
     ProcessDetailController controller,
   ) {
+
+       // DIALOG DE CONFIRMAÇÃO
+  void _showDialog(BuildContext context, ProcessResponseEntity entity) {
+    Get.defaultDialog(
+      title: "Confirmar finalização do processo",
+      middleText:
+          "Tem certeza que deseja finalizar o processo \"${entity.title}\"?",
+      textConfirm: "Confirmar",
+      textCancel: "Cancelar",
+      confirmTextColor: Colors.white,
+      buttonColor: Colors.red,
+      onConfirm: () async {
+        Get.back(); // fecha o diálogo
+        await controller.uploadStatusProcess(entity.id, "FINALIZADO");
+      },
+    );
+  }
+
+
     final theme = Theme.of(context);
     final colors = theme.colorScheme;
 
@@ -344,7 +360,9 @@ class _ProcessDetailPageState extends State<ProcessDetailPage> {
             children: [
               Expanded(
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    _showDialog(context, entity);
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green,
                     padding: const EdgeInsets.symmetric(vertical: 16),
@@ -385,16 +403,36 @@ class _ProcessDetailPageState extends State<ProcessDetailPage> {
     );
   }
 
-  // ============================================================
-  // COMPONENTES DE MENU
-  // ============================================================
-
-  // Menu Item para Desktop
+ 
+  
+  
   Widget _buildDesktopSideMenu(
     BuildContext context,
     ProcessResponseEntity entity,
     ProcessDetailController controller,
   ) {
+
+
+   // DIALOG DE CONFIRMAÇÃO
+  void _showDialog(BuildContext context, ProcessResponseEntity entity) {
+    Get.defaultDialog(
+      title: "Confirmar finalização do processo",
+      middleText:
+          "Tem certeza que deseja finalizar o processo \"${entity.title}\"?",
+      textConfirm: "Confirmar",
+      textCancel: "Cancelar",
+      confirmTextColor: Colors.white,
+      buttonColor: Colors.red,
+      onConfirm: () async {
+        Get.back(); // fecha o diálogo
+        await controller.uploadStatusProcess(entity.id, "FINALIZADO");
+      },
+    );
+  }
+
+
+
+
     final theme = Theme.of(context);
     final colors = theme.colorScheme;
 
@@ -501,7 +539,9 @@ class _ProcessDetailPageState extends State<ProcessDetailPage> {
               runSpacing: 10,
               children: [
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    _showDialog(context, entity);
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green,
                   ),
@@ -1118,6 +1158,8 @@ class _ProcessDetailPageState extends State<ProcessDetailPage> {
     );
   }
 
+  
+
   Widget _buildDynamicForm(BuildContext context, ProcessResponseEntity entity) {
     final fieldsStructure = entity.ipType.formStructure.fields;
     return ListView.separated(
@@ -1180,8 +1222,12 @@ class _ProcessDetailPageState extends State<ProcessDetailPage> {
         ],
       ),
     );
+    
   }
+  
+  
 }
+ 
 
 class _StatusUi {
   final Color color;
@@ -1211,3 +1257,4 @@ class _DiagonalLinesPainter extends CustomPainter {
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
+
