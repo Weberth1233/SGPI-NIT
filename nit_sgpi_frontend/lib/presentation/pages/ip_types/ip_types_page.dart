@@ -9,8 +9,16 @@ class SecondStageProcess {
   final FirstStageProcess firstStageProcess;
   final IpTypeEntity item;
   final bool isEdit;
+  final String? originalIpTypeId;
+  final Map<String, dynamic>? originalFormData;
 
-  SecondStageProcess({required this.firstStageProcess, required this.item, this.isEdit =false});
+  SecondStageProcess({
+    required this.firstStageProcess,
+    required this.item,
+    this.isEdit = false,
+    this.originalIpTypeId,
+    this.originalFormData,
+  });
 }
 
 class IpTypesPage extends StatelessWidget {
@@ -20,7 +28,7 @@ class IpTypesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final auxProcess = Get.arguments;
+    final auxProcess = Get.arguments as FirstStageProcess;
     final ipTypesController = Get.find<IpTypesController>();
 
     final theme = Theme.of(context);
@@ -42,7 +50,6 @@ class IpTypesPage extends StatelessWidget {
               ),
               const SizedBox(height: 80),
 
-  
               Expanded(
                 child: Obx(() {
                   if (ipTypesController.isLoading.value) {
@@ -66,21 +73,22 @@ class IpTypesPage extends StatelessWidget {
                           ? 4
                           : w >= 840
                           ? 3
-                          : w >= 600 // Ajuste leve no breakpoint
+                          : w >=
+                                600 // Ajuste leve no breakpoint
                           ? 2
                           : 1;
 
                       return Scrollbar(
                         child: SingleChildScrollView(
-                         
                           padding: const EdgeInsets.fromLTRB(4, 0, 4, 24),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                             
                               Center(
                                 child: Container(
-                                  constraints: const BoxConstraints(maxWidth: 600),
+                                  constraints: const BoxConstraints(
+                                    maxWidth: 600,
+                                  ),
                                   padding: const EdgeInsets.symmetric(
                                     horizontal: 16,
                                     vertical: 12,
@@ -95,7 +103,9 @@ class IpTypesPage extends StatelessWidget {
                                       Icon(
                                         Icons.touch_app_rounded,
                                         size: 20,
-                                        color: _backgroundColor.withOpacity(0.8),
+                                        color: _backgroundColor.withOpacity(
+                                          0.8,
+                                        ),
                                       ),
                                       const SizedBox(width: 10),
                                       Flexible(
@@ -119,14 +129,17 @@ class IpTypesPage extends StatelessWidget {
                                 children: list.map((item) {
                                   return _IpTypeCard(
                                     title: item.name,
-                                    // Passamos a cor principal para o card usar no ícone
                                     dominantColor: _backgroundColor,
                                     onTap: () {
-                                      final secondStageProcess =
-                                          SecondStageProcess(
-                                            firstStageProcess: auxProcess,
-                                            item: item,
-                                          );
+                                      final secondStageProcess = SecondStageProcess(
+                                        firstStageProcess: auxProcess,
+                                        item: item,
+                                        isEdit: auxProcess.isEdit,
+                                        originalIpTypeId:
+                                            auxProcess.originalIpTypeId,
+                                        originalFormData:
+                                            auxProcess.originalFormData,
+                                      );
 
                                       Get.toNamed(
                                         "/process/ip_types/form",
@@ -180,7 +193,11 @@ class _Header extends StatelessWidget {
             onTap: onBack,
             child: const Padding(
               padding: EdgeInsets.all(12.0),
-              child: Icon(Icons.arrow_back_rounded, size: 24, color : Color(0XFF004093),)
+              child: Icon(
+                Icons.arrow_back_rounded,
+                size: 24,
+                color: Color(0XFF004093),
+              ),
             ),
           ),
         ),
@@ -282,7 +299,10 @@ class _EmptyState extends StatelessWidget {
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.white,
                 foregroundColor: IpTypesPage._backgroundColor,
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 12,
+                ),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -321,7 +341,6 @@ class _IpTypeCard extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(borderRadiusValue),
         boxShadow: [
-         
           BoxShadow(
             color: dominantColor.withOpacity(0.1),
             blurRadius: 15,
@@ -366,7 +385,7 @@ class _IpTypeCard extends StatelessWidget {
                     title,
                     style: textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.w700,
-                      color: const Color(0xFF2D3748), 
+                      color: const Color(0xFF2D3748),
                       fontSize: 16.5,
                       height: 1.3,
                     ),
@@ -374,10 +393,14 @@ class _IpTypeCard extends StatelessWidget {
                 ),
                 const SizedBox(width: 8),
 
-                
                 Icon(
                   Icons.arrow_forward_ios_rounded,
-                  color: const Color.fromARGB(255, 7, 84, 228), // Cinza claro e sutil
+                  color: const Color.fromARGB(
+                    255,
+                    7,
+                    84,
+                    228,
+                  ), // Cinza claro e sutil
                   size: 20,
                 ),
               ],

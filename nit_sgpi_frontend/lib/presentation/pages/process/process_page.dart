@@ -7,11 +7,15 @@ import '../../shared/utils/responsive.dart';
 import '../../shared/widgets/custom_text_field.dart';
 
 class FirstStageProcess {
+  final int? idProcess;
   final String title;
   final List<int> idsUser;
   final bool isEdit;
+  final String? originalIpTypeId;
+  final Map<String, dynamic>? originalFormData;
 
-  FirstStageProcess({required this.title, required this.idsUser, this.isEdit = false});
+  FirstStageProcess({this.idProcess,required this.title, required this.idsUser, this.isEdit = false, this.originalIpTypeId,
+    this.originalFormData,});
 }
 
 class ProcessPage extends StatefulWidget {
@@ -370,12 +374,15 @@ final ProcessResponseEntity? process = Get.arguments is ProcessResponseEntity ? 
                                     );
                                     return;
                                   }
-
+                            
                                   final auxProcess = FirstStageProcess(
+                                    idProcess: process?.id,
                                     title: titleController.text.trim(),
                                     idsUser: userController.selectedUsers.keys
                                         .toList(),
-                                    isEdit: widget.isEditMode
+                                    isEdit: widget.isEditMode,
+                                    originalIpTypeId: process?.ipType.id.toString(),
+                                    originalFormData: process?.formData,
                                   );
 
                                   await Get.toNamed(
