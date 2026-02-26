@@ -42,6 +42,8 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
+                                .requestMatchers(HttpMethod.POST, "api/auth/forgot-password").permitAll()
+                                .requestMatchers(HttpMethod.POST, "api/auth/reset-password").permitAll()
                         
 
                         // IpTypes - ROLES

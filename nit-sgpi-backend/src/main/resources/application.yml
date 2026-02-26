@@ -1,5 +1,5 @@
-#server:
-#  port: 8081
+server:
+  port: 8081
 
 # Configurações Customizadas do Sistema
 file:
@@ -9,11 +9,22 @@ file:
 spring:
   application:
     name: srpi
+  mail:
+    host: smtp-relay.brevo.com
+    port: 587
+    username: a374cd001@smtp-brevo.com
+    password: ${SENDINBLUE_SMTP_KEY}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 
   # Banco de Dados PostgreSQL
   datasource:
-   # url: jdbc:postgresql://localhost:5432/nitsrpi
-    url: jdbc:postgresql://postgres:5432/nitsrpi
+    url: jdbc:postgresql://localhost:5432/nitsrpi
+    #url: jdbc:postgresql://postgres:5432/nitsrpi
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
@@ -46,3 +57,6 @@ api:
   security:
     token:
       secret: ${JWT_SECRET:my-secret-key}
+
+
+
