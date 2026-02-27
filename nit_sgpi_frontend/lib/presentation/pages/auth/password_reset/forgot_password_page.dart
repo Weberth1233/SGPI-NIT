@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:nit_sgpi_frontend/presentation/pages/auth/password_reset/controllers/forgot_password_controller.dart';
 import 'package:nit_sgpi_frontend/presentation/shared/widgets/custom_text_field.dart';
 
 class ForgotPasswordPage extends StatelessWidget {
@@ -7,8 +8,11 @@ class ForgotPasswordPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController email = TextEditingController();
+    
+    TextEditingController _emailController = TextEditingController();
+
     final theme = Theme.of(context);
+    final forgotPasswordController = Get.find<ForgotPasswordController>();
     
     return Scaffold(
       body: Column(
@@ -70,18 +74,58 @@ class ForgotPasswordPage extends StatelessWidget {
                   Text("Enviaremos um codigo para seu e-mail!"),
                   SizedBox(height: 50),
                   
-                  CustomTextField(controller: email, label: "E-mail"),
+                  CustomTextField(controller: _emailController, label: "E-mail"),
                   SizedBox(height: 10),
                   
-                  ElevatedButton(
-                    onPressed: () {},
-                    child: Text(
-                      "Enviar",
-                      style: theme.textTheme.bodySmall!.copyWith(
+                  Obx(
+                    () => SizedBox(
+                      width: 447,
+                      height: 44,
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor: WidgetStateProperty.all(
+                            theme.colorScheme.onSecondary,
+                          ),
+                        ),
+                        onPressed: forgotPasswordController.loading.value
+                            ? null
+                            : () {
+                                forgotPasswordController.forgotPassword(
+                                  _emailController.text,
+                                );
+                              },
+                        child: forgotPasswordController.loading.value
+                            ? const SizedBox(
+                                width: 20,
+                                height: 20,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: Colors.white,
+                                ),
+                              )
+                            :  Text(
+                                "Enviar",
+                                style: theme.textTheme.bodySmall!.copyWith(
                         color: theme.colorScheme.onSecondary,
+                      ),
+                              ),
                       ),
                     ),
                   ),
+                  
+                  
+
+                  Obx(() {
+                    final message = forgotPasswordController.message.value;
+                    if (message.isEmpty) return const SizedBox(height: 20);
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 12),
+                      child: Text(
+                        message,
+                        style: const TextStyle(color: Colors.red),
+                      ),
+                    );
+                  }),
                 ],
               ),
             ),

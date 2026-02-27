@@ -1,6 +1,7 @@
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:nit_sgpi_frontend/presentation/pages/attachments/attachments_page.dart';
 import 'package:nit_sgpi_frontend/presentation/pages/attachments/bindings/attachments_bindigs.dart';
+import 'package:nit_sgpi_frontend/presentation/pages/auth/password_reset/bindings/forgot_password_bindings.dart';
 import 'package:nit_sgpi_frontend/presentation/pages/auth/password_reset/forgot_password_page.dart';
 import 'package:nit_sgpi_frontend/presentation/pages/home/bindings/process_detail_bindings.dart';
 import 'package:nit_sgpi_frontend/presentation/pages/home/process_detail_page.dart';
@@ -30,7 +31,7 @@ class MyRoutes {
       binding: RegisterBindings(),
     ),
 
-    GetPage(name: "/forgot-password", page: () => ForgotPasswordPage()),
+    GetPage(name: "/forgot-password", page: () => ForgotPasswordPage(), binding: ForgotPasswordBindings()),
 
     GetPage(name: "/home", page: () => HomePage(), binding: HomeBindings()),
 

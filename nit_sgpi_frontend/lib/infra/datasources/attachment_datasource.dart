@@ -1,13 +1,7 @@
 import 'dart:convert';
-import 'dart:typed_data'; // Necessário para Uint8List
-
-// Imports condicionais e de pacotes
-import 'package:flutter/foundation.dart'; // kIsWeb
-import 'package:get/get_connect/http/src/utils/utils.dart';
-import 'package:web/web.dart' as web; // O substituto do dart:html
-import 'dart:js_interop'; // Necessário para converter bytes para JS
-
-// Seus imports do projeto
+import 'package:flutter/foundation.dart'; 
+import 'package:web/web.dart' as web; 
+import 'dart:js_interop'; 
 import 'package:nit_sgpi_frontend/domain/entities/attachment_entity.dart';
 import 'package:nit_sgpi_frontend/infra/models/attachment_model.dart';
 import '../../domain/core/errors/exceptions.dart';

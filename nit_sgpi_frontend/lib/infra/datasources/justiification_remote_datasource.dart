@@ -29,7 +29,6 @@ class JustificationRemoteDatasourceImpl implements IJustificationRemoteDataSourc
       if (response.statusCode == 201) {
         return "Cadastrado com sucesso!";
       } else if (response.statusCode == 422) {
-        // 👇 transforma o JSON de erro em string bonita
         return response.body;
       } else {
         throw ServerException(

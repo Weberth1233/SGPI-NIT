@@ -28,14 +28,10 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
-  //  Background: Linhas diagonais minimalistas + Glow radial atrás da logo
   Widget _bgDiagonalLines(ThemeData theme) {
     return Stack(
       children: [
-        // cor base
         Container(color: theme.colorScheme.primary),
-
-        //linhas diagonais
         Positioned.fill(
           child: CustomPaint(
             painter: _DiagonalLinesPainter(
@@ -45,8 +41,6 @@ class _LoginPageState extends State<LoginPage> {
             ),
           ),
         ),
-
-        //Glow radial atrás da logo
         Positioned.fill(
           child: Container(
             decoration: BoxDecoration(
