@@ -30,26 +30,45 @@ class MyRoutes {
       binding: RegisterBindings(),
     ),
 
-    GetPage(name: "/forgot-password", page:() => ForgotPasswordPage()),
+    GetPage(name: "/forgot-password", page: () => ForgotPasswordPage()),
 
     GetPage(name: "/home", page: () => HomePage(), binding: HomeBindings()),
-    
-    GetPage(name: "/user-logged", page: () => RegisterPage(isEditMode: true,), binding: RegisterBindings()),
 
-    GetPage(name: "/process", page: () => ProcessPage(), binding: UserBindings()),
+    GetPage(
+      name: "/user-logged",
+      page: () => RegisterPage(isEditMode: true),
+      binding: RegisterBindings(),
+    ),
 
-    
-    GetPage(name: "/process-edit", page: () => ProcessPage(isEditMode: true,), binding: UserBindings()),
-    
+    GetPage(
+      name: "/process",
+      page: () => ProcessPage(),
+      binding: UserBindings(),
+    ),
 
-    GetPage(name: "/home/process-detail/:id", page:() =>  ProcessDetailPage(), binding: ProcessDetailBindings()),
-    
-    GetPage(name: "/process-detail/attachments", page:() => AttachmentsPage(), binding: AttachmentsBindigs()),
+    GetPage(
+      name: "/process-edit",
+      page: () => ProcessPage(isEditMode: true),
+      binding: UserBindings(),
+    ),
 
-    GetPage(name: "/process-detail/justification", page:() => JustificationPage(), binding: JustificationBindings()),
+    GetPage(
+      name: "/home/process-detail/:id",
+      page: () => ProcessDetailPage(),
+      binding: ProcessDetailBindings(),
+    ),
 
-    
+    GetPage(
+      name: "/process-detail/attachments",
+      page: () => AttachmentsPage(),
+      binding: AttachmentsBindigs(),
+    ),
 
+    GetPage(
+      name: "/process-detail/justification",
+      page: () => JustificationPage(),
+      binding: JustificationBindings(),
+    ),
 
     GetPage(
       name: '/process/ip_types',
