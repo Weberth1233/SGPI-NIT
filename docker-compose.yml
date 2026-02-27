@@ -42,6 +42,8 @@ services:
     networks:
       - nitsrpi-network
     restart: unless-stopped
+    env_file:
+      - ./nit-sgpi-backend/.env
     environment:
       JWT_SECRET: my-secret-key
     volumes:
