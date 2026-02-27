@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:nit_sgpi_frontend/presentation/pages/login/controllers/login_controller.dart';
-import '../../shared/widgets/custom_text_field.dart';
+import 'package:nit_sgpi_frontend/presentation/pages/auth/login/controllers/login_controller.dart';
+import '../../../shared/widgets/custom_text_field.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -191,7 +191,9 @@ class _LoginPageState extends State<LoginPage> {
                         const SizedBox(width: 12),
 
                         OutlinedButton(
-                          onPressed: () {}, // por enquanto não navega
+                          onPressed: () {
+                            Get.toNamed("/forgot-password");
+                          }, // por enquanto não navega
                           style: OutlinedButton.styleFrom(
                             backgroundColor: Colors.yellow,
                              foregroundColor: Colors.white,

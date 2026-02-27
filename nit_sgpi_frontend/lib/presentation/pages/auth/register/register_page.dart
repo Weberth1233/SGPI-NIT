@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nit_sgpi_frontend/domain/entities/user/address_entity.dart';
 import 'package:nit_sgpi_frontend/domain/entities/user/user_entity.dart';
-import 'package:nit_sgpi_frontend/presentation/pages/register/controllers/register_controller.dart';
+import 'package:nit_sgpi_frontend/presentation/pages/auth/register/controllers/register_controller.dart';
 import 'package:nit_sgpi_frontend/presentation/shared/widgets/custom_text_field.dart';
-import '../../shared/utils/responsive.dart';
-import '../../shared/utils/validators.dart';
+import '../../../shared/utils/responsive.dart';
+import '../../../shared/utils/validators.dart';
 import 'package:flutter/services.dart';
 
-import '../users/controllers/user_logged_controller.dart';
+import '../../users/controllers/user_logged_controller.dart';
 
 class RegisterPage extends StatefulWidget {
   final bool isEditMode;

@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 
-import '../../../../domain/usecases/login_usecase.dart';
+import '../../../../../domain/usecases/login_usecase.dart';
 
 class LoginController extends GetxController {
   final LoginUsecase loginUseCase;

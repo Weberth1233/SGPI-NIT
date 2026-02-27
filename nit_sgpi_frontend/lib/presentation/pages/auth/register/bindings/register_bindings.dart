@@ -4,16 +4,16 @@ import 'package:nit_sgpi_frontend/domain/repositories/iregister_repository.dart'
 import 'package:nit_sgpi_frontend/domain/usecases/post_user.dart';
 import 'package:nit_sgpi_frontend/infra/datasources/register_remote_datasource.dart';
 import 'package:nit_sgpi_frontend/infra/repositories/register_repository_impl.dart';
-import 'package:nit_sgpi_frontend/presentation/pages/register/controllers/register_controller.dart';
+import 'package:nit_sgpi_frontend/presentation/pages/auth/register/controllers/register_controller.dart';
 import 'package:nit_sgpi_frontend/presentation/pages/users/controllers/user_logged_controller.dart' show UserLoggedController;
 
-import '../../../../domain/repositories/iuser_repository.dart';
-import '../../../../domain/usecases/get_user_logged.dart';
-import '../../../../domain/usecases/put_user.dart';
-import '../../../../infra/core/network/api_client.dart';
-import '../../../../infra/datasources/auth_local_datasource.dart';
-import '../../../../infra/datasources/user_remote_datasources.dart';
-import '../../../../infra/repositories/user_repository_impl.dart';
+import '../../../../../domain/repositories/iuser_repository.dart';
+import '../../../../../domain/usecases/get_user_logged.dart';
+import '../../../../../domain/usecases/put_user.dart';
+import '../../../../../infra/core/network/api_client.dart';
+import '../../../../../infra/datasources/auth_local_datasource.dart';
+import '../../../../../infra/datasources/user_remote_datasources.dart';
+import '../../../../../infra/repositories/user_repository_impl.dart';
 
 class RegisterBindings extends Bindings {
   @override

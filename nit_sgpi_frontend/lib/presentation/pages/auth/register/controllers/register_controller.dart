@@ -2,8 +2,8 @@ import 'package:get/get.dart';
 import 'package:nit_sgpi_frontend/domain/entities/user/user_entity.dart';
 import 'package:nit_sgpi_frontend/domain/usecases/post_user.dart';
 
-import '../../../../domain/core/errors/failures.dart';
-import '../../../../domain/usecases/put_user.dart';
+import '../../../../../domain/core/errors/failures.dart';
+import '../../../../../domain/usecases/put_user.dart';
 
 class RegisterController extends GetxController{
   final PostUser _postUser;
