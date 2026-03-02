@@ -4,18 +4,30 @@ import 'package:nit_sgpi_frontend/presentation/pages/auth/password_reset/control
 
 import '../../../shared/widgets/custom_text_field.dart';
 
-class PasswordResetPage extends StatelessWidget {
+class PasswordResetPage extends StatefulWidget {
   const PasswordResetPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    TextEditingController _tokenController = TextEditingController();
+  State<PasswordResetPage> createState() => _PasswordResetPageState();
+}
+
+class _PasswordResetPageState extends State<PasswordResetPage> {
+   TextEditingController _tokenController = TextEditingController();
     TextEditingController _newPasswordController = TextEditingController();
     final passwordResetController = Get.find<PasswordResetController>();
 
-    final theme = Theme.of(context);
-    // final forgotPasswordController = Get.find<ForgotPasswordController>();
+    @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _tokenController.dispose();
+    _newPasswordController.dispose();
+  }
 
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
