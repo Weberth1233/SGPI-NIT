@@ -21,7 +21,7 @@ class IpTypesBindings extends Bindings{
     Get.lazyPut<ApiClient>(
       () => ApiClient(
         Get.find<http.Client>(),
-        Get.find<AuthLocalDataSource>(),
+        // Get.find<AuthLocalDataSource>(),
       ),
     );
     Get.lazyPut<IIpTypesRemoteDataSource>(

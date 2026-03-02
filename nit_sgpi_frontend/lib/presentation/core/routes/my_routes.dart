@@ -16,11 +16,13 @@ import 'package:nit_sgpi_frontend/presentation/pages/process/bindings/user_bindi
 import 'package:nit_sgpi_frontend/presentation/pages/process/process_page.dart';
 import 'package:nit_sgpi_frontend/presentation/pages/auth/register/bindings/register_bindings.dart';
 import 'package:nit_sgpi_frontend/presentation/pages/auth/register/register_page.dart';
+import '../../middlewares/auth_middleware.dart';
 import '../../pages/home/bindings/home_bindings.dart';
 import '../../pages/home/home_page.dart';
 import '../../pages/ip_types/bindings/ip_types_form_binding.dart';
 import '../../pages/ip_types/ip_types_form.dart';
 import '../../pages/auth/login/bindings/login_bindings.dart';
+import '../../pages/unauthenticated_page.dart';
 
 class MyRoutes {
   static String get initialRoute => '/';
@@ -33,57 +35,80 @@ class MyRoutes {
       binding: RegisterBindings(),
     ),
 
-    GetPage(name: "/forgot-password", page: () => ForgotPasswordPage(), binding: ForgotPasswordBindings()),
-    GetPage(name: "/password-reset", page: () => PasswordResetPage(), binding: PasswordResetBindings()),
+    GetPage(
+      name: "/forgot-password",
+      page: () => ForgotPasswordPage(),
+      binding: ForgotPasswordBindings(),
+    ),
+    GetPage(
+      name: "/password-reset",
+      page: () => PasswordResetPage(),
+      binding: PasswordResetBindings(),
+    ),
 
-    GetPage(name: "/home", page: () => HomePage(), binding: HomeBindings()),
+    GetPage(
+      name: "/home",
+      page: () => HomePage(),
+      binding: HomeBindings(),
+      middlewares: [AuthMiddleware()],
+    ),
 
     GetPage(
       name: "/user-logged",
       page: () => RegisterPage(isEditMode: true),
       binding: RegisterBindings(),
+      middlewares: [AuthMiddleware()],
     ),
 
     GetPage(
       name: "/process",
       page: () => ProcessPage(),
       binding: UserBindings(),
+      middlewares: [AuthMiddleware()],
     ),
 
     GetPage(
       name: "/process-edit",
       page: () => ProcessPage(isEditMode: true),
       binding: UserBindings(),
+      middlewares: [AuthMiddleware()],
     ),
 
     GetPage(
       name: "/home/process-detail/:id",
       page: () => ProcessDetailPage(),
       binding: ProcessDetailBindings(),
+      middlewares: [AuthMiddleware()],
     ),
 
     GetPage(
       name: "/process-detail/attachments",
       page: () => AttachmentsPage(),
       binding: AttachmentsBindigs(),
+      middlewares: [AuthMiddleware()],
     ),
 
     GetPage(
       name: "/process-detail/justification",
       page: () => JustificationPage(),
       binding: JustificationBindings(),
+      middlewares: [AuthMiddleware()],
     ),
 
     GetPage(
       name: '/process/ip_types',
       page: () => IpTypesPage(),
       binding: IpTypesBindings(),
+      middlewares: [AuthMiddleware()],
     ),
 
     GetPage(
       name: '/process/ip_types/form',
       page: () => IpTypesForm(),
       binding: IpTypesFormBinding(),
+      middlewares: [AuthMiddleware()],
     ),
+
+    GetPage(name: '/unauthenticated', page: () => const UnauthenticatedPage()),
   ];
 }

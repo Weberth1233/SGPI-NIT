@@ -1,14 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:nit_sgpi_frontend/presentation/shared/controller/auth_controller.dart';
 
+import 'infra/datasources/auth_local_datasource.dart';
+import 'infra/datasources/auth_remote_datasource.dart';
+import 'infra/repositories/auth_repository_impl.dart';
 import 'presentation/core/my_widget.dart';
 
-void main() async { // <--- 2. ADICIONE O 'async' AQUI
-  WidgetsFlutterBinding.ensureInitialized(); // Recomendado quando usa async no main
-  
-  await initializeDateFormatting('pt_BR', null); // <--- 3. ADICIONE ESSA LINHA
-  
-  runApp(const MyWidget());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await initializeDateFormatting('pt_BR', null);
+
+  final local = AuthLocalDataSource();
+  final remote = AuthRemoteDataSource(http.Client());
+  final repository = AuthRepositoryImpl(remote, local);
+
+  final authController = Get.put<AuthController>(
+    AuthController(repository),
+    permanent: true,
+  );
+
+  await authController.loadSession();
+
+  runApp(
+    MyWidget(
+      initialRoute: authController.isAuthenticated
+          ? '/home'
+          : '/',
+    ),
+  );
 }
 
 
