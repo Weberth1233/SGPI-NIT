@@ -40,7 +40,7 @@ public class ProcessController implements GenericController{
 
     //Obter autor pelo id
     @PutMapping("{id}")
-    public ResponseEntity<Object> updateIpTypes
+    public ResponseEntity<Object> updateProcess
     (@RequestBody @Valid ProcessRequestDTO dto, @PathVariable("id") String id ) {
         var idIpTypes = Long.parseLong(id);
         //Buscando na base se existe alguem com esse id
