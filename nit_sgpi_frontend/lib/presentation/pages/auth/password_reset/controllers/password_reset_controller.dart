@@ -1,20 +1,20 @@
 import 'package:get/get.dart';
-import 'package:nit_sgpi_frontend/domain/usecases/forgot_password.dart';
+import 'package:nit_sgpi_frontend/domain/usecases/password_reset.dart';
 
 import '../../../../../domain/core/errors/failures.dart';
 
-class ForgotPasswordController extends GetxController {
-  final ForgotPassword _forgotPassword;
+class PasswordResetController extends GetxController{
+  final PasswordReset _passwordReset;
 
-  ForgotPasswordController(this._forgotPassword);
+  PasswordResetController(this._passwordReset);
 
   RxBool loading = false.obs;
   RxString message = "".obs;
 
-  Future<void> forgotPassword(String email) async {
+  Future<void> passwordReset(String token, String newPassword) async {
     loading.value = true;
     message.value = "";
-    final result = await _forgotPassword(email);
+    final result = await _passwordReset(token, newPassword);
     result.fold(
       (Failure failure) {
         message.value = failure.message;       

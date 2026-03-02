@@ -11,9 +11,8 @@ class CustomMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final width = MediaQuery.of(context).size.width;
-    final isMobile = width < 800; // Define o ponto de quebra (breakpoint)
+    final isMobile = width < 800; 
 
-    // === MODO MOBILE ===
     if (isMobile) {
       return Scaffold(
         backgroundColor: Theme.of(context).colorScheme.onSecondary,
@@ -27,15 +26,14 @@ class CustomMenu extends StatelessWidget {
           elevation: 0,
         ),
         drawer: Drawer(
-          width: 100, // Mantém a largura original do seu design
+          width: 100, 
           backgroundColor: theme.colorScheme.primary,
-          child: _MenuContent(theme: theme), // Reusa o conteúdo
+          child: _MenuContent(theme: theme), 
         ),
         body: child,
       );
     }
 
-    // === MODO DESKTOP ===
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.onSecondary,
       body: Row(
@@ -46,10 +44,8 @@ class CustomMenu extends StatelessWidget {
             height: double.infinity,
             width: 100,
             color: theme.colorScheme.primary,
-            // Reusa o mesmo conteúdo do menu mobile
             child: _MenuContent(theme: theme),
           ),
-          // Conteúdo da página
           Expanded(child: child),
         ],
       ),
@@ -57,9 +53,6 @@ class CustomMenu extends StatelessWidget {
   }
 }
 
-/// =======================
-/// Conteúdo do Menu (Compartilhado)
-/// =======================
 class _MenuContent extends StatelessWidget {
   final ThemeData theme;
 
@@ -71,7 +64,6 @@ class _MenuContent extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
       child: Column(
         children: [
-          // Logo (com tratamento de erro caso não carregue nos testes)
           Image.asset(
             "assets/images/Logo SGPI-Photoroom 1.png",
             width: 100,
@@ -96,8 +88,7 @@ class _MenuContent extends StatelessWidget {
                 ),
                 SizedBox(
                   height: 50,
-                ), // Ajustei o espaçamento para ficar flexível
-                // Botões de navegação (Dica: Use IconButton ou InkWell para cliques)
+                ), 
                 Icon(Icons.home, color: Colors.white, size: 30),
                 SizedBox(height: 30),
                 Icon(Icons.settings, color: Colors.white, size: 30),
@@ -111,10 +102,6 @@ class _MenuContent extends StatelessWidget {
     );
   }
 }
-
-/// =======================
-/// Seção do usuário
-/// =======================
 class _UserSection extends StatelessWidget {
   final ThemeData theme;
 

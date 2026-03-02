@@ -8,6 +8,7 @@ import '../../domain/core/errors/exceptions.dart';
 abstract class IAuthRemoteDataSource {
   Future<AuthUserEntity> login(String email, String password);
   Future<String> forgotPassword(String email);
+  Future<String> passwordReset(String token, String newPassword);
 }
 
 class AuthRemoteDataSource implements IAuthRemoteDataSource {
@@ -45,6 +46,33 @@ class AuthRemoteDataSource implements IAuthRemoteDataSource {
         Uri.parse('${BaseUrl.urlWithHttp}/api/auth/forgot-password'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({"email": email}),
+      );
+
+      print('STATUS: ${response.statusCode}');
+      print('BODY: ${response.body}');
+
+      if (response.statusCode == 200) {
+        final json = jsonDecode(response.body);
+        print(json['message']);
+        return json['message'];
+      } else {
+        throw ServerException(
+          'Erro ${response.statusCode} ao buscar processos! - Detalhes: ${response.body}',
+        );
+      }
+    } catch (e) {
+      print(e);
+      throw NetworkException('Erro de conexão com o servidor!$e');
+    }
+  }
+  
+  @override
+  Future<String> passwordReset(String token, String newPassword) async{
+     try {
+      final response = await client.post(
+        Uri.parse('${BaseUrl.urlWithHttp}/api/auth/reset-password'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({"token": token, "newPassword": newPassword}),
       );
 
       print('STATUS: ${response.statusCode}');

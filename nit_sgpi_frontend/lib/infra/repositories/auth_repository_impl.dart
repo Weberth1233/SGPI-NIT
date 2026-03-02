@@ -56,4 +56,18 @@ class AuthRepositoryImpl implements AuthRepository {
       return Left(ServerFailure("Erro inesperado!"));
     }
   }
+  
+  @override
+  Future<Either<Failure, String>> passwordReset(String token, String newPassword)async {
+     try {
+      final result = await remote.passwordReset(token, newPassword);
+      return Right(result);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(e.message));
+    } on NetworkException catch (e) {
+      return Left(NetworkFailure(e.message));
+    } catch (e) {
+      return Left(ServerFailure("Erro inesperado!"));
+    }
+  }
 }

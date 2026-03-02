@@ -3,17 +3,28 @@ import 'package:get/get.dart';
 import 'package:nit_sgpi_frontend/presentation/pages/auth/password_reset/controllers/forgot_password_controller.dart';
 import 'package:nit_sgpi_frontend/presentation/shared/widgets/custom_text_field.dart';
 
-class ForgotPasswordPage extends StatelessWidget {
+class ForgotPasswordPage extends StatefulWidget {
   const ForgotPasswordPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    
-    TextEditingController _emailController = TextEditingController();
+  State<ForgotPasswordPage> createState() => _ForgotPasswordPageState();
+}
 
+class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
+  TextEditingController _emailController = TextEditingController();
+  final forgotPasswordController = Get.find<ForgotPasswordController>();
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _emailController.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final forgotPasswordController = Get.find<ForgotPasswordController>();
-    
+
     return Scaffold(
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -53,7 +64,7 @@ class ForgotPasswordPage extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(height: 50,),
+          SizedBox(height: 50),
           Center(
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 30, vertical: 50),
@@ -73,26 +84,25 @@ class ForgotPasswordPage extends StatelessWidget {
                   SizedBox(height: 5),
                   Text("Enviaremos um codigo para seu e-mail!"),
                   SizedBox(height: 50),
-                  
-                  CustomTextField(controller: _emailController, label: "E-mail"),
+
+                  CustomTextField(
+                    controller: _emailController,
+                    label: "E-mail",
+                  ),
                   SizedBox(height: 10),
-                  
+
                   Obx(
                     () => SizedBox(
                       width: 447,
                       height: 44,
                       child: ElevatedButton(
-                        style: ButtonStyle(
-                          backgroundColor: WidgetStateProperty.all(
-                            theme.colorScheme.onSecondary,
-                          ),
-                        ),
                         onPressed: forgotPasswordController.loading.value
                             ? null
                             : () {
                                 forgotPasswordController.forgotPassword(
                                   _emailController.text,
                                 );
+                                _emailController.clear();
                               },
                         child: forgotPasswordController.loading.value
                             ? const SizedBox(
@@ -100,29 +110,38 @@ class ForgotPasswordPage extends StatelessWidget {
                                 height: 20,
                                 child: CircularProgressIndicator(
                                   strokeWidth: 2,
-                                  color: Colors.white,
+                                  color: Colors.amber,
                                 ),
                               )
-                            :  Text(
+                            : Text(
                                 "Enviar",
                                 style: theme.textTheme.bodySmall!.copyWith(
-                        color: theme.colorScheme.onSecondary,
-                      ),
+                                  color: theme.colorScheme.onSecondary,
+                                ),
                               ),
                       ),
                     ),
                   ),
-                  
-                  
-
+                  SizedBox(height: 20),
                   Obx(() {
                     final message = forgotPasswordController.message.value;
                     if (message.isEmpty) return const SizedBox(height: 20);
                     return Padding(
                       padding: const EdgeInsets.only(bottom: 12),
-                      child: Text(
-                        message,
-                        style: const TextStyle(color: Colors.red),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            message,
+                            style: const TextStyle(color: Colors.black),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              Get.toNamed("/password-reset");
+                            },
+                            child: Text("Clique aqui para mudar sua senha!"),
+                          ),
+                        ],
                       ),
                     );
                   }),
