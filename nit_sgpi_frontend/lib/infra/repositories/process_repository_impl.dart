@@ -103,4 +103,18 @@ class ProcessRepositoryImpl implements IProcessRepository {
       return Left(ServerFailure("Erro inesperado!"));
     }
   }
+  
+  @override
+  Future<Either<Failure, String>> updateStatusProcess(int processId, String newStatus) async{
+    try {
+      final result = await remoteDataSource.updateStatusProcess(processId, newStatus);
+      return Right(result);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(e.message));
+    } on NetworkException catch (e) {
+      return Left(NetworkFailure(e.message));
+    } catch (e) {
+      return Left(ServerFailure("Erro inesperado!"));
+    }
+  }
 }

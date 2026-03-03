@@ -26,6 +26,8 @@ abstract class IProcessRemoteDataSource {
   Future<String> deleteProcess(int idProcess);
 
   Future<ProcessResponseEntity> getProcessById(int processId);
+
+  Future<String> updateStatusProcess(int processId, String newStatus);
 }
 
 class ProcessRemoteDataSourceImpl implements IProcessRemoteDataSource {
@@ -135,7 +137,9 @@ class ProcessRemoteDataSourceImpl implements IProcessRemoteDataSource {
       );
       if (response.statusCode == 200) {
         ProcessResponseEntity processRequestEntity =
-            ProcessResponseModel.fromJson(json.decode(response.body)).toEntity();
+            ProcessResponseModel.fromJson(
+              json.decode(response.body),
+            ).toEntity();
         return processRequestEntity;
       } else {
         throw ServerException(
@@ -147,23 +151,47 @@ class ProcessRemoteDataSourceImpl implements IProcessRemoteDataSource {
       throw NetworkException('Erro de conexão com o servidor!');
     }
   }
-  
+
   @override
-  Future<String> deleteProcess(int idProcess) async{
-     try{
-      final response = await apiClient.delete("${BaseUrl.urlWithHttp}/process/$idProcess");
-      if(response.statusCode == 204){
+  Future<String> deleteProcess(int idProcess) async {
+    try {
+      final response = await apiClient.delete(
+        "${BaseUrl.urlWithHttp}/process/$idProcess",
+      );
+      if (response.statusCode == 204) {
         return "Removido com sucesso!";
-      }else if(response.statusCode == 404){
+      } else if (response.statusCode == 404) {
         return "Não encontrou justificativa na base de dados!";
-      }else {
+      } else {
         throw ServerException(
           'Erro ${response.statusCode} erro na deleção! - Detalhes: ${response.body}',
         );
       }
-    }catch(e){
+    } catch (e) {
       print(e);
       throw NetworkException("Erro de conexão com o servidor!");
+    }
+  }
+  
+  @override
+  Future<String> updateStatusProcess(int processId, String newStatus) async {
+    try {
+      // Ajuste aqui se mudou o nome para .patch no ApiClient
+      final response = await apiClient.patch(
+        "${BaseUrl.urlWithHttp}/process/$processId/status",
+        body: {"status": newStatus},
+      );
+
+      if (response.statusCode == 204 || response.statusCode == 200) {
+        return "Status atualizado com sucesso!";
+      } else {
+        // Isso vai te mostrar exatamente o que o servidor não gostou
+        print("Erro do Servidor: ${response.body}");
+        throw ServerException('Erro ${response.statusCode}: ${response.body}');
+      }
+    } catch (e) {
+      print("Erro na requisição: $e");
+      throw NetworkException('Erro de conexão!');
     }
   }
 }

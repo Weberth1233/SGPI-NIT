@@ -8,6 +8,7 @@ import 'package:nit_sgpi_frontend/domain/entities/process/process_status_count_e
 abstract class IProcessRepository {
   Future<Either<Failure, PagedResultEntity<ProcessResponseEntity>>> getProcesses({String title,String statusGenero, int page = 0, int size = 10});
   Future<Either<Failure, List<ProcessStatusCountEntity>>> getProcessesStatus();
+  Future<Either<Failure, String>> updateStatusProcess(int processId, String newStatus);
   Future<Either<Failure, String>> postProcess(ProcessRequestEntity entity);
   Future<Either<Failure, ProcessResponseEntity>> getProcessById(int processId); 
   Future<Either<Failure, String>> deleteProcessById(int processId); 

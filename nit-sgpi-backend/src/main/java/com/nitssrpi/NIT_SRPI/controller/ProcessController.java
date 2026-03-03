@@ -111,9 +111,6 @@ public class ProcessController implements GenericController{
         }).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-
-
-
     @GetMapping("/status/amount")
     public ResponseEntity<List<ProcessStatusCountDTO>> countStatus(){
         return ResponseEntity.ok(service.countProcessStatus());
@@ -134,4 +131,11 @@ public class ProcessController implements GenericController{
         return ResponseEntity.noContent().build();
     }
 
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<Void> updateStatus(
+            @PathVariable Long id,
+            @RequestBody StatusUpdateDTO dto) {
+        service.updateStatus(id, dto.status());
+        return ResponseEntity.noContent().build();
+    }
 }

@@ -8,6 +8,7 @@ import com.nitssrpi.NIT_SRPI.repository.IpTypesRepository;
 import com.nitssrpi.NIT_SRPI.repository.ProcessRepository;
 import com.nitssrpi.NIT_SRPI.repository.UserRepository;
 import com.nitssrpi.NIT_SRPI.repository.specs.ProcessSpecs;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -125,10 +126,9 @@ public class ProcessService {
         }
     }
 
-    public void updateProcessStatus(Process process, StatusProcess newStatus){
-        if(process.getId() == null){
-            throw new IllegalArgumentException("Para atualizar o status do processo esteja cadastrado!");
-        }
+    public void updateStatus(Long id, StatusProcess newStatus) {
+        Process process = repository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Processo não encontrado com ID: " + id));
         process.setStatus(newStatus);
         repository.save(process);
     }

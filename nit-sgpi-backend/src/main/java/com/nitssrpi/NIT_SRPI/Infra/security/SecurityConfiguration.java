@@ -74,7 +74,7 @@ public class SecurityConfiguration {
         ));
 
         // Métodos necessários para APIs REST
-        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
 
         // Headers que o Flutter costuma enviar
         config.setAllowedHeaders(List.of(
