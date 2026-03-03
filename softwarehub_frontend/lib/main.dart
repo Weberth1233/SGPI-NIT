@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:nit_sgpi_frontend/presentation/shared/controller/auth_controller.dart';
-
 import 'infra/datasources/auth_local_datasource.dart';
 import 'infra/datasources/auth_remote_datasource.dart';
 import 'infra/repositories/auth_repository_impl.dart';
 import 'presentation/core/my_widget.dart';
+import 'presentation/shared/controller/auth_controller.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
