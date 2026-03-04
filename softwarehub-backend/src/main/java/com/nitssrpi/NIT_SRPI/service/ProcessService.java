@@ -1,6 +1,7 @@
 package com.nitssrpi.NIT_SRPI.service;
 
 import com.nitssrpi.NIT_SRPI.Infra.security.SecurityService;
+import com.nitssrpi.NIT_SRPI.controller.dto.OperationNotAllowedException;
 import com.nitssrpi.NIT_SRPI.controller.dto.ProcessStatusCountDTO;
 import com.nitssrpi.NIT_SRPI.model.*;
 import com.nitssrpi.NIT_SRPI.model.Process;
@@ -120,7 +121,21 @@ public class ProcessService {
 
     public void updateStatus(Long id, StatusProcess newStatus) {
         Process process = repository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Processo não encontrado com ID: " + id));
+                .orElseThrow(() ->
+                        new EntityNotFoundException("Processo não encontrado com ID: " + id)
+                );
+
+        if (newStatus == StatusProcess.FINALIZADO) {
+            process.getAttachments().stream()
+                    .filter(att -> "PENDING".equalsIgnoreCase(att.getStatus()))
+                    .findFirst()
+                    .ifPresent(att -> {
+                        throw new OperationNotAllowedException(
+                                "Há documento pendente para assinatura: "
+                                        + att.getDisplayName()
+                        );
+                    });
+        }
         process.setStatus(newStatus);
         repository.save(process);
     }

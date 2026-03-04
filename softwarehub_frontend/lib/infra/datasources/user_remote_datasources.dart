@@ -17,7 +17,6 @@ abstract class IUserRemoteDataSource {
 
   Future<UserEntity> getUserLogged();
   Future<String> updateUser(int idUser, UserEntity user);
-
 }
 
 class UserRemoteDatasourcesImpl implements IUserRemoteDataSource {
@@ -62,7 +61,10 @@ class UserRemoteDatasourcesImpl implements IUserRemoteDataSource {
           'Erro ${response.statusCode} ao buscar usuarios! - Detalhes: ${response.body}',
         );
       }
-    } catch (e) {
+    } on ServerException {
+      rethrow; // 👈 mantém a exception original
+    }
+    catch (e) {
       throw NetworkException('Erro de conexão com o servidor!');
     }
   }
@@ -80,7 +82,10 @@ class UserRemoteDatasourcesImpl implements IUserRemoteDataSource {
           'Erro ${response.statusCode} ao buscar processos! - Detalhes: ${response.body}',
         );
       }
-    } catch (e) {
+    }on ServerException {
+      rethrow; // 👈 mantém a exception original
+    }
+     catch (e) {
       print(e);
       throw NetworkException('Erro de conexão com o servidor!');
     }
@@ -103,6 +108,8 @@ class UserRemoteDatasourcesImpl implements IUserRemoteDataSource {
           'Erro ${response.statusCode} ao buscar processos! - Detalhes: ${response.body}',
         );
       }
+    }on ServerException {
+      rethrow; // 👈 mantém a exception original
     } catch (e) {
       print(e);
       throw NetworkException('Erro de conexão com o servidor!');

@@ -57,10 +57,13 @@ class AuthRemoteDataSource implements IAuthRemoteDataSource {
         return json['message'];
       } else {
         throw ServerException(
-          'Erro ${response.statusCode} ao buscar processos! - Detalhes: ${response.body}',
+          'Erro ${response.statusCode}! - Detalhes: ${response.body}',
         );
       }
-    } catch (e) {
+    } on ServerException {
+      rethrow; // 👈 mantém a exception original
+    }
+    catch (e) {
       print(e);
       throw NetworkException('Erro de conexão com o servidor!$e');
     }
@@ -87,7 +90,10 @@ class AuthRemoteDataSource implements IAuthRemoteDataSource {
           'Erro ${response.statusCode} ao buscar processos! - Detalhes: ${response.body}',
         );
       }
-    } catch (e) {
+    } on ServerException {
+      rethrow; // 👈 mantém a exception original
+    }
+    catch (e) {
       print(e);
       throw NetworkException('Erro de conexão com o servidor!$e');
     }

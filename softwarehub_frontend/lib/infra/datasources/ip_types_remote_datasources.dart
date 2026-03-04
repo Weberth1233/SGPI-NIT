@@ -35,7 +35,10 @@ class IpTypesRemoteDataSourceImpl implements IIpTypesRemoteDataSource{
           'Erro ${response.statusCode} ao buscar processos! - Detalhes: ${response.body}',
         );
       }
-    } catch (e) {
+    } on ServerException {
+      rethrow; // 👈 mantém a exception original
+    }
+    catch (e) {
       throw NetworkException('Erro de conexão com o servidor!');
     }
   }

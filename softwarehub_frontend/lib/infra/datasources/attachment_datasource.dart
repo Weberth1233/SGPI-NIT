@@ -89,7 +89,10 @@ class AttachmentDataSourceImpl implements IAttachmentDatasource {
           'Erro ${response.statusCode} ao buscar anexos! - Detalhes: ${response.body}',
         );
       }
-    } catch (e) {
+    }on ServerException {
+      rethrow; // 👈 mantém a exception original
+    }
+     catch (e) {
       // Se não for ServerException, assume erro de rede
       if (e is ServerException) rethrow;
       throw NetworkException('Erro de conexão com o servidor!');
@@ -121,6 +124,8 @@ class AttachmentDataSourceImpl implements IAttachmentDatasource {
           'Erro ${response.statusCode} ao enviar arquivo! - Detalhes: ${response.body}',
         );
       }
+    }on ServerException {
+      rethrow; // 👈 mantém a exception original
     } catch (e) {
       if (e is ServerException) rethrow;
       throw NetworkException('Erro de conexão ao tentar enviar o arquivo.');

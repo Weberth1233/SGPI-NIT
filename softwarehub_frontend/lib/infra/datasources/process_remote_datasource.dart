@@ -70,7 +70,9 @@ class ProcessRemoteDataSourceImpl implements IProcessRemoteDataSource {
           'Erro ${response.statusCode} ao buscar processos! - Detalhes: ${response.body}',
         );
       }
-    } catch (e) {
+    } on ServerException {
+      rethrow; // 👈 mantém a exception original
+    }catch (e) {
       print(e);
       throw NetworkException('Erro de conexão com o servidor!');
     }
@@ -97,6 +99,8 @@ class ProcessRemoteDataSourceImpl implements IProcessRemoteDataSource {
           'Erro ${response.statusCode} ao buscar processos! - Detalhes: ${response.body}',
         );
       }
+    } on ServerException {
+      rethrow; // 👈 mantém a exception original
     } catch (e) {
       throw NetworkException('Erro de conexão com o servidor!');
     }
@@ -125,6 +129,8 @@ class ProcessRemoteDataSourceImpl implements IProcessRemoteDataSource {
           'Erro ${response.statusCode} erro no cadastro! - Detalhes: ${response.body}',
         );
       }
+    }on ServerException {
+      rethrow; // 👈 mantém a exception original
     } catch (e) {
       print(e);
       throw NetworkException('Erro de conexão com o servidor!');
@@ -148,7 +154,10 @@ class ProcessRemoteDataSourceImpl implements IProcessRemoteDataSource {
           'Erro ${response.statusCode} ao buscar processos! - Detalhes: ${response.body}',
         );
       }
-    } catch (e) {
+    } on ServerException {
+      rethrow; // 👈 mantém a exception original
+    }
+    catch (e) {
       print(e);
       throw NetworkException('Erro de conexão com o servidor!');
     }
@@ -169,12 +178,15 @@ class ProcessRemoteDataSourceImpl implements IProcessRemoteDataSource {
           'Erro ${response.statusCode} erro na deleção! - Detalhes: ${response.body}',
         );
       }
-    } catch (e) {
+    } on ServerException {
+      rethrow; // 👈 mantém a exception original
+    }
+    catch (e) {
       print(e);
       throw NetworkException("Erro de conexão com o servidor!");
     }
   }
-  
+
   @override
   Future<String> updateStatusProcess(int processId, String newStatus) async {
     try {
@@ -182,18 +194,21 @@ class ProcessRemoteDataSourceImpl implements IProcessRemoteDataSource {
         "${BaseUrl.urlWithHttp}/process/$processId/status",
         body: {"status": newStatus},
       );
+
       if (response.statusCode == 204 || response.statusCode == 200) {
         return "Status atualizado com sucesso!";
       } else {
         throw ServerException('Erro ${response.statusCode}: ${response.body}');
       }
+    } on ServerException {
+      rethrow; // 👈 mantém a exception original
     } catch (e) {
-      throw NetworkException('Erro de conexão!');
+      throw NetworkException('Erro de conexão! $e');
     }
   }
-  
+
   @override
-  Future<String> putProcess(int processId, ProcessRequestEntity entity) async{
+  Future<String> putProcess(int processId, ProcessRequestEntity entity) async {
     try {
       final model = ProcessRequestModel.fromEntity(entity);
 
@@ -214,8 +229,10 @@ class ProcessRemoteDataSourceImpl implements IProcessRemoteDataSource {
           'Erro ${response.statusCode} erro no cadastro! - Detalhes: ${response.body}',
         );
       }
-    } catch (e) {
-      print(e);
+    } on ServerException {
+      rethrow; // 👈 mantém a exception original
+    }
+    catch (e) {
       throw NetworkException('Erro de conexão com o servidor!');
     }
   }

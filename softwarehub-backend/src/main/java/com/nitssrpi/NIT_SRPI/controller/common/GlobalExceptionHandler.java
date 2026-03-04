@@ -1,6 +1,7 @@
 package com.nitssrpi.NIT_SRPI.controller.common;
 import com.nitssrpi.NIT_SRPI.controller.dto.ErroCampo;
 import com.nitssrpi.NIT_SRPI.controller.dto.ErrorResposta;
+import com.nitssrpi.NIT_SRPI.controller.dto.ExceptionTradingRule;
 import jakarta.validation.constraints.Null;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authorization.AuthorizationDeniedException;
@@ -22,6 +23,12 @@ public class GlobalExceptionHandler {
         List<ErroCampo> listaErros = fieldErrors.
                 stream().map(fe -> new ErroCampo(fe.getField(), fe.getDefaultMessage())).toList();
         return new ErrorResposta(HttpStatus.UNPROCESSABLE_ENTITY.value(), "Erro de validação!", listaErros);
+    }
+
+    @ExceptionHandler(ExceptionTradingRule.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResposta handleTradingRuleException(ExceptionTradingRule e) {
+        return ErrorResposta.respostaPadrao(e.getMessage());
     }
 
     //NullPointerException:

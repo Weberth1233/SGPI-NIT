@@ -35,7 +35,10 @@ class JustificationRemoteDatasourceImpl implements IJustificationRemoteDataSourc
           'Erro ${response.statusCode} erro no cadastro! - Detalhes: ${response.body}',
         );
       }
-    }catch(e){
+    }on ServerException {
+      rethrow; // 👈 mantém a exception original
+    }
+    catch(e){
       print(e);
       throw NetworkException("Erro de conexão com o servidor!");
     }
@@ -54,7 +57,10 @@ class JustificationRemoteDatasourceImpl implements IJustificationRemoteDataSourc
           'Erro ${response.statusCode} erro na deleção! - Detalhes: ${response.body}',
         );
       }
-    }catch(e){
+    }on ServerException {
+      rethrow; // 👈 mantém a exception original
+    }
+    catch(e){
       print(e);
       throw NetworkException("Erro de conexão com o servidor!");
     }
@@ -78,7 +84,10 @@ class JustificationRemoteDatasourceImpl implements IJustificationRemoteDataSourc
           'Erro ${response.statusCode} erro no cadastro! - Detalhes: ${response.body}',
         );
       }
-    }catch(e){
+    }on ServerException {
+      rethrow; // 👈 mantém a exception original
+    }
+    catch(e){
       print(e);
       throw NetworkException("Erro de conexão com o servidor!");
     }

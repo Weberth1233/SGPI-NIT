@@ -44,7 +44,10 @@ class RegisterRemoteDatasource implements IRegisterRemoteDataSource {
         'Erro ${response.statusCode} erro no cadastro! - Detalhes: ${response.body}',
       );
     }
-  } catch (e) {
+  }on ServerException {
+      rethrow; // 👈 mantém a exception original
+    }
+     catch (e) {
     print(e);
     throw NetworkException('Erro de conexão com o servidor!');
   }
