@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -40,11 +41,11 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(authorize -> authorize
                                 // 2. Libera explicitamente o "pre-flight" do navegador
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+
                         .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
                                 .requestMatchers(HttpMethod.POST, "api/auth/forgot-password").permitAll()
                                 .requestMatchers(HttpMethod.POST, "api/auth/reset-password").permitAll()
-                        
 
                         // IpTypes - ROLES
                         .requestMatchers(HttpMethod.GET, "/ip_types/**").hasAnyRole("ADMIN", "USER")
@@ -64,6 +65,19 @@ public class SecurityConfiguration {
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
+
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer(){
+        return web -> web.ignoring().requestMatchers(
+                "/v2/api-docs/**",
+                "/v3/api-docs/**",
+                "/swagger-resources/**",
+                "/swagger-ui.html",
+                "/swagger-ui/**",
+                "/webjars/**"
+        );
+    }
+
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {

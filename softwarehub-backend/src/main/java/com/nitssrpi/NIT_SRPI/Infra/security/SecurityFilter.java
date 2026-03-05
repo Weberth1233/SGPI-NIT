@@ -19,10 +19,25 @@ public class SecurityFilter extends OncePerRequestFilter {
     UserRepository userRepository;
 
 
+    private static final String[] PUBLIC_ROUTES = {
+            "/auth/login",
+            "/auth/register",
+            "/swagger-ui",
+            "/v3/api-docs",
+            "/swagger-resources",
+            "/webjars"
+    };
+
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getServletPath();
-        return path.equals("/auth/login") || path.equals("/auth/register");
+
+        for (String route : PUBLIC_ROUTES) {
+            if (path.startsWith(route)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

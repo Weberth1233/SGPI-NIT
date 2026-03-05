@@ -6,6 +6,10 @@ import com.nitssrpi.NIT_SRPI.controller.mappers.UserMapper;
 import com.nitssrpi.NIT_SRPI.controller.mappers.UserUpdateMapper;
 import com.nitssrpi.NIT_SRPI.model.User;
 import com.nitssrpi.NIT_SRPI.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -17,12 +21,19 @@ import java.net.URI;
 @RestController
 @RequestMapping("users")
 @RequiredArgsConstructor
+@Tag(name = "Usuário")
 public class UserController  implements GenericController{
     private final UserService service;
     private final UserMapper mapper;
     private final UserUpdateMapper userUpdateMapper;
 
     @PostMapping
+    @Operation(summary = "Salvar", description = "Cadastrar novo usuário")
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "Cadastrado com sucesso!"),
+            @ApiResponse(responseCode = "422", description = "Erro de validação!"),
+            @ApiResponse(responseCode = "409", description = "Usuário já cadastrado!"),
+    })
     public ResponseEntity<Object> save(@RequestBody @Valid UserRequestDTO dto) {
         User user = mapper.toEntity(dto);
         service.save(user);
@@ -30,8 +41,13 @@ public class UserController  implements GenericController{
         return ResponseEntity.created(location).build();
     }
 
+
     //Obter autor pelo id
     @GetMapping("{id}")
+    @Operation(summary = "Obter por id", description = "Obter dados do usuário passando o Id como paramêtro")
+    @ApiResponses({
+            @ApiResponse(responseCode = "204", description = "Cadastrado com sucesso!"),
+    })
     public ResponseEntity<UserResponseDTO> getDetailsUser
     (@PathVariable("id") String id) {
         var idUser = Long.parseLong(id);
@@ -43,6 +59,11 @@ public class UserController  implements GenericController{
 
 
     @PutMapping("{id}")
+    @Operation(summary = "Atualizar", description = "Atualizar usuário passando o ID")
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "Atualizado com sucesso!"),
+            @ApiResponse(responseCode = "422", description = "Erro de validação!"),
+    })
     public ResponseEntity<Object> updateUser(@PathVariable("id") String id, @RequestBody @Valid UserUpdateDTO dto){
         var idUser = Long.parseLong(id);
 
@@ -81,7 +102,12 @@ public class UserController  implements GenericController{
 
     }
 
+
     @GetMapping("/logged")
+    @Operation(summary = "Obter dados ", description = "Obter dados do usuario logado")
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "Busca realizada com sucesso!"),
+    })
     //logged-in user
     public ResponseEntity<UserResponseDTO> getLoggedUser() {
             UserResponseDTO dto = mapper.toDTO(service.getLoggedUser());
@@ -89,6 +115,10 @@ public class UserController  implements GenericController{
     }
 
     @GetMapping
+    @Operation(summary = "Pesquisar usuário", description = "Pesquisar usuário passando o user name, nome completo, página ou tamanho da página como paramêtro")
+    @ApiResponses({
+            @ApiResponse(responseCode = "204", description = "Cadastrado com sucesso!"),
+    })
     public ResponseEntity<Page<UserResponseDTO>> pagedSearch(@RequestParam(value = "user-name", required = false) String userName,
                                             @RequestParam(value = "full-name", required = false) String fullName,
                                             @RequestParam(value = "page", defaultValue = "0") Integer page,

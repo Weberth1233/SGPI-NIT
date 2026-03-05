@@ -4,6 +4,7 @@ import com.nitssrpi.NIT_SRPI.controller.dto.IpTypesDocumentResponseDTO;
 import com.nitssrpi.NIT_SRPI.controller.mappers.IpTypesDocumentMapper;
 import com.nitssrpi.NIT_SRPI.model.IpTypeDocument;
 import com.nitssrpi.NIT_SRPI.service.IpTypesDocumentService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("ip_types_documents")
 @RequiredArgsConstructor
-
+@Tag(name = "Documentos Tipo Propriedade Intelectual")
 public class IpTypeDocumentController implements  GenericController {
     private final IpTypesDocumentService service;
     private final IpTypesDocumentMapper mapper;

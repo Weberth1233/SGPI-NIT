@@ -44,7 +44,7 @@ class _ProcessDetailPageState extends State<ProcessDetailPage> {
                 child: IconButton(
                   padding: EdgeInsets.zero,
                   icon: Icon(Icons.arrow_back, color: colors.primary),
-                  onPressed: () => Get.back(),
+                  onPressed: () => Get.toNamed("/home"),
                 ),
               ),
             ),

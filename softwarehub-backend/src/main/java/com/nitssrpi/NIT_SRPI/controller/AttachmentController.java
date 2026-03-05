@@ -4,6 +4,7 @@ import com.nitssrpi.NIT_SRPI.controller.mappers.AttachmentMapper;
 import com.nitssrpi.NIT_SRPI.model.Attachment;
 import com.nitssrpi.NIT_SRPI.repository.AttachmentRepository;
 import com.nitssrpi.NIT_SRPI.service.AttachmentService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -18,6 +19,7 @@ import java.util.List;
 @RestController
 @RequestMapping("attachments")
 @RequiredArgsConstructor
+@Tag(name = "Documentação")
 public class AttachmentController {
     private final AttachmentService attachmentService;
     private final AttachmentMapper mapper;
