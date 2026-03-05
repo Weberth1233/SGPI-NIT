@@ -1,6 +1,7 @@
 package com.nitssrpi.NIT_SRPI.controller.dto;
 
 import com.nitssrpi.NIT_SRPI.model.UserRole;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Past;
@@ -8,7 +9,7 @@ import jakarta.validation.constraints.Pattern;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDate;
-
+@Schema(name = "Usuário")
 public record UserRequestDTO(
         @NotBlank(message = "Campo obrigatório!")
         String userName,

@@ -4,6 +4,7 @@ import com.nitssrpi.NIT_SRPI.controller.dto.IpTypesResponseDTO;
 import com.nitssrpi.NIT_SRPI.controller.mappers.IpTypesMapper;
 import com.nitssrpi.NIT_SRPI.model.IpTypes;
 import com.nitssrpi.NIT_SRPI.service.IpTypesService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("ip_types")
 @RequiredArgsConstructor
+@Tag(name = "Tipo Propriedade Intelectual")
 public class IpTypesController implements GenericController{
     private final IpTypesService service;
     private final IpTypesMapper mapper;

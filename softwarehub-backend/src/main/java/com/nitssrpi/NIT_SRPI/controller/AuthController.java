@@ -1,6 +1,7 @@
 package com.nitssrpi.NIT_SRPI.controller;
 
 import com.nitssrpi.NIT_SRPI.service.AuthService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,6 +11,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("api/auth/")
 @CrossOrigin(origins = "*")
+@Tag(name = "Esqueci a senha")
 public class AuthController {
     @Autowired // <--- ESSA ANOTAÇÃO É OBRIGATÓRIA
     private AuthService authService;

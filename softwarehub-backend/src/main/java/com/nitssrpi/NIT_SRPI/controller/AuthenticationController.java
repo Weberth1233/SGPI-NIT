@@ -9,6 +9,7 @@ import com.nitssrpi.NIT_SRPI.controller.mappers.UserMapper;
 import com.nitssrpi.NIT_SRPI.model.User;
 import com.nitssrpi.NIT_SRPI.repository.UserRepository;
 import com.nitssrpi.NIT_SRPI.service.UserService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +26,7 @@ import java.net.URI;
 
 @RestController
 @RequestMapping("auth")
+@Tag(name = "Autenticação")
 public class AuthenticationController implements GenericController{
     @Autowired
     private AuthenticationManager authenticationManager;
