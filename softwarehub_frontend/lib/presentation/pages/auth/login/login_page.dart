@@ -329,8 +329,7 @@ class _LoginPageState extends State<LoginPage> {
                                   Expanded(
                                     child: OutlinedButton.icon(
                                       onPressed: () {
-                                        // mesma lógica: ainda “placeholder” se você não tiver rota
-                                        // Get.toNamed("/recover");
+                                        Get.toNamed("/forgot-password");
                                       },
                                       style: OutlinedButton.styleFrom(
                                         foregroundColor: const Color(
