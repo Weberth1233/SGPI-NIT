@@ -232,7 +232,7 @@ class _ProcessDetailPageState extends State<ProcessDetailPage> {
   ) {
 
        // DIALOG DE CONFIRMAÇÃO
-  void _showDialog(BuildContext context, ProcessResponseEntity entity) {
+  void showDialog(BuildContext context, ProcessResponseEntity entity) {
     Get.defaultDialog(
       title: "Confirmar finalização do processo",
       middleText:
@@ -360,7 +360,7 @@ class _ProcessDetailPageState extends State<ProcessDetailPage> {
               Expanded(
                 child: ElevatedButton(
                   onPressed: () {
-                    _showDialog(context, entity);
+                    showDialog(context, entity);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green,
@@ -413,7 +413,7 @@ class _ProcessDetailPageState extends State<ProcessDetailPage> {
 
 
    // DIALOG DE CONFIRMAÇÃO
-  void _showDialog(BuildContext context, ProcessResponseEntity entity) {
+  void showDialog(BuildContext context, ProcessResponseEntity entity) {
     Get.defaultDialog(
       title: "Confirmar finalização do processo",
       middleText:
@@ -539,7 +539,7 @@ class _ProcessDetailPageState extends State<ProcessDetailPage> {
               children: [
                 ElevatedButton(
                   onPressed: () {
-                    _showDialog(context, entity);
+                    showDialog(context, entity);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green,

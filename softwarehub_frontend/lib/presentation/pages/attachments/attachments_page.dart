@@ -89,7 +89,7 @@ class _AttachmentsPageState extends State<AttachmentsPage> {
 
   Widget _buildAttachmentCard(BuildContext context, AttachmentEntity entity) {
     final theme = Theme.of(context);
-    final bool isSigned = entity.signedFilePath != "" && entity.signedFilePath != null;
+    final bool isSigned = entity.signedFilePath != "";
 
     // Cores fixas para o visual desejado (Fundo Azul Escuro, Texto Branco)
     final cardBackgroundColor = theme.colorScheme.primary; // Assume que sua cor primária é o azul escuro do tema

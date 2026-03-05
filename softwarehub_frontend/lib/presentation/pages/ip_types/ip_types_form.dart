@@ -154,7 +154,7 @@ class IpTypesForm extends GetView<IpTypesFormController> {
                                   ),
                                 ),
                               );
-                            }).toList(),
+                            }),
 
                             const SizedBox(height: 32),
 

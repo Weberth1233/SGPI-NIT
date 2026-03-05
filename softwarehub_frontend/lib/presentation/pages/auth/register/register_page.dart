@@ -89,16 +89,14 @@ class _RegisterPageState extends State<RegisterPage> {
       }
 
       // Tratando o endereço
-      if (user.address != null) {
-        cepController.text = user.address!.zipCode;
-        streetController.text = user.address!.street;
-        numberController.text = user.address!.number;
-        complementController.text = user.address!.complement ?? '';
-        neighborhoodController.text = user.address!.neighborhood;
-        cityController.text = user.address!.city;
-        stateController.text = user.address!.state;
-      }
-    }
+      cepController.text = user.address.zipCode;
+      streetController.text = user.address.street;
+      numberController.text = user.address.number;
+      complementController.text = user.address.complement ?? '';
+      neighborhoodController.text = user.address.neighborhood;
+      cityController.text = user.address.city;
+      stateController.text = user.address.state;
+        }
   }
 
   @override
@@ -420,8 +418,9 @@ class _RegisterPageState extends State<RegisterPage> {
                                     final y = int.tryParse(v ?? "");
                                     final nowY = DateTime.now().year;
                                     if (y == null) return "Inválido";
-                                    if (y < 1900 || y > nowY)
+                                    if (y < 1900 || y > nowY) {
                                       return "1900-$nowY";
+                                    }
                                     return null;
                                   },
                                 ),

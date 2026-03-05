@@ -13,12 +13,9 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final _emailController = TextEditingController(
     text: 'marialurdes123@gmail.com',
-    //text: "joaosilva@gmail.com"
   );
-  final _passwordController = TextEditingController(
-    text: 'marialurdes123'
-    //text: "joao1234"
-  );
+  final _passwordController = TextEditingController(text: 'marialurdes123');
+
   final loginController = Get.find<LoginController>();
 
   @override
@@ -28,193 +25,352 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
-  Widget _bgDiagonalLines(ThemeData theme) {
-    return Stack(
-      children: [
-        Container(color: theme.colorScheme.primary),
-        Positioned.fill(
-          child: CustomPaint(
-            painter: _DiagonalLinesPainter(
-              color: theme.colorScheme.onPrimary.withOpacity(0.030),
-              spacing: 70,
-              strokeWidth: 1.5,
-            ),
-          ),
+  // Background clean gradiente + sombra suave
+  Widget _cleanBackground(ThemeData theme) {
+    return Container(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            Color(0xFF005A9C), // Azul (tom médio/escuro)
+            Color.fromARGB(255, 22, 117, 185), // Azul (tom médio/escuro)
+            Color(0xFFFBC02D), // Amarelo / Dourado
+          ],
         ),
-        Positioned.fill(
-          child: Container(
-            decoration: BoxDecoration(
-              gradient: RadialGradient(
-                center: const Alignment(0, -0.25),
-                radius: 0.50,
-                colors: [Colors.white.withOpacity(0.15), Colors.transparent],
-              ),
-            ),
-          ),
+      ),
+    );
+  }
+
+  Widget _topAccentBar() {
+    return Container(
+      height: 6,
+      decoration: const BoxDecoration(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(18)),
+        gradient: LinearGradient(
+          colors: [
+            Color(0xFF00B0FF), // azul
+            Colors.white, // branco
+            Color.fromARGB(255, 223, 174, 16),
+          ],
         ),
-      ],
+      ),
+    );
+  }
+
+  InputDecoration _fieldDecoration({
+    required ThemeData theme,
+    required String hint,
+    required IconData icon,
+  }) {
+    final colors = theme.colorScheme;
+
+    return InputDecoration(
+      hintText: hint,
+      prefixIcon: Icon(icon, color: colors.primary.withOpacity(0.75)),
+      filled: true,
+      fillColor: Colors.white,
+      contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide(color: Colors.black.withOpacity(0.08)),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide(color: Colors.black.withOpacity(0.08)),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide(
+          color: colors.primary.withOpacity(0.55),
+          width: 1.4,
+        ),
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final colors = theme.colorScheme;
 
     return Scaffold(
       body: Stack(
         children: [
-          _bgDiagonalLines(theme),
+          _cleanBackground(theme),
+
+          Positioned.fill(
+            child: CustomPaint(
+              painter: _DiagonalLinesPainter(
+                color: theme.colorScheme.onSecondary.withOpacity(0.030),
+                spacing: 70,
+                strokeWidth: 1.5,
+              ),
+            ),
+          ),
 
           Center(
-            child: Container(
-              padding: const EdgeInsets.all(24),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Image.asset("assets/images/Logo SGPI-Photoroom 1.png"),
-                  Text(
-                    '𝙉𝙄𝙏',
-                    style: context.textTheme.bodyLarge!.copyWith(
-                      color: theme.colorScheme.onSecondary,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-
-                  const SizedBox(height: 45),
-
-                  CustomTextField(
-                    label: "𝗘-𝗠𝗔𝗜𝗟",
-                    controller: _emailController,
-                    size: 447,
-                    textWhiteColor: true,
-                  ),
-                  const SizedBox(height: 16),
-
-                  CustomTextField(
-                    label: "𝗦𝗘𝗡𝗛𝗔",
-                    controller: _passwordController,
-                    obscureText: true,
-                    size: 447,
-                    textWhiteColor: true,
-                  ),
-                  const SizedBox(height: 24),
-
-                  Obx(() {
-                    final error = loginController.errorMessage.value;
-                    if (error.isEmpty) return const SizedBox(height: 20);
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 12),
-                      child: Text(
-                        error,
-                        style: const TextStyle(color: Colors.red),
-                      ),
-                    );
-                  }),
-
-                  Obx(
-                    () => SizedBox(
-                      width: 447,
-                      height: 44,
-                      child: ElevatedButton(
-                        style: ButtonStyle(
-                          backgroundColor: WidgetStateProperty.all(
-                            theme.colorScheme.onSecondary,
-                          ),
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 24),
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 420),
+                child: Material(
+                  color: Colors.transparent,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.96),
+                      borderRadius: BorderRadius.circular(18),
+                      boxShadow: [
+                        BoxShadow(
+                          blurRadius: 28,
+                          spreadRadius: 0,
+                          offset: const Offset(0, 14),
+                          color: Colors.black.withOpacity(0.12),
                         ),
-                        onPressed: loginController.loading.value
-                            ? null
-                            : () {
-                                loginController.login(
-                                  _emailController.text,
-                                  _passwordController.text,
-                                );
-                              },
-                        child: loginController.loading.value
-                            ? const SizedBox(
-                                width: 20,
-                                height: 20,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                  color: Colors.white,
-                                ),
-                              )
-                            : const Text(
-                                "𝗟𝗢𝗚𝗜𝗡",
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
+                      ],
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        _topAccentBar(),
+
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(18, 18, 18, 18),
+                          child: Column(
+                            children: [
+                              // Logo
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 0),
+                                child: Image.asset(
+                                  "assets/images/Logo SGPI-Photoroom 1.png",
+                                  height: 350,
+                                  fit: BoxFit.contain,
                                 ),
                               ),
-                      ),
-                    ),
-                  ),
+                              //
+                              Text(
+                                "𝗦𝗢𝗙𝗧𝗪𝗔𝗥𝗘 𝗛𝗨𝗕",
+                                style: theme.textTheme.titleMedium?.copyWith(
+                                  color: colors.primary,
+                                  fontWeight: FontWeight.w800,
+                                  letterSpacing: 0.8,
+                                ),
+                              ),
 
-                  const SizedBox(height: 30),
+                              const SizedBox(height: 10),
 
-                  Center(
-                    child: Wrap(
-                      spacing: 10,
-                      runSpacing: 10,
-                      children: [
-                        OutlinedButton(
-                          onPressed: () => Get.toNamed("/register"),
-                          style: OutlinedButton.styleFrom(
-                            backgroundColor: Colors.green,
-                            foregroundColor: Colors.white,
-                            side: const BorderSide(
-                              color: Colors.green,
-                              width: 1.5,
-                            ),
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 18,
-                              vertical: 12,
-                            ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
-                          child: Text(
-                            "FAZER CADASTRO",
-                            style: theme.textTheme.bodyMedium!.copyWith(
-                              color: theme.colorScheme.primary,
-                              fontWeight: FontWeight.w800,
-                            ),
-                          ),
-                        ),
+                              // Campo Usuário / Email
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  "E-mail",
+                                  style: theme.textTheme.labelLarge?.copyWith(
+                                    color: colors.primary.withOpacity(0.85),
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 20,
+                                  ),
+                                ),
+                              ),
 
-                        const SizedBox(width: 12),
+                              const SizedBox(height: 10),
 
-                        OutlinedButton(
-                          onPressed: () {
-                            Get.toNamed("/forgot-password");
-                          }, // por enquanto não navega
-                          style: OutlinedButton.styleFrom(
-                            backgroundColor: Colors.yellow,
-                             foregroundColor: Colors.white,
-                            side: const BorderSide(
-                              color: Colors.yellow,
-                              width: 1.5,
-                            ),
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 18,
-                              vertical: 12,
-                            ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
-                          child: Text(
-                            "ESQUECI A SENHA",
-                            style: theme.textTheme.bodyMedium!.copyWith(
-                              color: theme.colorScheme.primary,
-                              fontWeight: FontWeight.w800,
-                            ),
+                              TextField(
+                                controller: _emailController,
+                                keyboardType: TextInputType.emailAddress,
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  color: Colors.black,
+                                ),
+                                decoration: _fieldDecoration(
+                                  theme: theme,
+                                  hint: "Seu email ...",
+                                  icon: Icons.person_outline,
+
+                                ),
+                              ),
+
+                              const SizedBox(height: 16),
+
+                              // Campo Senha
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  "Senha",
+                                  style: theme.textTheme.labelLarge?.copyWith(
+                                    color: colors.primary.withOpacity(0.85),
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 20,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              TextField(
+                                controller: _passwordController,
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  color: Colors.black,
+                                ),
+                                obscureText: true,
+                                decoration: _fieldDecoration(
+                                  theme: theme,
+                                  hint: "Digite sua senha",
+                                  icon: Icons.lock_outline,
+                                ),
+                              ),
+
+                              const SizedBox(height: 16),
+
+                              // Erro (mesma lógica)
+                              Obx(() {
+                                final error =
+                                    loginController.errorMessage.value;
+                                if (error.isEmpty)
+                                  return const SizedBox(height: 0);
+                                return Padding(
+                                  padding: const EdgeInsets.only(bottom: 10),
+                                  child: Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      error,
+                                      style: const TextStyle(
+                                        color: Colors.red,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              }),
+
+                              // Botão Entrar (mesma lógica)
+                              Obx(
+                                    () => SizedBox(
+                                  width: double.infinity,
+                                  height: 48,
+                                  child: ElevatedButton.icon(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: colors.primary,
+                                      foregroundColor: Colors.white,
+                                      elevation: 0,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                    ),
+                                    onPressed: loginController.loading.value
+                                        ? null
+                                        : () {
+                                      loginController.login(
+                                        _emailController.text,
+                                        _passwordController.text,
+                                      );
+                                    },
+                                    icon: loginController.loading.value
+                                        ? const SizedBox(
+                                      width: 18,
+                                      height: 18,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                        color: Colors.white,
+                                      ),
+                                    )
+                                        : const Icon(Icons.login),
+                                    label: Text(
+                                      loginController.loading.value
+                                          ? "Entrando..."
+                                          : "Entrar",
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w800,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+
+                              const SizedBox(height: 30),
+
+                              // Ações inferiores (igual da imagem: 2 botões lado a lado)
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: OutlinedButton.icon(
+                                      onPressed: () => Get.toNamed("/register"),
+                                      style: OutlinedButton.styleFrom(
+                                        foregroundColor: colors.primary,
+                                        side: BorderSide(
+                                          color: colors.primary.withOpacity(
+                                            0.55,
+                                          ),
+                                        ),
+                                        padding: const EdgeInsets.symmetric(
+                                          vertical: 12,
+                                        ),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            12,
+                                          ),
+                                        ),
+                                        backgroundColor: Colors.white,
+
+                                      ),
+                                      icon: const Icon(
+                                        Icons.person_add_alt_1_outlined,
+                                        size: 20,
+                                      ),
+                                      label: const Text(
+                                        "Cadastre-se",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w800,
+                                          fontSize: 18,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 12),
+                                  Expanded(
+                                    child: OutlinedButton.icon(
+                                      onPressed: () {
+                                        // mesma lógica: ainda “placeholder” se você não tiver rota
+                                        // Get.toNamed("/recover");
+                                      },
+                                      style: OutlinedButton.styleFrom(
+                                        foregroundColor: const Color(
+                                          0xFFFF6D00,
+                                        ),
+                                        side: const BorderSide(
+                                          color: Color(0xFFFF6D00),
+                                        ),
+                                        padding: const EdgeInsets.symmetric(
+                                          vertical: 12,
+                                        ),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            12,
+                                          ),
+                                        ),
+                                        backgroundColor: Colors.white,
+                                      ),
+                                      icon: const Icon(
+                                        Icons.key_outlined,
+                                        size: 20,
+                                      ),
+                                      label: const Text(
+                                        "Recuperar Senha",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w800,
+                                          fontSize: 18,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
                           ),
                         ),
                       ],
                     ),
                   ),
-                ],
+                ),
               ),
             ),
           ),
@@ -224,6 +380,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 }
 
+// Seu painter original restaurado
 class _DiagonalLinesPainter extends CustomPainter {
   final Color color;
   final double spacing;
@@ -241,7 +398,6 @@ class _DiagonalLinesPainter extends CustomPainter {
       ..color = color
       ..strokeWidth = strokeWidth;
 
-    // Linhas diagonais: varre além do tamanho para cobrir tudo
     for (double x = -size.height; x < size.width + size.height; x += spacing) {
       canvas.drawLine(
         Offset(x, 0),

@@ -1,7 +1,6 @@
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:nit_sgpi_frontend/domain/repositories/ijustification_repository.dart';
-import 'package:nit_sgpi_frontend/domain/usecases/delete_justification.dart';
 import 'package:nit_sgpi_frontend/domain/usecases/post_justification.dart';
 import 'package:nit_sgpi_frontend/domain/usecases/put_justification.dart';
 import 'package:nit_sgpi_frontend/infra/datasources/justiification_remote_datasource.dart';

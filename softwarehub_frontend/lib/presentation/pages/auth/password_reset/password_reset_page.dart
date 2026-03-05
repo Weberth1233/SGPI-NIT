@@ -12,8 +12,8 @@ class PasswordResetPage extends StatefulWidget {
 }
 
 class _PasswordResetPageState extends State<PasswordResetPage> {
-   TextEditingController _tokenController = TextEditingController();
-    TextEditingController _newPasswordController = TextEditingController();
+   final TextEditingController _tokenController = TextEditingController();
+    final TextEditingController _newPasswordController = TextEditingController();
     final passwordResetController = Get.find<PasswordResetController>();
 
     @override
