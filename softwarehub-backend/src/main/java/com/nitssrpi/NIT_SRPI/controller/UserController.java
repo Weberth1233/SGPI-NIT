@@ -46,7 +46,9 @@ public class UserController  implements GenericController{
     @GetMapping("{id}")
     @Operation(summary = "Obter por id", description = "Obter dados do usuário passando o Id como paramêtro")
     @ApiResponses({
-            @ApiResponse(responseCode = "204", description = "Cadastrado com sucesso!"),
+            @ApiResponse(responseCode = "200", description = "Buscar realizada com sucesso!"),
+            @ApiResponse(responseCode = "404", description = "Usuario não encontrado!"),
+
     })
     public ResponseEntity<UserResponseDTO> getDetailsUser
     (@PathVariable("id") String id) {
@@ -61,8 +63,10 @@ public class UserController  implements GenericController{
     @PutMapping("{id}")
     @Operation(summary = "Atualizar", description = "Atualizar usuário passando o ID")
     @ApiResponses({
-            @ApiResponse(responseCode = "201", description = "Atualizado com sucesso!"),
+            @ApiResponse(responseCode = "204", description = "Atualizado com sucesso!"),
             @ApiResponse(responseCode = "422", description = "Erro de validação!"),
+            @ApiResponse(responseCode = "404", description = "usuário não encontrado!"),
+
     })
     public ResponseEntity<Object> updateUser(@PathVariable("id") String id, @RequestBody @Valid UserUpdateDTO dto){
         var idUser = Long.parseLong(id);
@@ -106,7 +110,7 @@ public class UserController  implements GenericController{
     @GetMapping("/logged")
     @Operation(summary = "Obter dados ", description = "Obter dados do usuario logado")
     @ApiResponses({
-            @ApiResponse(responseCode = "201", description = "Busca realizada com sucesso!"),
+            @ApiResponse(responseCode = "200", description = "Busca realizada com sucesso!"),
     })
     //logged-in user
     public ResponseEntity<UserResponseDTO> getLoggedUser() {
@@ -117,7 +121,7 @@ public class UserController  implements GenericController{
     @GetMapping
     @Operation(summary = "Pesquisar usuário", description = "Pesquisar usuário passando o user name, nome completo, página ou tamanho da página como paramêtro")
     @ApiResponses({
-            @ApiResponse(responseCode = "204", description = "Cadastrado com sucesso!"),
+            @ApiResponse(responseCode = "200", description = "Busca realizada com sucesso!"),
     })
     public ResponseEntity<Page<UserResponseDTO>> pagedSearch(@RequestParam(value = "user-name", required = false) String userName,
                                             @RequestParam(value = "full-name", required = false) String fullName,

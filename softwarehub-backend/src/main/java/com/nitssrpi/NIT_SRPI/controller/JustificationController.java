@@ -43,7 +43,9 @@ public class JustificationController implements  GenericController{
     @GetMapping("process/{id}")
     @Operation(summary = "Obter justificativas de um processo", description = "Obter todas as justificativas de um processo passando o ID do processo como parâmetro")
     @ApiResponses({
-            @ApiResponse(responseCode = "204", description = "Encontrado com sucesso!")
+            @ApiResponse(responseCode = "200", description = "Encontrado com sucesso!"),
+            @ApiResponse(responseCode = "404", description = "Processo não encontrado!"),
+
     })
     public ResponseEntity<List<JustificationResponseDTO>> allJusticationProcess(@PathVariable("id") Long id){
         List<Justification> results = service.findByProcessJustification(id);
@@ -54,8 +56,9 @@ public class JustificationController implements  GenericController{
     @PutMapping("{id}")
     @Operation(summary = "Atualizar", description = "Atualizar justificativa passando o ID como parâmetro")
     @ApiResponses({
-            @ApiResponse(responseCode = "201", description = "Atualizado com sucesso!"),
+            @ApiResponse(responseCode = "204", description = "Atualizado com sucesso!"),
             @ApiResponse(responseCode = "422", description = "Erro de validação!"),
+            @ApiResponse(responseCode = "404", description = "Justificativa não encontrado!"),
     })
     public ResponseEntity<Object> updateIpTypes
             (@RequestBody @Valid JustificationRequestDTO dto, @PathVariable("id") String id ) {

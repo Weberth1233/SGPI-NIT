@@ -4,6 +4,9 @@ import com.nitssrpi.NIT_SRPI.controller.mappers.AttachmentMapper;
 import com.nitssrpi.NIT_SRPI.model.Attachment;
 import com.nitssrpi.NIT_SRPI.repository.AttachmentRepository;
 import com.nitssrpi.NIT_SRPI.service.AttachmentService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
@@ -26,6 +29,10 @@ public class AttachmentController {
     private final AttachmentRepository attachmentRepository;
 
     @GetMapping
+    @Operation(summary = "Obter", description = "Obter todos os documentos")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Sucesso na busca!"),
+    })
     public ResponseEntity<List<AttachmentResponseDTO>> getAllAttachments() {
         List<Attachment> result = attachmentRepository.findAll();
         List<AttachmentResponseDTO> list = result.stream().map(mapper::toDTO).toList();
@@ -33,6 +40,10 @@ public class AttachmentController {
     }
 
     @GetMapping("/download/template/{id}")
+    @Operation(summary = "Download template", description = "Fazer download de template passando o ID do documento como parâmetro")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Sucesso no download!"),
+    })
     public ResponseEntity<Resource> downloadTemplate(@PathVariable Long id){
         Attachment att = attachmentRepository.findById(id).orElseThrow();
         // Busca sempre o caminho do template
@@ -45,6 +56,10 @@ public class AttachmentController {
     }
 
     @GetMapping("/download/signed/{id}")
+    @Operation(summary = "Download de documento assinado", description = "Fazer download do documento assinado passando o ID do documento como parâmetro")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Sucesso no download!"),
+    })
     public ResponseEntity<Resource> downloadSigned(@PathVariable Long id) {
         Attachment att = attachmentRepository.findById(id).orElseThrow();
 
@@ -61,6 +76,10 @@ public class AttachmentController {
     }
 
     @PostMapping("/upload/{id}")
+    @Operation(summary = "Fazer upload de documento", description = "Fazer upload do documento assinado")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Sucesso no upload!"),
+    })
     public ResponseEntity<String> upload(@PathVariable Long id, @RequestParam("file") MultipartFile file) {
         Attachment att = attachmentRepository.findById(id).orElseThrow();
         attachmentService.saveSignedFile(file, att);
@@ -70,6 +89,12 @@ public class AttachmentController {
 
     //teste backend
     @GetMapping("/process/{id}")
+    @Operation(summary = "Obter documentos de um processo", description = "Obter documentos de um processo passando o id do processo")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Sucesso no busca!"),
+            @ApiResponse(responseCode = "404", description = "Docuemtos não encontrados!"),
+
+    })
     public ResponseEntity<List<AttachmentResponseDTO>> getAllAttachmentsIpType(@PathVariable Long id) {
         List<Attachment> result = attachmentRepository.findByProcessId(id);
         List<AttachmentResponseDTO> list = result.stream().map(mapper::toDTO).toList();

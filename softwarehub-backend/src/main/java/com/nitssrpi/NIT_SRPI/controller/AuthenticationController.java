@@ -9,6 +9,9 @@ import com.nitssrpi.NIT_SRPI.controller.mappers.UserMapper;
 import com.nitssrpi.NIT_SRPI.model.User;
 import com.nitssrpi.NIT_SRPI.repository.UserRepository;
 import com.nitssrpi.NIT_SRPI.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +29,7 @@ import java.net.URI;
 
 @RestController
 @RequestMapping("auth")
-@Tag(name = "Autenticação")
+@Tag(name = "Autenticação usuário")
 public class AuthenticationController implements GenericController{
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -39,6 +42,11 @@ public class AuthenticationController implements GenericController{
 
 
     @PostMapping("/login")
+    @Operation(summary = "Logar", description = "login passando o email e senha")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Login realizada com sucesso!"),
+
+    })
     public ResponseEntity login(@RequestBody @Valid AuthenticationDTO data){
         var userNamePassword = new UsernamePasswordAuthenticationToken(data.email(), data.password());
         var auth = this.authenticationManager.authenticate(userNamePassword);
@@ -49,6 +57,12 @@ public class AuthenticationController implements GenericController{
     }
 
     @PostMapping("/register")
+    @Operation(summary = "Cadastro", description = "Cadastro de usuário")
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "Cadastrado com sucesso!"),
+            @ApiResponse(responseCode = "422", description = "Erro de validação!"),
+
+    })
     public ResponseEntity<Object> save(@RequestBody @Valid UserRequestDTO dto) {
         if(this.service.findByEmail(dto.email()) != null) return ResponseEntity.badRequest().build();
         String encryptedPassword = new BCryptPasswordEncoder().encode(dto.password());

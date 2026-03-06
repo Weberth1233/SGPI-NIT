@@ -52,8 +52,9 @@ public class ProcessController implements GenericController{
     @PutMapping("{id}")
     @Operation(summary = "Atualizar", description = "Atualizar processo passando o ID")
     @ApiResponses({
-            @ApiResponse(responseCode = "201", description = "Atualizado com sucesso!"),
+            @ApiResponse(responseCode = "204", description = "Atualizado com sucesso!"),
             @ApiResponse(responseCode = "422", description = "Erro de validação!"),
+            @ApiResponse(responseCode = "404", description = "Processo não encontrado!"),
     })
     public ResponseEntity<Object> updateProcess
     (@RequestBody @Valid ProcessRequestDTO dto, @PathVariable("id") String id ) {

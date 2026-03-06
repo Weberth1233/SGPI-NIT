@@ -4,6 +4,9 @@ import com.nitssrpi.NIT_SRPI.controller.dto.IpTypesResponseDTO;
 import com.nitssrpi.NIT_SRPI.controller.mappers.IpTypesMapper;
 import com.nitssrpi.NIT_SRPI.model.IpTypes;
 import com.nitssrpi.NIT_SRPI.service.IpTypesService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +26,11 @@ public class IpTypesController implements GenericController{
     private final IpTypesMapper mapper;
 
     @PostMapping
+    @Operation(summary = "Salvar", description = "Cadastrar nova propriedade intelectual")
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "Cadastrado com sucesso!"),
+            @ApiResponse(responseCode = "422", description = "Erro de validação!"),
+    })
     public ResponseEntity<Object> save(@RequestBody @Valid IpTypesRequestDTO dto) {
         IpTypes ipTypes = mapper.toEntity(dto);
         service.save(ipTypes);
@@ -42,6 +50,10 @@ public class IpTypesController implements GenericController{
   *
 }*/
     @GetMapping
+    @Operation(summary = "Obter", description = "Obter todos as propriedades intelectuais")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Sucesso na busca!"),
+    })
     public ResponseEntity<List<IpTypesResponseDTO>> allTypesOfProperty(){
         List<IpTypes> result = service.allTypesOfProperty();
         List<IpTypesResponseDTO> list = result.stream().map(mapper::toDTO).toList();
@@ -49,6 +61,11 @@ public class IpTypesController implements GenericController{
     }
 
     @PutMapping("{id}")
+    @Operation(summary = "Atualizar", description = "Atualizar propriedade intelectual passando o ID como paramêtro")
+    @ApiResponses({
+            @ApiResponse(responseCode = "204", description = "Atualizado com sucesso!"),
+            @ApiResponse(responseCode = "404", description = "Tipo propriedade intelectual não encontrado!"),
+    })
     public ResponseEntity<Object> updateIpTypes
     (@RequestBody @Valid IpTypesRequestDTO dto, @PathVariable("id") String id ) {
         var idIpTypes = Long.parseLong(id);
@@ -67,6 +84,11 @@ public class IpTypesController implements GenericController{
 
     //Obter autor pelo id
     @GetMapping("{id}")
+    @Operation(summary = "Obter por id", description = "Obter dados de um propriedade intelectual passando o ID como paramêtro")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Sucesso na busca!"),
+            @ApiResponse(responseCode = "404", description = "Tipo propriedade intelectual não encontrado!"),
+    })
     public ResponseEntity<IpTypesResponseDTO> getDetails
             (@PathVariable("id") String id) {
 
@@ -80,6 +102,11 @@ public class IpTypesController implements GenericController{
 
     //Obter autor pelo id
     @DeleteMapping("{id}")
+    @Operation(summary = "Deletar", description = "Deletar propriedade intelectual passando o ID como paramêtro")
+    @ApiResponses({
+            @ApiResponse(responseCode = "204", description = "Deletado com sucesso!"),
+            @ApiResponse(responseCode = "404", description = "Tipo propriedade intelectual não encontrado!"),
+    })
     public ResponseEntity<Object> deleteIpTypes
     (@PathVariable("id") String id) {
         var idIpTypes = Long.parseLong(id);
