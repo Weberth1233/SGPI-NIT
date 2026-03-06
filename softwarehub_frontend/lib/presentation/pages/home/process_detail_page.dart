@@ -378,7 +378,7 @@ class _ProcessDetailPageState extends State<ProcessDetailPage> {
                 child: ElevatedButton(
                   onPressed: () => Get.toNamed(
                     '/process-detail/justification',
-                    arguments: entity.id,
+                    arguments: {'processId': entity.id},
                   ),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.orange,

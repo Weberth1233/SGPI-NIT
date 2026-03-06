@@ -64,6 +64,15 @@ class _MenuContent extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
       child: Column(
         children: [
+          Text(
+                  "NIT",
+                  style: TextStyle(
+                    fontSize: 25,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 2.0,
+                    color: Colors.white,
+                  ),
+                ),
           Image.asset(
             "assets/images/Logo SGPI-Photoroom 1.png",
             width: 100,
@@ -78,9 +87,9 @@ class _MenuContent extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               children: const [
                 Text(
-                  "𝙉𝙄𝙏",
+                  "SOFTWAREHUB",
                   style: TextStyle(
-                    fontSize: 25,
+                    fontSize: 8,
                     fontWeight: FontWeight.w900,
                     letterSpacing: 2.0,
                     color: Colors.white,
@@ -89,9 +98,9 @@ class _MenuContent extends StatelessWidget {
                 SizedBox(
                   height: 50,
                 ), 
-                Icon(Icons.home, color: Colors.white, size: 30),
-                SizedBox(height: 30),
-                Icon(Icons.settings, color: Colors.white, size: 30),
+                // Icon(Icons.home, color: Colors.white, size: 30),
+                // SizedBox(height: 30),
+                // Icon(Icons.settings, color: Colors.white, size: 30),
               ],
             ),
           ),
@@ -112,13 +121,16 @@ class _UserSection extends StatelessWidget {
     final controller = Get.find<AuthLocalDataSource>();
 
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         CircleAvatar(
-          radius: 26,
+          radius: 25,
           backgroundColor: theme.colorScheme.tertiary,
-          child:  IconButton(onPressed: (){
-Get.toNamed("/user-logged");
-          },icon: Icon(Icons.person), color: Colors.white),
+          child:  Center(
+            child: IconButton(onPressed: (){
+            Get.toNamed("/user-logged");
+            },icon: Icon(Icons.person, size: 25,), color: Colors.white),
+          ),
         ),
         const SizedBox(height: 8),
         
@@ -132,13 +144,13 @@ Get.toNamed("/user-logged");
             }
             final role = snapshot.data;
             if (role == 'ADMIN') {
-              return Text("Admin", style: Theme.of(context).textTheme.bodySmall!.copyWith(color: Theme.of(context).colorScheme.onSecondary,));
+              return Text("Admin", style: Theme.of(context).textTheme.bodySmall!.copyWith(color: Theme.of(context).colorScheme.onSecondary, fontWeight: FontWeight.bold));
             } else {
               return Text("Usuário", style: Theme.of(context).textTheme.bodySmall!.copyWith(color: Theme.of(context).colorScheme.onSecondary,));
             }
           },
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 10),
         // Corrigi o botão: Havia um TextButton dentro de um ElevatedButton
         SizedBox(
           width: double.infinity,
