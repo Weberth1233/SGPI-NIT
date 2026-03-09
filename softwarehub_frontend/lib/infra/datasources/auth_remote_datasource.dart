@@ -87,7 +87,7 @@ class AuthRemoteDataSource implements IAuthRemoteDataSource {
         return json['message'];
       } else {
         throw ServerException(
-          'Erro ${response.statusCode} ao buscar processos! - Detalhes: ${response.body}',
+          'Erro ${response.statusCode}! - Detalhes: ${response.body}',
         );
       }
     } on ServerException {

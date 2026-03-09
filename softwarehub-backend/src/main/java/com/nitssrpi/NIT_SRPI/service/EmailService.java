@@ -15,7 +15,7 @@ public class EmailService {
         SimpleMailMessage message = new SimpleMailMessage();
         // Use o e-mail que vimos no seu print do Brevo
 //        message.setFrom("weberth.ea@unitins.br");
-        message.setFrom("webertherikanolarsirqueira@gmail.com");
+        message.setFrom("nitsoftwarehub@gmail.com");
         message.setTo(to);
         message.setSubject("Código de Recuperação de Senha");
         message.setText("Seu código de recuperação é: " + token);

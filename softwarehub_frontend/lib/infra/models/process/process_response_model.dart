@@ -35,7 +35,6 @@ class ProcessResponseModel implements BaseModel{
   });
 
   factory ProcessResponseModel.fromJson(Map<String, dynamic> json) {
-    print(json);
     return ProcessResponseModel(
       id: json['id'],
       title: json['title'],
