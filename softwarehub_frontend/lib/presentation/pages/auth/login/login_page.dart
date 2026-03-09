@@ -33,6 +33,7 @@ class _LoginPageState extends State<LoginPage> {
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [
+            // Adcionar branco
             Color(0xFF005A9C), // Azul (tom médio/escuro)
             Color.fromARGB(255, 22, 117, 185), // Azul (tom médio/escuro)
             Color(0xFFFBC02D), // Amarelo / Dourado
@@ -145,19 +146,28 @@ class _LoginPageState extends State<LoginPage> {
                                   "assets/images/Logo SGPI-Photoroom 1.png",
                                   height: 350,
                                   fit: BoxFit.contain,
+                                  alignment: Alignment.bottomCenter,
                                 ),
                               ),
                               //
-                              Text(
-                                "𝗦𝗢𝗙𝗧𝗪𝗔𝗥𝗘 𝗛𝗨𝗕",
-                                style: theme.textTheme.titleMedium?.copyWith(
-                                  color: colors.primary,
-                                  fontWeight: FontWeight.w800,
-                                  letterSpacing: 0.8,
+                              Transform.translate(
+                                offset: const Offset(0, 3),
+                                // Puxa o texto 40 pixels para cima
+                                child: Text(
+                                  "𝗦𝗢𝗙𝗧𝗪𝗔𝗥𝗘 𝗛𝗨𝗕",
+                                  textAlign: TextAlign.center,
+                                  style: theme.textTheme.titleMedium?.copyWith(
+                                    color: colors.primary,
+                                    fontWeight: FontWeight.w800,
+                                    letterSpacing: 0.8,
+                                    fontSize: 30,
+                                    height:
+                                        0.8, // Diminui a altura da linha do próprio texto
+                                  ),
                                 ),
                               ),
 
-                              const SizedBox(height: 10),
+                              const SizedBox(height: 30),
 
                               // Campo Usuário / Email
                               Align(
@@ -185,7 +195,6 @@ class _LoginPageState extends State<LoginPage> {
                                   theme: theme,
                                   hint: "Seu email ...",
                                   icon: Icons.person_outline,
-
                                 ),
                               ),
 
@@ -243,7 +252,7 @@ class _LoginPageState extends State<LoginPage> {
 
                               // Botão Entrar (mesma lógica)
                               Obx(
-                                    () => SizedBox(
+                                () => SizedBox(
                                   width: double.infinity,
                                   height: 48,
                                   child: ElevatedButton.icon(
@@ -258,20 +267,20 @@ class _LoginPageState extends State<LoginPage> {
                                     onPressed: loginController.loading.value
                                         ? null
                                         : () {
-                                      loginController.login(
-                                        _emailController.text,
-                                        _passwordController.text,
-                                      );
-                                    },
+                                            loginController.login(
+                                              _emailController.text,
+                                              _passwordController.text,
+                                            );
+                                          },
                                     icon: loginController.loading.value
                                         ? const SizedBox(
-                                      width: 18,
-                                      height: 18,
-                                      child: CircularProgressIndicator(
-                                        strokeWidth: 2,
-                                        color: Colors.white,
-                                      ),
-                                    )
+                                            width: 18,
+                                            height: 18,
+                                            child: CircularProgressIndicator(
+                                              strokeWidth: 2,
+                                              color: Colors.white,
+                                            ),
+                                          )
                                         : const Icon(Icons.login),
                                     label: Text(
                                       loginController.loading.value
@@ -310,7 +319,6 @@ class _LoginPageState extends State<LoginPage> {
                                           ),
                                         ),
                                         backgroundColor: Colors.white,
-
                                       ),
                                       icon: const Icon(
                                         Icons.person_add_alt_1_outlined,
