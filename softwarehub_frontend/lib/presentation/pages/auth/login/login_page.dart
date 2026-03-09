@@ -33,10 +33,10 @@ class _LoginPageState extends State<LoginPage> {
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [
-            // Adcionar branco
-            Color(0xFF005A9C), // Azul (tom médio/escuro)
-            Color.fromARGB(255, 22, 117, 185), // Azul (tom médio/escuro)
-            Color(0xFFFBC02D), // Amarelo / Dourado
+            Color.fromARGB(205, 124, 182, 225),
+            Color.fromARGB(255, 22, 117, 185),
+            Color(0xFF005A9C),
+            Color(0xFFFBC02D),
           ],
         ),
       ),
@@ -144,14 +144,14 @@ class _LoginPageState extends State<LoginPage> {
                                 padding: const EdgeInsets.only(bottom: 0),
                                 child: Image.asset(
                                   "assets/images/Logo SGPI-Photoroom 1.png",
-                                  height: 350,
+                                  height: 340,
                                   fit: BoxFit.contain,
                                   alignment: Alignment.bottomCenter,
                                 ),
                               ),
                               //
                               Transform.translate(
-                                offset: const Offset(0, 3),
+                                offset: const Offset(0, 5),
                                 // Puxa o texto 40 pixels para cima
                                 child: Text(
                                   "𝗦𝗢𝗙𝗧𝗪𝗔𝗥𝗘 𝗛𝗨𝗕",
@@ -167,7 +167,7 @@ class _LoginPageState extends State<LoginPage> {
                                 ),
                               ),
 
-                              const SizedBox(height: 30),
+                              const SizedBox(height: 25),
 
                               // Campo Usuário / Email
                               Align(
