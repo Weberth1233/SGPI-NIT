@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nit_sgpi_frontend/presentation/pages/auth/login/controllers/login_controller.dart';
 import '../../../shared/widgets/custom_text_field.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -142,16 +143,16 @@ class _LoginPageState extends State<LoginPage> {
                               // Logo
                               Padding(
                                 padding: const EdgeInsets.only(bottom: 0),
-                                child: Image.asset(
-                                  "assets/images/Logo SGPI-Photoroom 1.png",
+                                child: SvgPicture.asset(
+                                  "assets/images/logo_sgpi.svg",
                                   height: 340,
-                                  fit: BoxFit.contain,
+                                  fit: BoxFit.contain, // Isso força o SVG a respeitar o tamanho de 60x65
                                   alignment: Alignment.bottomCenter,
                                 ),
                               ),
                               //
                               Transform.translate(
-                                offset: const Offset(0, 5),
+                                offset: const Offset(0, 8),
                                 // Puxa o texto 40 pixels para cima
                                 child: Text(
                                   "𝗦𝗢𝗙𝗧𝗪𝗔𝗥𝗘 𝗛𝗨𝗕",
@@ -167,7 +168,7 @@ class _LoginPageState extends State<LoginPage> {
                                 ),
                               ),
 
-                              const SizedBox(height: 25),
+                              const SizedBox(height: 30),
 
                               // Campo Usuário / Email
                               Align(
