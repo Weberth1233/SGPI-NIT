@@ -20,6 +20,8 @@ class _ProcessDetailPageState extends State<ProcessDetailPage> {
     final theme = Theme.of(context);
     final colors = theme.colorScheme;
 
+
+
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -42,7 +44,7 @@ class _ProcessDetailPageState extends State<ProcessDetailPage> {
                 child: IconButton(
                   padding: EdgeInsets.zero,
                   icon: Icon(Icons.arrow_back, color: colors.primary),
-                  onPressed: () => Get.toNamed("/home"),
+                  onPressed: () => Get.back(),
                 ),
               ),
             ),
@@ -230,7 +232,7 @@ class _ProcessDetailPageState extends State<ProcessDetailPage> {
   ) {
 
        // DIALOG DE CONFIRMAÇÃO
-  void showDialog(BuildContext context, ProcessResponseEntity entity) {
+  void _showDialog(BuildContext context, ProcessResponseEntity entity) {
     Get.defaultDialog(
       title: "Confirmar finalização do processo",
       middleText:
@@ -358,7 +360,7 @@ class _ProcessDetailPageState extends State<ProcessDetailPage> {
               Expanded(
                 child: ElevatedButton(
                   onPressed: () {
-                    showDialog(context, entity);
+                    _showDialog(context, entity);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green,
@@ -411,7 +413,7 @@ class _ProcessDetailPageState extends State<ProcessDetailPage> {
 
 
    // DIALOG DE CONFIRMAÇÃO
-  void showDialog(BuildContext context, ProcessResponseEntity entity) {
+  void _showDialog(BuildContext context, ProcessResponseEntity entity) {
     Get.defaultDialog(
       title: "Confirmar finalização do processo",
       middleText:
@@ -537,7 +539,7 @@ class _ProcessDetailPageState extends State<ProcessDetailPage> {
               children: [
                 ElevatedButton(
                   onPressed: () {
-                    showDialog(context, entity);
+                    _showDialog(context, entity);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green,
@@ -1254,4 +1256,3 @@ class _DiagonalLinesPainter extends CustomPainter {
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
-
