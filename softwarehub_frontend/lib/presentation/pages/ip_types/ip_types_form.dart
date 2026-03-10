@@ -10,38 +10,30 @@ class IpTypesForm extends GetView<IpTypesFormController> {
   Widget build(BuildContext context) {
     final secondaryStage = controller.secondStageProcess;
     final theme = Theme.of(context);
-
-    // Cores base
     const backgroundColor = Color(0xFF094E9A);
-    // Uma cor ligeiramente mais clara para as linhas do fundo
     final backgroundLineColor = Colors.white.withOpacity(0.05);
     const surfaceColor = Colors.white;
-
-    // Estilo de sombra reutilizável para os cards brancos
     final commonShadow = BoxShadow(
-      color: Colors.black.withOpacity(0.2), // Sombra escura suave
-      blurRadius: 16, // Desfoque alto para suavidade
-      offset: const Offset(0, 8), // Deslocamento vertical
+      color: Colors.black.withOpacity(0.2), 
+      blurRadius: 16, 
+      offset: const Offset(0, 8), 
       spreadRadius: 0,
     );
 
     return Scaffold(
       backgroundColor: backgroundColor,
-      // Usamos um Stack para colocar o padrão de linhas atrás do conteúdo
+      
       body: Stack(
         children: [
-          // CAMADA 1: Pintura das linhas de fundo
           Positioned.fill(
             child: CustomPaint(
               painter: _BackgroundLinesPainter(color: backgroundLineColor),
             ),
           ),
 
-          // CAMADA 2: Conteúdo Principal com AppBar flutuante
           SafeArea(
             child: Column(
               children: [
-                // Custom AppBar
                 Padding(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 16.0,
@@ -49,14 +41,13 @@ class IpTypesForm extends GetView<IpTypesFormController> {
                   ),
                   child: Row(
                     children: [
-                      // Botão de voltar quadrado, MAIOR e com SOMBRA
                       Container(
-                        height: 52, // Aumentado
-                        width: 52, // Aumentado
+                        height: 52, 
+                        width: 52, 
                         decoration: BoxDecoration(
                           color: surfaceColor,
                           borderRadius: BorderRadius.circular(12),
-                          boxShadow: [commonShadow], // Sombra adicionada
+                          boxShadow: [commonShadow], 
                         ),
                         child: IconButton(
                           onPressed: () => Get.back(),
@@ -79,8 +70,6 @@ class IpTypesForm extends GetView<IpTypesFormController> {
                     ],
                   ),
                 ),
-
-                // Corpo rolável
                 Expanded(
                   child: SingleChildScrollView(
                     padding: const EdgeInsets.symmetric(
@@ -93,7 +82,6 @@ class IpTypesForm extends GetView<IpTypesFormController> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // Header Container com SOMBRA
                             Center(
                               child: Container(
                                 height: 50,
@@ -103,7 +91,7 @@ class IpTypesForm extends GetView<IpTypesFormController> {
                                   borderRadius: BorderRadius.circular(24),
                                   boxShadow: [
                                     commonShadow,
-                                  ], // Sombra adicionada
+                                  ], 
                                 ),
                                 alignment: Alignment.center,
                                 child: Text(
@@ -116,8 +104,6 @@ class IpTypesForm extends GetView<IpTypesFormController> {
                               ),
                             ),
                             const SizedBox(height: 48),
-
-                            // Mapeamento dos Campos
                             ...secondaryStage.item.formStructure.fields.map((
                               field,
                             ) {
@@ -132,7 +118,7 @@ class IpTypesForm extends GetView<IpTypesFormController> {
                                 padding: const EdgeInsets.only(bottom: 24),
                                 child: Container(
                                   width: 800,
-                                  // ✅ Aumentamos a altura do card da descrição para 240
+                                 
                                   height: isDescription ? 240 : 120,
                                   padding: const EdgeInsets.all(20),
                                   decoration: BoxDecoration(
@@ -149,7 +135,6 @@ class IpTypesForm extends GetView<IpTypesFormController> {
                                               ? TextInputType.number
                                               : TextInputType.text),
 
-                                    // ✅ Magia acontecendo aqui: manda o input preencher o card!
                                     expands: isDescription,
                                   ),
                                 ),
@@ -157,8 +142,6 @@ class IpTypesForm extends GetView<IpTypesFormController> {
                             }),
 
                             const SizedBox(height: 32),
-
-                            // Botão de Enviar com Elevação
                             Align(
                               alignment: Alignment.centerRight,
                               child: SizedBox(
@@ -169,7 +152,7 @@ class IpTypesForm extends GetView<IpTypesFormController> {
                                     backgroundColor: surfaceColor,
                                     foregroundColor: backgroundColor,
                                     elevation:
-                                        8, // Elevação aumentada para destaque
+                                        8, 
                                     shadowColor: Colors.black.withOpacity(0.4),
                                     padding: const EdgeInsets.symmetric(
                                       horizontal: 32,
@@ -189,7 +172,7 @@ class IpTypesForm extends GetView<IpTypesFormController> {
                                 ),
                               ),
                             ),
-                            const SizedBox(height: 32), // Espaço extra no final
+                            const SizedBox(height: 32), 
                           ],
                         ),
                       ),

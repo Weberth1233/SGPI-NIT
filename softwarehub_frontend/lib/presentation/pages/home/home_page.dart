@@ -54,57 +54,60 @@ class HomePage extends StatelessWidget {
                             const SizedBox(height: 1),
                             Text(
                               "Sistema de Gestão de Propriedade Intelectual",
-                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                    fontSize: 17,
-                                    color: Colors.black,
-                                  ),
+                              style: Theme.of(context).textTheme.bodyMedium
+                                  ?.copyWith(fontSize: 17, color: Colors.black),
                             ),
                           ],
                         ),
-                      ),                    
-                      
-   // BOTÃO ADICIONAR PROCESSOS
-    Column(
-      children: [
-        const SizedBox(height: 20), // 👈 controla o quanto ele desce
-        ElevatedButton(
-          onPressed: () {
-            Get.toNamed("/process");
-          },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Theme.of(context).colorScheme.primary,
-            foregroundColor: Colors.white,
-            padding: const EdgeInsets.symmetric(
-              horizontal: 25,
-              vertical: 20,
-            ),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-            elevation: 5,
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: const [
-              Icon(Icons.add, size: 25),
-              SizedBox(width: 3),
-              Text(
-                "NOVO PROCESSO",
-                style: TextStyle(fontWeight: FontWeight.w800),
-              ),
-            ],
-          ),
-        ),
-      ],
-    ),
-  ],
-),
+                      ),
+
+                      // BOTÃO ADICIONAR PROCESSOS
+                      Column(
+                        children: [
+                          const SizedBox(
+                            height: 20,
+                          ), // 👈 controla o quanto ele desce
+                          ElevatedButton(
+                            onPressed: () {
+                              Get.toNamed("/process");
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Theme.of(
+                                context,
+                              ).colorScheme.primary,
+                              foregroundColor: Colors.white,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 25,
+                                vertical: 20,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              elevation: 5,
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: const [
+                                Icon(Icons.add, size: 25),
+                                SizedBox(width: 3),
+                                Text(
+                                  "NOVO PROCESSO",
+                                  style: TextStyle(fontWeight: FontWeight.w800),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
 
                   const SizedBox(height: 40),
 
                   // ===== Cards de status (resumo)
                   Align(
-                    alignment: Alignment.bottomLeft, // Alinha os cards à esquerda
+                    alignment:
+                        Alignment.bottomLeft, // Alinha os cards à esquerda
                     child: Obx(() {
                       if (processController.isLoadingProcessCount.value) {
                         return const CircularProgressIndicator();
@@ -169,7 +172,7 @@ class HomePage extends StatelessWidget {
 
                   const SizedBox(height: 40),
 
-                  // ===== Bloco cinza: filtros 
+                  // ===== Bloco cinza: filtros
                   const FilterHeader(),
 
                   const SizedBox(height: 20),
@@ -406,33 +409,34 @@ class _FilterHeaderState extends State<FilterHeader> {
       ),
     );
   }
-Widget _buildSearch(BuildContext context, TextEditingController controller) {
-  return TextFormField(
-    controller: controller,
-    style: const TextStyle(fontSize: 17), 
-    decoration: InputDecoration(
-      hintText: "Pesquisar..",
-      hintStyle: const TextStyle(fontSize: 20),
-      prefixIcon: Icon(
-        Icons.search,
-        size: 20, // 
-        color: Colors.black.withOpacity(0.55),
-      ),
 
-      filled: true,
-      fillColor: Colors.white,
-      isDense: true,
-      contentPadding: const EdgeInsets.symmetric(
-        vertical: 10,
-        horizontal: 12,
+  Widget _buildSearch(BuildContext context, TextEditingController controller) {
+    return TextFormField(
+      controller: controller,
+      style: const TextStyle(fontSize: 17),
+      decoration: InputDecoration(
+        hintText: "Pesquisar..",
+        hintStyle: const TextStyle(fontSize: 20),
+        prefixIcon: Icon(
+          Icons.search,
+          size: 20, //
+          color: Colors.black.withOpacity(0.55),
+        ),
+
+        filled: true,
+        fillColor: Colors.white,
+        isDense: true,
+        contentPadding: const EdgeInsets.symmetric(
+          vertical: 10,
+          horizontal: 12,
+        ),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(24),
+          borderSide: BorderSide.none,
+        ),
       ),
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(24),
-        borderSide: BorderSide.none,
-      ),
-    ),
-    textInputAction: TextInputAction.search,
-    onFieldSubmitted: (value) => processController.searchByTitle(value),
-  );
-}
+      textInputAction: TextInputAction.search,
+      onFieldSubmitted: (value) => processController.searchByTitle(value),
+    );
+  }
 }

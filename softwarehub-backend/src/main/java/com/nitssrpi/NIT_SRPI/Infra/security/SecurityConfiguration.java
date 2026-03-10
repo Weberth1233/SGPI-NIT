@@ -53,13 +53,32 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.PUT, "/ip_types/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/ip_types/**").hasRole("ADMIN")
 
+                                .requestMatchers(HttpMethod.GET, "/attachments/**").hasAnyRole("ADMIN", "USER")
+                                .requestMatchers(HttpMethod.POST, "/attachments/**").hasAnyRole("ADMIN", "USER")
+                                .requestMatchers(HttpMethod.PUT, "/attachments/**").hasAnyRole("ADMIN", "USER")
+                                .requestMatchers(HttpMethod.DELETE, "/attachments/**").hasRole("ADMIN")
+
+                                .requestMatchers(HttpMethod.GET, "/ip_types_documents/**").hasAnyRole("ADMIN", "USER")
+                                .requestMatchers(HttpMethod.POST, "/ip_types_documents/**").hasAnyRole("ADMIN", "USER")
+                                .requestMatchers(HttpMethod.PUT, "/ip_types_documents/**").hasAnyRole("ADMIN", "USER")
+                                .requestMatchers(HttpMethod.DELETE, "/ip_types_documents/**").hasRole("ADMIN")
+
+                                .requestMatchers(HttpMethod.GET, "/justification/**").hasAnyRole("ADMIN", "USER")
+                                .requestMatchers(HttpMethod.POST, "/justification/**").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.PUT, "/justification/**").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.DELETE, "/justification/**").hasRole("ADMIN")
+
+                                .requestMatchers(HttpMethod.GET, "/users/**").hasAnyRole("ADMIN", "USER")
+                                .requestMatchers(HttpMethod.POST, "/users/**").hasAnyRole("ADMIN", "USER")
+                                .requestMatchers(HttpMethod.PUT, "/users/**").hasAnyRole("ADMIN", "USER")
+                                .requestMatchers(HttpMethod.DELETE, "/users/**").hasRole("ADMIN")
+
                         // Process - ROLES
 //                        .requestMatchers(HttpMethod.GET, "/process/user/processes").hasAnyRole("ADMIN", "USER")
                         .requestMatchers(HttpMethod.GET, "/process/**").hasAnyRole("ADMIN", "USER")
                         .requestMatchers(HttpMethod.POST, "/process/**").hasAnyRole("ADMIN", "USER")
                         .requestMatchers(HttpMethod.PUT, "/process/**").hasAnyRole("ADMIN", "USER")
-                        .requestMatchers(HttpMethod.DELETE, "/process/**").hasRole("ADMIN")
-                                .requestMatchers(HttpMethod.GET, "/attachments/**").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.DELETE, "/process/**").hasAnyRole("ADMIN", "USER")
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
