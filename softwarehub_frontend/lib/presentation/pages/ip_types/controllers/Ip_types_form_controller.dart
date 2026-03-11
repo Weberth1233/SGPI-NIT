@@ -93,11 +93,41 @@ class IpTypesFormController extends GetxController {
           ),
         );
       }
-      Get.snackbar('Sucesso', 'Processo enviado com sucesso!');
+      _showSuccessSnackbar("Sucesso ao cadastrar processo!");
       clearForm();
       Get.offAllNamed('/home');
     } catch (e) {
-      Get.snackbar('Erro', 'Erro ao enviar processo');
+      _showErrorSnackbar("Erro ao enviar processo");
     }
+  }
+
+  void _showSuccessSnackbar(String text) {
+    final colors = Get.theme.colorScheme;
+
+    Get.snackbar(
+      'Sucesso',
+      text,
+      backgroundColor: colors.primary,
+      colorText: colors.onPrimary,
+      snackPosition: SnackPosition.TOP,
+      margin: const EdgeInsets.all(12),
+      borderRadius: 12,
+      duration: const Duration(seconds: 2),
+    );
+  }
+
+  void _showErrorSnackbar(String text) {
+    final colors = Get.theme.colorScheme;
+
+    Get.snackbar(
+      'Erro',
+      text,
+      backgroundColor: colors.error,
+      colorText: colors.onError,
+      snackPosition: SnackPosition.TOP,
+      margin: const EdgeInsets.all(12),
+      borderRadius: 12,
+      duration: const Duration(seconds: 3),
+    );
   }
 }

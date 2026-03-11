@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../domain/entities/process/process_response_entity.dart';
 import '../controllers/home_controller.dart';
+import '../home_page.dart';
 
 class ProcessCard extends StatelessWidget {
   final ProcessResponseEntity item;
@@ -23,188 +24,199 @@ class ProcessCard extends StatelessWidget {
         "${date.month.toString().padLeft(2, '0')}/"
         "${date.year}";
 
-    return SizedBox(
-      width: 400,
-      height: 190,
-      child: Card(
-        elevation: 6,
-        shadowColor: Colors.black26,
-        color: backgroundColor,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
-        clipBehavior: Clip.antiAlias,
-        child: InkWell(
-          onTap: () {
-            Get.toNamed('/home/process-detail/${item.id}');
-          },
-          splashColor: Colors.white.withOpacity(0.1),
-          highlightColor: Colors.white.withOpacity(0.05),
-          child: Stack(
-            children: [
-              // Ícone decorativo de fundo
-              Positioned(
-                right: -20,
-                top: -20,
-                child: Icon(
-                  Icons.folder_copy_rounded,
-                  size: 100,
-                  color: Colors.white.withOpacity(0.05),
-                ),
+    return Stack(
+      children: [
+        Positioned.fill(
+            child: CustomPaint(
+              painter: DiagonalLinesPainter(
+                color: Theme.of(context).colorScheme.onSecondary.withOpacity(0.04),
               ),
-
-              // BOTÃO DE DELETE
-              Positioned(
-                top: 10,
-                right: 10,
-                child: Tooltip(
-                  message: "Excluir processo",
-                  child: InkWell(
-                    onTap: () {
-                      _showDeleteDialog(context);
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.all(6),
-                      decoration: BoxDecoration(
-                        color: Colors.red.withOpacity(0.20),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: const Icon(
-                        Icons.delete_outline,
-                        color: Colors.white,
-                        size: 20,
-                      ),
+            ),
+          ),
+        SizedBox(
+          width: 400,
+          height: 190,
+          child: Card(
+            elevation: 6,
+            shadowColor: Colors.black26,
+            color: backgroundColor,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            clipBehavior: Clip.antiAlias,
+            child: InkWell(
+              onTap: () {
+                Get.toNamed('/home/process-detail/${item.id}');
+              },
+              splashColor: Colors.white.withOpacity(0.1),
+              highlightColor: Colors.white.withOpacity(0.05),
+              child: Stack(
+                children: [
+                  // Ícone decorativo de fundo
+                  Positioned(
+                    right: -20,
+                    top: -20,
+                    child: Icon(
+                      Icons.folder_copy_rounded,
+                      size: 100,
+                      color: Colors.white.withOpacity(0.05),
                     ),
                   ),
-                ),
-              ),
-
-              Positioned(
-                top: 10,
-                right: 45,
-                child: Tooltip(
-                  message: "Editar processo",
-                  child: InkWell(
-                    onTap: () {
-                      Get.toNamed("/process-edit", arguments: item);
-                      // _showDeleteDialog(context);
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.all(6),
-                      decoration: BoxDecoration(
-                        color: Colors.red.withOpacity(0.20),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: const Icon(
-                        Icons.edit_outlined,
-                        color: Colors.white,
-                        size: 20,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-
-              // Conteúdo principal
-              Padding(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Tipo de IP
-                    Row(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(8),
+        
+                  // BOTÃO DE DELETE
+                  Positioned(
+                    top: 10,
+                    right: 10,
+                    child: Tooltip(
+                      message: "Excluir processo",
+                      child: InkWell(
+                        onTap: () {
+                          _showDeleteDialog(context);
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(6),
                           decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.15),
+                            color: Colors.red.withOpacity(0.20),
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: const Icon(
-                            Icons.assignment_outlined,
-                            color: contentColor,
-                            size: 18,
+                            Icons.delete_outline,
+                            color: Colors.white,
+                            size: 20,
                           ),
                         ),
-                        const SizedBox(width: 10),
-                        Text(
-                          item.ipType.name.toUpperCase(),
-                          style: context.textTheme.labelSmall!.copyWith(
-                            color: contentColor.withOpacity(0.8),
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 1.0,
-                          ),
-                        ),
-                      ],
-                    ),
-
-                    const SizedBox(height: 16),
-
-                    // Título
-                    Text(
-                      item.title,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: context.textTheme.titleLarge!.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: contentColor,
-                        fontSize: 20,
-                        height: 1.2,
                       ),
                     ),
-
-                    const Spacer(),
-
-                    // Status + Data
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 6,
-                          ),
+                  ),
+        
+                  Positioned(
+                    top: 10,
+                    right: 45,
+                    child: Tooltip(
+                      message: "Editar processo",
+                      child: InkWell(
+                        onTap: () {
+                          Get.toNamed("/process-edit", arguments: item);
+                          // _showDeleteDialog(context);
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(6),
                           decoration: BoxDecoration(
-                            color: _getStatusColor(item.status),
-                            borderRadius: BorderRadius.circular(20),
-                            border: Border.all(color: Colors.white24),
+                            color: Colors.red.withOpacity(0.20),
+                            borderRadius: BorderRadius.circular(8),
                           ),
-                          child: Text(
-                            item.status,
-                            style: context.textTheme.bodySmall!.copyWith(
-                              color: contentColor,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 12,
-                            ),
+                          child: const Icon(
+                            Icons.edit_outlined,
+                            color: Colors.white,
+                            size: 20,
                           ),
                         ),
-
+                      ),
+                    ),
+                  ),
+        
+                  // Conteúdo principal
+                  Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Tipo de IP
                         Row(
                           children: [
-                            Icon(
-                              Icons.calendar_today,
-                              size: 14,
-                              color: contentColor.withOpacity(0.7),
-                            ),
-                            const SizedBox(width: 6),
-                            Text(
-                              dateFormatted,
-                              style: context.textTheme.bodySmall!.copyWith(
-                                color: contentColor.withOpacity(0.8),
-                                fontSize: 12,
+                            Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: Colors.white.withOpacity(0.15),
+                                borderRadius: BorderRadius.circular(8),
                               ),
+                              child: const Icon(
+                                Icons.assignment_outlined,
+                                color: contentColor,
+                                size: 18,
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            Text(
+                              item.ipType.name.toUpperCase(),
+                              style: context.textTheme.labelSmall!.copyWith(
+                                color: contentColor.withOpacity(0.8),
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 1.0,
+                              ),
+                            ),
+                          ],
+                        ),
+        
+                        const SizedBox(height: 16),
+        
+                        // Título
+                        Text(
+                          item.title,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: context.textTheme.titleLarge!.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: contentColor,
+                            fontSize: 20,
+                            height: 1.2,
+                          ),
+                        ),
+        
+                        const Spacer(),
+        
+                        // Status + Data
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 6,
+                              ),
+                              decoration: BoxDecoration(
+                                color: _getStatusColor(item.status),
+                                borderRadius: BorderRadius.circular(20),
+                                border: Border.all(color: Colors.white24),
+                              ),
+                              child: Text(
+                                item.status,
+                                style: context.textTheme.bodySmall!.copyWith(
+                                  color: contentColor,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ),
+        
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.calendar_today,
+                                  size: 14,
+                                  color: contentColor.withOpacity(0.7),
+                                ),
+                                const SizedBox(width: 6),
+                                Text(
+                                  dateFormatted,
+                                  style: context.textTheme.bodySmall!.copyWith(
+                                    color: contentColor.withOpacity(0.8),
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
                         ),
                       ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
-      ),
+      ],
     );
   }
 

@@ -230,7 +230,7 @@ class HomePage extends StatelessWidget {
         children: [
           Positioned.fill(
             child: CustomPaint(
-              painter: _DiagonalLinesPainter(
+              painter: DiagonalLinesPainter(
                 color: theme.colorScheme.onSecondary.withOpacity(0.04),
               ),
             ),
@@ -660,9 +660,9 @@ class _FilterHeaderState extends State<FilterHeader> {
   }
 }
 
-class _DiagonalLinesPainter extends CustomPainter {
+class DiagonalLinesPainter extends CustomPainter {
   final Color color;
-  _DiagonalLinesPainter({required this.color});
+  DiagonalLinesPainter({required this.color});
 
   @override
   void paint(Canvas canvas, Size size) {

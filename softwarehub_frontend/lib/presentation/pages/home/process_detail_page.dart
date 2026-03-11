@@ -44,7 +44,7 @@ class _ProcessDetailPageState extends State<ProcessDetailPage> {
                 child: IconButton(
                   padding: EdgeInsets.zero,
                   icon: Icon(Icons.arrow_back, color: colors.primary),
-                  onPressed: () => Get.back(),
+                  onPressed: () => Get.toNamed("/home"),
                 ),
               ),
             ),
@@ -722,7 +722,7 @@ class _ProcessDetailPageState extends State<ProcessDetailPage> {
         break;
       case 3:
         title = "ANEXOS";
-        subtitle = "Arquivos relacionados ao processo.";
+        subtitle = "Arquivos relacionados ao processo. Clique no processo para enviá-lo assinado";
         content = _buildAttachmentsList(context, entity);
         break;
       case 4:
