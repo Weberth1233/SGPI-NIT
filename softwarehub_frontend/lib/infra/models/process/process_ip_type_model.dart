@@ -3,11 +3,13 @@ import '../../../domain/entities/process/process_ip_type_entity.dart';
 class ProcessIpTypeModel {
   final int id;
   final String name;
+  final String color;
   final FormStructureEntity formStructure;
 
   ProcessIpTypeModel({
     required this.id,
     required this.name,
+    required this.color,
     required this.formStructure,
   });
 
@@ -15,6 +17,7 @@ class ProcessIpTypeModel {
     return ProcessIpTypeModel(
       id: json['id'],
       name: json['name'],
+      color: json['color'],
       formStructure: FormStructureModel.fromJson(json['formStructure']),
     );
   }
@@ -23,12 +26,13 @@ class ProcessIpTypeModel {
     return ProcessIpTypeModel(
       id: entity.id,
       name: entity.name,
+      color: entity.color,
       formStructure: entity.formStructure,
     );
   }
 
   ProcessIpTypeEntity toEntity() {
-    return ProcessIpTypeEntity(id: id, name: name, formStructure: formStructure);
+    return ProcessIpTypeEntity(id: id, name: name,color: color, formStructure: formStructure);
   }
 }
 

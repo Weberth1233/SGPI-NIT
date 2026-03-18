@@ -1,11 +1,13 @@
 class IpTypeEntity {
   final int id;
   final String name;
+  final String color;
   final IpTypeStructureEntity formStructure;
 
   IpTypeEntity({
     required this.id,
     required this.name,
+    required this.color,
     required this.formStructure,
   });
 }

@@ -11,14 +11,13 @@ class ProcessDetailController extends GetxController {
   final DeleteJustification _deleteJustification;
   final UpdateStatusProcess _updateStatusProcess;
 
-
   final AuthLocalDataSource _authLocal;
 
   ProcessDetailController(
     this._getProcessById,
     this._authLocal,
     this._deleteJustification,
-    this._updateStatusProcess
+    this._updateStatusProcess,
   );
 
   final RxBool isLoading = false.obs;
@@ -37,6 +36,13 @@ class ProcessDetailController extends GetxController {
     super.onInit();
     _checkRole();
     _loadProcessId();
+  }
+
+  @override
+  void onClose() {
+     print("DEBUG: Controller do processo ${process.value?.id} FOI DESTRUÍDO!");
+    process.value = null; // Limpa o processo antigo ao sair
+    super.onClose();
   }
 
   Future<void> _checkRole() async {
@@ -197,5 +203,4 @@ class ProcessDetailController extends GetxController {
       isLoading.value = false;
     }
   }
-  
 }

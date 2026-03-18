@@ -1,11 +1,13 @@
 class ProcessIpTypeEntity {
   final int id;
   final String name;
+  final String color;
   final FormStructureEntity formStructure;
 
   ProcessIpTypeEntity({
     required this.id,
     required this.name,
+    required this.color,
     required this.formStructure,
   });
 }

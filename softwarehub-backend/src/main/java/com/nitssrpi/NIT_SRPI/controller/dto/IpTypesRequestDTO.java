@@ -8,6 +8,8 @@ import jakarta.validation.constraints.NotNull;
 public record IpTypesRequestDTO(
         @NotBlank(message = "Campo nome não pode ser vazio!")
         String name,
+        @NotBlank(message = "Campo cor não pode ser vazio!")
+        String color,
         @NotNull(message = "Campos não podem ser vazios!")
         FormStructure formStructure) {
 

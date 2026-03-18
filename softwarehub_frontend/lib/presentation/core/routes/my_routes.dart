@@ -78,6 +78,7 @@ class MyRoutes {
       name: "/home/process-detail/:id",
       page: () => ProcessDetailPage(),
       binding: ProcessDetailBindings(),
+      preventDuplicates: false,
       middlewares: [AuthMiddleware()],
     ),
 
