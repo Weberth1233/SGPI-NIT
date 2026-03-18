@@ -119,15 +119,17 @@ public class UserController  implements GenericController{
     }
 
     @GetMapping
-    @Operation(summary = "Pesquisar usuário", description = "Pesquisar usuário passando o user name, nome completo, página ou tamanho da página como paramêtro")
+    @Operation(summary = "Pesquisar usuário", description = "Pesquisar usuário passando o user name, nome completo,cpf,email, página ou tamanho da página como paramêtro")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Busca realizada com sucesso!"),
     })
     public ResponseEntity<Page<UserResponseDTO>> pagedSearch(@RequestParam(value = "user-name", required = false) String userName,
                                             @RequestParam(value = "full-name", required = false) String fullName,
+                                                             @RequestParam(value = "email", required = false) String email,
+                                                             @RequestParam(value = "cpf", required = false) String cpf,
                                             @RequestParam(value = "page", defaultValue = "0") Integer page,
                                             @RequestParam(value = "page-size",  defaultValue = "10") Integer pageSize){
-        Page<User> resultPage = service.searchUsers(userName, fullName, page, pageSize);
+        Page<User> resultPage = service.searchUsers(userName, fullName, email, cpf, page, pageSize);
         Page<UserResponseDTO> result = resultPage.map(mapper::toDTO);
         return ResponseEntity.ok(result);
     }

@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 public record UserResponseDTO(Long id, String userName, String email, String password,
                               String phoneNumber,
-                              LocalDate birthDate,String profession, String fullName, String role, Boolean isEnabled,
+                              LocalDate birthDate,String profession, String fullName, String role, Boolean isEnabled, String cpf,
                               AddressResponseDTO address
 ) {
 

@@ -14,4 +14,13 @@ public class UserSpecs {
     public static Specification<User> likeFullName(String fullName){
         return (root, query, cb) -> cb.like(cb.upper(root.get("fullName")), "%" + fullName.toUpperCase() + "%");
     }
+
+    public static Specification<User> likeEmail(String email){
+        return (root, query, cb) -> cb.like(cb.upper(root.get("email")), "%" + email.toUpperCase() + "%");
+    }
+
+    public static Specification<User> equalCPF(String cpf){
+        return (root, query, cb) -> cb.equal(root.get("cpf"), cpf);
+    }
+
 }

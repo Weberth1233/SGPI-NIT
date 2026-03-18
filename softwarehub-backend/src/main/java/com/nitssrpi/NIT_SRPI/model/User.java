@@ -38,6 +38,9 @@ public class User implements UserDetails {
     @Column(name = "phone_number")
     private String phoneNumber;
 
+    @Column(name = "cpf")
+    private String cpf;
+
     @Column(name = "birth_date")
     private LocalDate birthDate;
 

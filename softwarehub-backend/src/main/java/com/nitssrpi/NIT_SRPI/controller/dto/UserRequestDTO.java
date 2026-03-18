@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Pattern;
+import org.hibernate.validator.constraints.br.CPF;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDate;
@@ -17,6 +18,9 @@ public record UserRequestDTO(
         String email,
         @NotBlank
         String password,
+        @NotBlank(message = "O cpf é obrigatório")
+        @CPF(message = "CPF inválido!")
+        String cpf,
         @NotBlank(message = "O telefone é obrigatório")
         @Pattern(
                 regexp = "^\\(?([1-9]{2})\\)?[-. ]?([9])?([-  ]?)?(\\d{4})[-. ]?(\\d{4})$",
