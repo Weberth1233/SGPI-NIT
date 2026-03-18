@@ -18,6 +18,8 @@ public class IpTypes {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+    @Column(name = "color", length = 20)
+    private String color;
     @Type(JsonType.class)
     @Column(columnDefinition = "jsonb")
     private FormStructure formStructure;

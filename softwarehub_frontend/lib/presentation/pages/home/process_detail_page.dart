@@ -20,8 +20,6 @@ class _ProcessDetailPageState extends State<ProcessDetailPage> {
     final theme = Theme.of(context);
     final colors = theme.colorScheme;
 
-
-
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -44,7 +42,7 @@ class _ProcessDetailPageState extends State<ProcessDetailPage> {
                 child: IconButton(
                   padding: EdgeInsets.zero,
                   icon: Icon(Icons.arrow_back, color: colors.primary),
-                  onPressed: () => Get.toNamed("/home"),
+                  onPressed: () => Get.back(),
                 ),
               ),
             ),

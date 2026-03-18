@@ -49,18 +49,18 @@ services:
     volumes:
       - ./softwarehub-backend/uploads:/app/uploads
 
- # frontend:
- #   build:
- #     context: ./softwarehub_frontend # Caminho para a pasta do Flutter
- #     dockerfile: Dockerfile
- #   container_name: nitsrpi-frontend
- #   ports:
- #     - "80:80" # Acessível em http://localhost
- #   depends_on:
- #     - backend
- #   networks:
- #     - nitsrpi-network
- #   restart: unless-stopped
+  # frontend:
+  #  build:
+  #    context: ./softwarehub_frontend # Caminho para a pasta do Flutter
+  #    dockerfile: Dockerfile
+  #  container_name: nitsrpi-frontend
+  #  ports:
+  #    - "80:80" # Acessível em http://localhost
+  #  depends_on:
+  #    - backend
+  #  networks:
+  #    - nitsrpi-network
+  #  restart: unless-stopped
     
 networks:
   nitsrpi-network:

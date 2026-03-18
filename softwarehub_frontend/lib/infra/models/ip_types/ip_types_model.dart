@@ -4,11 +4,13 @@ import 'Ip_type_structure_model.dart';
 class IpTypeModel {
   final int id;
   final String name;
+  final String color;
   final IpTypeStructureModel formStructure;
 
   IpTypeModel({
     required this.id,
     required this.name,
+    required this.color,
     required this.formStructure,
   });
 
@@ -16,6 +18,7 @@ class IpTypeModel {
     return IpTypeModel(
       id: json['id'],
       name: json['name'],
+      color: json['color'],
       formStructure: IpTypeStructureModel.fromJson(json['formStructure']),
     );
   }
@@ -25,6 +28,7 @@ class IpTypeModel {
       id: entity.id,
       formStructure: IpTypeStructureModel.fromEntity(entity.formStructure),
       name: entity.name, 
+      color: entity.color,
     );
   }
 
@@ -32,6 +36,7 @@ class IpTypeModel {
     return {
       'id': id,
       'name': name,
+      'color':color,
       'formStructure': formStructure.toJson(),
     };
   }
@@ -41,6 +46,7 @@ class IpTypeModel {
     return IpTypeEntity(
       id: id,
       name: name,
+      color: color,
       formStructure: formStructure.toEntity(),
     );
   }
