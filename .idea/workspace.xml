@@ -2,16 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f8257618-1329-4d8d-a065-e148448811e8" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Dart_SDK.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_12_03_2026_13_20_[Changes]/shelved.patch" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_12_03_2026_13_20__Changes_.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/softwarehub_frontend/assets/images/Background_foto.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/NIT.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/NIT.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/softwarehub_frontend/lib/presentation/pages/home/home_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/softwarehub_frontend/lib/presentation/pages/home/home_page.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/softwarehub_frontend/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/softwarehub_frontend/pubspec.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/softwarehub_frontend/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/softwarehub_frontend/pubspec.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -96,7 +88,9 @@
       <updated>1770307096102</updated>
       <workItem from="1773332246300" duration="2475000" />
       <workItem from="1773682282560" duration="3477000" />
-      <workItem from="1773767584085" duration="10755000" />
+      <workItem from="1773767584085" duration="11405000" />
+      <workItem from="1773847454207" duration="1753000" />
+      <workItem from="1773850723632" duration="5539000" />
     </task>
     <servers />
   </component>
@@ -108,12 +102,12 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="Dart">
           <url>file://$PROJECT_DIR$/softwarehub_frontend/lib/presentation/pages/home/home_page.dart</url>
-          <line>20</line>
+          <line>22</line>
           <option name="timeStamp" value="8" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="Dart">
-          <url>file://$PROJECT_DIR$/softwarehub_frontend/lib/presentation/pages/home/widgets/process card.dart</url>
-          <line>6</line>
+          <url>file://$PROJECT_DIR$/softwarehub_frontend/lib/presentation/pages/home/home_page.dart</url>
+          <line>236</line>
           <option name="timeStamp" value="9" />
         </line-breakpoint>
       </breakpoints>
