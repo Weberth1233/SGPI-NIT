@@ -136,8 +136,7 @@ class _ProcessPageState extends State<ProcessPage> {
           Positioned.fill(
             child: CustomPaint(
               painter: _DiagonalLinesPainter(
-                // Tom ajustado para integrar melhor ao fundo sem poluir
-                color: Colors.white.withOpacity(0.06),
+                color: theme.colorScheme.primary.withOpacity(0.08),
               ),
             ),
           ),
@@ -198,7 +197,7 @@ class _ProcessPageState extends State<ProcessPage> {
                           const SizedBox(height: 30),
 
                           _LabeledFieldRowSimple(
-                            label: "Título do processo :",
+                            label: "Título do processo",
                             field: CustomTextField(
                               controller: titleController,
                               label: "",
@@ -206,12 +205,12 @@ class _ProcessPageState extends State<ProcessPage> {
                             ),
                           ),
 
-                          const SizedBox(height: 30),
+                          const SizedBox(height: 45),
 
 
                           _LabeledFieldRowSearch(
 
-                            label: "Pesquisar membro:",
+                            label: "Adicionar membro",
                             field: LayoutBuilder(
                               builder: (context, constr) {
                                 // Ajuste fino dos breakpoints para telas médias (tablets) e grandes (desktop)
