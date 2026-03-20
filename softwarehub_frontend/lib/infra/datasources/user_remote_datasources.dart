@@ -11,6 +11,8 @@ abstract class IUserRemoteDataSource {
   Future<PagedUserResultModel> getUsers({
     String userName = '',
     String fullName = '',
+    String email = '',
+    String cpf = '',
     int page = 0,
     int size = 10,
   });
@@ -28,6 +30,8 @@ class UserRemoteDatasourcesImpl implements IUserRemoteDataSource {
   Future<PagedUserResultModel> getUsers({
     String userName = '',
     String fullName = '',
+    String email = '',
+    String cpf = '',
     int page = 0,
     int size = 10,
   }) async{
@@ -40,9 +44,14 @@ class UserRemoteDatasourcesImpl implements IUserRemoteDataSource {
       if (userName.isNotEmpty) {
         queryParams['user-name'] = userName;
       }
-
       if (fullName.isNotEmpty) {
         queryParams['full-name'] = fullName;
+      }
+      if(email.isNotEmpty){
+        queryParams['email'] = email;
+      }
+      if(cpf.isNotEmpty){
+        queryParams['cpf'] = cpf;
       }
 
       final uri = Uri.http(

@@ -18,6 +18,16 @@ class Validators {
     return null;
   }
 
+  static String? cpf(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return "Informe o CPF";
+    }
+    if (!GetUtils.isCpf(value)) {
+      return "CPF inválido";
+    }
+    return null;
+  }
+
   static String? minLength(String? value, int min, {String? message}) {
     if (value == null || value.length < min) {
       return message ?? "Deve ter pelo menos $min caracteres";

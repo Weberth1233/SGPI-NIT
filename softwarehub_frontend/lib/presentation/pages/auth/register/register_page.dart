@@ -13,10 +13,7 @@ import '../../users/controllers/user_logged_controller.dart';
 class RegisterPage extends StatefulWidget {
   final bool isEditMode;
 
-  const RegisterPage({
-    super.key,
-    this.isEditMode = false,
-  });
+  const RegisterPage({super.key, this.isEditMode = false});
 
   @override
   State<RegisterPage> createState() => _RegisterPageState();
@@ -31,6 +28,7 @@ class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController userController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
+  final TextEditingController cpfController = TextEditingController();
   final TextEditingController professionController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -51,21 +49,19 @@ class _RegisterPageState extends State<RegisterPage> {
   bool _showPassword = false;
   Worker? _userWorker;
 
-
   @override
   void initState() {
     super.initState();
     // Se for modo de edição, carrega os dados do usuário logado nos controllers
     if (widget.isEditMode) {
-      if(userControllerGet.user.value != null){
+      if (userControllerGet.user.value != null) {
         _loadUserData();
-
       }
-      _userWorker =  ever(userControllerGet.user, (user) {
-        if(user != null){
+      _userWorker = ever(userControllerGet.user, (user) {
+        if (user != null) {
           _loadUserData();
         }
-      },);
+      });
     }
   }
 
@@ -75,6 +71,7 @@ class _RegisterPageState extends State<RegisterPage> {
       nameController.text = user.fullName;
       userController.text = user.userName;
       emailController.text = user.email;
+      cpfController.text =user.cpf;
       professionController.text = user.profession;
       phoneController.text = user.phoneNumber;
 
@@ -96,7 +93,7 @@ class _RegisterPageState extends State<RegisterPage> {
       neighborhoodController.text = user.address.neighborhood;
       cityController.text = user.address.city;
       stateController.text = user.address.state;
-        }
+    }
   }
 
   @override
@@ -105,6 +102,7 @@ class _RegisterPageState extends State<RegisterPage> {
     nameController.dispose();
     userController.dispose();
     emailController.dispose();
+    cpfController.dispose();
     professionController.dispose();
     phoneController.dispose();
     passwordController.dispose();
@@ -128,6 +126,7 @@ class _RegisterPageState extends State<RegisterPage> {
     userController.clear();
     nameController.clear();
     emailController.clear();
+    cpfController.clear();
     professionController.clear();
     phoneController.clear();
     passwordController.clear();
@@ -241,7 +240,9 @@ class _RegisterPageState extends State<RegisterPage> {
                         const SizedBox(width: 12),
                         Expanded(
                           child: Text(
-                            widget.isEditMode ? "Editar Perfil" : "Cadastro de usuários",
+                            widget.isEditMode
+                                ? "Editar Perfil"
+                                : "Cadastro de usuários",
                             style: theme.textTheme.headlineSmall?.copyWith(
                               color: theme.colorScheme.surface,
                               fontWeight: FontWeight.w900,
@@ -263,8 +264,8 @@ class _RegisterPageState extends State<RegisterPage> {
                           _sectionHeader(
                             context,
                             "Dados do usuário",
-                            widget.isEditMode 
-                                ? "Atualize suas informações pessoais." 
+                            widget.isEditMode
+                                ? "Atualize suas informações pessoais."
                                 : "Preencha as informações para criar sua conta.",
                           ),
 
@@ -313,6 +314,16 @@ class _RegisterPageState extends State<RegisterPage> {
                             keyboardType: TextInputType.emailAddress,
                             validator: Validators.email,
                             prefixIcon: const Icon(Icons.mail_outline),
+                          ),
+
+                          CustomTextField(
+                            controller: cpfController,
+                            label: "CPF",
+                            hintText: "00000000000",
+                            size: 724,
+                            keyboardType: TextInputType.number,
+                            validator: Validators.cpf,
+                            prefixIcon: const Icon(Icons.person),
                           ),
 
                           _gap(),
@@ -433,19 +444,23 @@ class _RegisterPageState extends State<RegisterPage> {
                           // ===== Senha
                           CustomTextField(
                             controller: passwordController,
-                            label: widget.isEditMode ? "Nova Senha (deixe em branco para manter)" : "Senha",
+                            label: widget.isEditMode
+                                ? "Nova Senha (deixe em branco para manter)"
+                                : "Senha",
                             hintText: "********",
                             size: 270,
                             obscureText: !_showPassword,
                             validator: (v) {
                               // Se estiver editando e o campo estiver vazio, não valida a senha
-                              if (widget.isEditMode && (v == null || v.isEmpty)) {
+                              if (widget.isEditMode &&
+                                  (v == null || v.isEmpty)) {
                                 return null;
                               }
                               return Validators.minLength(
                                 v,
                                 6,
-                                message: "Senha deve ter no mínimo 6 caracteres",
+                                message:
+                                    "Senha deve ter no mínimo 6 caracteres",
                               );
                             },
                             prefixIcon: const Icon(Icons.lock_outline),
@@ -475,8 +490,8 @@ class _RegisterPageState extends State<RegisterPage> {
                           _sectionHeader(
                             context,
                             "Endereço",
-                            widget.isEditMode 
-                                ? "Atualize seu endereço." 
+                            widget.isEditMode
+                                ? "Atualize seu endereço."
                                 : "Informe seu endereço para concluir o cadastro.",
                           ),
 
@@ -624,6 +639,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                       final userEntityToSave = UserEntity(
                                         userName: userController.text,
                                         email: emailController.text,
+                                        cpf: cpfController.text,
                                         password: passwordController.text,
                                         phoneNumber: phoneController.text,
                                         birthDate:
@@ -632,26 +648,36 @@ class _RegisterPageState extends State<RegisterPage> {
                                             "${birthDayController.text.padLeft(2, '0')}",
                                         profession: professionController.text,
                                         fullName: nameController.text,
-                                        role: userControllerGet.user.value != null ? userControllerGet.user.value!.role: 'USER',
+                                        role:
+                                            userControllerGet.user.value != null
+                                            ? userControllerGet.user.value!.role
+                                            : 'USER',
                                         isEnabled: true,
                                         address: AddressEntity(
                                           zipCode: cepController.text,
                                           street: streetController.text,
                                           number: numberController.text,
                                           complement: complementController.text,
-                                          neighborhood: neighborhoodController.text,
+                                          neighborhood:
+                                              neighborhoodController.text,
                                           city: cityController.text,
                                           state: stateController.text,
                                         ),
                                       );
 
                                       if (widget.isEditMode) {
-                                         print(userControllerGet.user.value!.id!);
+                                        print(
+                                          userControllerGet.user.value!.id!,
+                                        );
                                         // Chamar método de Update (certifique-se de que ele existe no seu RegisterController)
-                                        registerController.updateUserLogged(userControllerGet.user.value!.id!, userEntityToSave); 
-                                        
+                                        registerController.updateUserLogged(
+                                          userControllerGet.user.value!.id!,
+                                          userEntityToSave,
+                                        );
                                       } else {
-                                        registerController.post(userEntityToSave);
+                                        registerController.post(
+                                          userEntityToSave,
+                                        );
                                         clearForm();
                                       }
                                     }
@@ -659,8 +685,12 @@ class _RegisterPageState extends State<RegisterPage> {
 
                             label: Text(
                               registerController.isLoading.value
-                                  ? (widget.isEditMode ? "Atualizando..." : "Salvando...")
-                                  : (widget.isEditMode ? "Atualizar Perfil" : "Salvar cadastro"),
+                                  ? (widget.isEditMode
+                                        ? "Atualizando..."
+                                        : "Salvando...")
+                                  : (widget.isEditMode
+                                        ? "Atualizar Perfil"
+                                        : "Salvar cadastro"),
                               style: theme.textTheme.bodyMedium?.copyWith(
                                 color: theme.colorScheme.primary,
                                 fontWeight: FontWeight.w700,

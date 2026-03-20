@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:nit_sgpi_frontend/infra/models/user/address_model.dart';
 import '../../../domain/entities/user/user_entity.dart';
 
@@ -5,6 +7,7 @@ class UserModel {
   final int? id;
   final String userName;
   final String email;
+  final String cpf;
   final String password;
   final String phoneNumber;
   final String birthDate;
@@ -18,6 +21,7 @@ class UserModel {
     this.id,
     required this.userName,
     required this.email,
+    required this.cpf,
     required this.password,
     required this.phoneNumber,
     required this.birthDate,
@@ -33,6 +37,7 @@ class UserModel {
     return UserModel(
       id: json['id'] ?? '',
       userName: json['userName'],
+      cpf: json['cpf'],
       email: json['email'],
       password: json['password'],
       phoneNumber: json['phoneNumber'],
@@ -51,6 +56,7 @@ class UserModel {
       "id": id ?? '',
       "userName": userName,
       "email": email,
+      "cpf":cpf,
       "password": password,
       "phoneNumber": phoneNumber,
       "birthDate": birthDate,
@@ -67,6 +73,7 @@ class UserModel {
     return UserModel(
       id: entity.id,
       userName: entity.userName,
+      cpf: entity.cpf,
       email: entity.email,
       password: entity.password,
       phoneNumber: entity.phoneNumber,
@@ -84,6 +91,7 @@ class UserModel {
       id: id,
       userName: userName,
       email: email,
+      cpf: cpf,
       birthDate: birthDate,
       fullName: fullName,
       password: password,

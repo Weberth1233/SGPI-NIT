@@ -15,9 +15,9 @@ class UserRepositoryImpl implements IUserRepository{
   UserRepositoryImpl({required this.remoteDataSource});
 
   @override
-  Future<Either<Failure, PagedResultEntity<UserEntity>>> getUsers({String userName = "", String fullName= "", int page = 0, int size = 10}) async{
+  Future<Either<Failure, PagedResultEntity<UserEntity>>> getUsers({String userName = "", String fullName= "", String email = "", String cpf="", int page = 0, int size = 10}) async{
     try{
-      final PagedUserResultModel resultModel = await remoteDataSource.getUsers(fullName: fullName, userName: userName, size: size, page: page);
+      final PagedUserResultModel resultModel = await remoteDataSource.getUsers(fullName: fullName, userName: userName, email: email, cpf: cpf, size: size, page: page);
       final PagedResultEntity<UserEntity> resultEntity = resultModel.toEntity();
       return Right(resultEntity);
     }on ServerException catch (e) {

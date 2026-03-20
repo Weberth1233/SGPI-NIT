@@ -13,9 +13,11 @@ class GetUsers {
   Future<Either<Failure, PagedResultEntity<UserEntity>>> call({
     String fullName ="",
     String userName = "",
+    String email = "",
+    String cpf = "",
     int page = 0,
     int size = 10,
   }) {
-    return repository.getUsers(fullName:fullName, userName: userName, page: page,size: size);
+    return repository.getUsers(fullName:fullName, userName: userName,email: email,cpf: cpf, page: page,size: size);
   }
 }

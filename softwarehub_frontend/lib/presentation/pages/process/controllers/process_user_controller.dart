@@ -13,6 +13,9 @@ class ProcessUserController extends GetxController {
   final RxString errorMessage = ''.obs;
   
   final RxString fullNameFilter = ''.obs;
+  final RxString emailFilter = ''.obs;
+  final RxString cpfFilter = ''.obs;
+
   final RxInt page = 0.obs;
   final int size = 9;
   final RxBool hasMore = true.obs;
@@ -42,6 +45,16 @@ class ProcessUserController extends GetxController {
     fetchUsers(loadMore: false);
   }
 
+  void searchByEmail(String query) {
+    emailFilter.value = query;
+    fetchUsers(loadMore: false);
+  }
+
+  void searchByCPF(String query) {
+    cpfFilter.value = query;
+    fetchUsers(loadMore: false);
+  }
+
   Future<void> fetchUsers({bool loadMore = false}) async {
     if (isLoading.value || (loadMore && !hasMore.value)) return;
 
@@ -58,6 +71,8 @@ class ProcessUserController extends GetxController {
 
     final result = await getUsers(
       fullName: fullNameFilter.value,
+      email: emailFilter.value,
+      cpf: cpfFilter.value,
       page: page.value,
       size: size,
     );

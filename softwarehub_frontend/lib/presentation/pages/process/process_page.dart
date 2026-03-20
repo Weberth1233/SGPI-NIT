@@ -33,6 +33,10 @@ final ProcessResponseEntity? process = Get.arguments is ProcessResponseEntity ? 
 
   final TextEditingController titleController = TextEditingController();
   final TextEditingController searchController = TextEditingController();
+  
+  final TextEditingController searchEmaiController = TextEditingController();
+  final TextEditingController searchCpfController = TextEditingController();
+
   final userController = Get.find<ProcessUserController>();
   Worker? _usersWorker;
 
@@ -192,15 +196,43 @@ final ProcessResponseEntity? process = Get.arguments is ProcessResponseEntity ? 
                           const SizedBox(height: 18),
 
                           _LabeledFieldRow(
-                            label: "Membros :",
-                            field: CustomTextField(
-                              controller: searchController,
-                              label: "",
-                              hintText: "Pesquisar Membros...",
-                              onFieldSubmitted: (_) => userController
-                                  .searchByFullName(searchController.text),
+                            label: "Pesquisar Membros :",
+                            field: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Row(spacing: 10,children: [
+                                  Expanded(
+                                    child: CustomTextField(
+                                    controller: searchController,
+                                    label: "",
+                                    hintText: "Nome...",
+                                    onFieldSubmitted: (_) => userController
+                                        .searchByFullName(searchController.text),
+                                                                    ),
+                                  ),
+                                Expanded(
+                                  child: CustomTextField(
+                                    controller: searchEmaiController,
+                                    label: "",
+                                    hintText: "Email...",
+                                    onFieldSubmitted: (_) => userController
+                                        .searchByEmail(searchEmaiController.text),
+                                  ),
+                                )
+                                ],),
+
+                                CustomTextField(
+                                  controller: searchCpfController,
+                                  label: "",
+                                  hintText: "CPF...",
+                                  onFieldSubmitted: (_) => userController
+                                      .searchByCPF(searchCpfController.text),
+                                ),
+                              ],
                             ),
                           ),
+                          
                           const SizedBox(height: 22),
                           Obx(() {
                             if (userController.isLoading.value &&
