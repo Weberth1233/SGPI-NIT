@@ -111,26 +111,28 @@ class CustomTextField extends StatelessWidget {
     );
 
     return Column(
-      spacing: 7, // Flutter 3.24+
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          label,
-          style: context.textTheme.bodyMedium!.copyWith(
-            color: textWhiteColor
-                ? theme.colorScheme.onSecondary
-                : theme.colorScheme.tertiary,
-            fontWeight: FontWeight.w600,
+        if (label.trim().isNotEmpty) ...[
+          Text(
+            label,
+            style: context.textTheme.bodyMedium!.copyWith(
+              color: textWhiteColor
+                  ? theme.colorScheme.onSecondary
+                  : theme.colorScheme.tertiary,
+              fontWeight: FontWeight.w600,
+              fontSize: 20,
+            ),
           ),
-        ),
+          const SizedBox(height: 7),
+        ],
 
-        // ✅ 3. O pulo do gato: se for expansível (expands == true), usa o Expanded.
-        // Senão, mantém o comportamento original com SizedBox.
         if (expands)
           Expanded(child: textField)
         else
           SizedBox(width: size, child: textField),
       ],
     );
+
   }
 }

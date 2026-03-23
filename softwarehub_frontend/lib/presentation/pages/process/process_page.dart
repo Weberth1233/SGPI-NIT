@@ -14,26 +14,31 @@ class FirstStageProcess {
   final String? originalIpTypeId;
   final Map<String, dynamic>? originalFormData;
 
-  FirstStageProcess({this.idProcess,required this.title, required this.idsUser, this.isEdit = false, this.originalIpTypeId,
-    this.originalFormData,});
+  FirstStageProcess({
+    this.idProcess,
+    required this.title,
+    required this.idsUser,
+    this.isEdit = false,
+    this.originalIpTypeId,
+    this.originalFormData,
+  });
 }
 
 class ProcessPage extends StatefulWidget {
   final bool isEditMode;
-  
-  const ProcessPage({super.key, this.isEditMode = false,});
+
+  const ProcessPage({super.key, this.isEditMode = false});
 
   @override
   State<ProcessPage> createState() => _ProcessPageState();
 }
 
 class _ProcessPageState extends State<ProcessPage> {
-
-final ProcessResponseEntity? process = Get.arguments is ProcessResponseEntity ? Get.arguments : null;
+  final ProcessResponseEntity? process =
+  Get.arguments is ProcessResponseEntity ? Get.arguments : null;
 
   final TextEditingController titleController = TextEditingController();
   final TextEditingController searchController = TextEditingController();
-  
   final TextEditingController searchEmaiController = TextEditingController();
   final TextEditingController searchCpfController = TextEditingController();
 
@@ -47,19 +52,20 @@ final ProcessResponseEntity? process = Get.arguments is ProcessResponseEntity ? 
       titleController.text = process!.title;
       WidgetsBinding.instance.addPostFrameCallback((_) {
         final userController = Get.find<ProcessUserController>();
-        final Set<int> pendingIds = process!.authors
-                .map((u) => u.id)
-                .whereType<int>()
-                .toSet();
+        final Set<int> pendingIds =
+        process!.authors.map((u) => u.id).whereType<int>().toSet();
+
         _usersWorker = ever(userController.users, (List<UserEntity> loadedUsers) {
           if (pendingIds.isEmpty) return;
+
           for (var user in loadedUsers) {
             if (pendingIds.contains(user.id)) {
               userController.selectedUsers[user.id!] = user;
-                            pendingIds.remove(user.id); 
+              pendingIds.remove(user.id);
             }
           }
         });
+
         if (userController.users.isEmpty) {
           userController.fetchUsers();
         }
@@ -71,10 +77,12 @@ final ProcessResponseEntity? process = Get.arguments is ProcessResponseEntity ? 
   void dispose() {
     titleController.dispose();
     searchController.dispose();
-    _usersWorker?.dispose(); 
+    searchEmaiController.dispose();
+    searchCpfController.dispose();
+    _usersWorker?.dispose();
     super.dispose();
   }
-  
+
   @override
   Widget build(BuildContext context) {
     final userController = Get.find<ProcessUserController>();
@@ -109,7 +117,7 @@ final ProcessResponseEntity? process = Get.arguments is ProcessResponseEntity ? 
             const SizedBox(width: 12),
             Expanded(
               child: Text(
-                widget.isEditMode ? "Editar do Processo" :"Cadastro de Processo",
+                widget.isEditMode ? "Editar Processo" : "Cadastro de Processo",
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: theme.textTheme.titleLarge?.copyWith(
@@ -122,13 +130,13 @@ final ProcessResponseEntity? process = Get.arguments is ProcessResponseEntity ? 
           ],
         ),
       ),
-      backgroundColor: colors.primary,
+      backgroundColor: const Color(0xFFCBD5E1),
       body: Stack(
         children: [
           Positioned.fill(
             child: CustomPaint(
               painter: _DiagonalLinesPainter(
-                color: colors.onSecondary.withOpacity(0.04),
+                color: theme.colorScheme.primary.withOpacity(0.08),
               ),
             ),
           ),
@@ -164,7 +172,9 @@ final ProcessResponseEntity? process = Get.arguments is ProcessResponseEntity ? 
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           Text(
-                            widget.isEditMode ? "Editar seu Processo" : "Cadastre seu Processo",
+                            widget.isEditMode
+                                ? "Editar seu Processo"
+                                : "Cadastre seu Processo",
                             style: theme.textTheme.headlineSmall?.copyWith(
                               fontWeight: FontWeight.w900,
                               color: colors.primary,
@@ -173,7 +183,9 @@ final ProcessResponseEntity? process = Get.arguments is ProcessResponseEntity ? 
                             ),
                           ),
                           Text(
-                           widget.isEditMode ?"Inserir as informações necessárias para atualizar seu processo no sistema": "Inserir as informações necessárias para cadastrar seu processo no sistema",
+                            widget.isEditMode
+                                ? "Insira as informações necessárias para atualizar seu processo no sistema."
+                                : "Insira as informações necessárias para cadastrar seu processo no sistema.",
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: theme.textTheme.bodySmall?.copyWith(
@@ -182,58 +194,126 @@ final ProcessResponseEntity? process = Get.arguments is ProcessResponseEntity ? 
                               fontSize: 20,
                             ),
                           ),
-                          const SizedBox(height: 20),
+                          const SizedBox(height: 30),
 
-                          _LabeledFieldRow(
-                            label: "Título do processo :",
+                          _LabeledFieldRowSimple(
+                            label: "Título do processo",
                             field: CustomTextField(
                               controller: titleController,
                               label: "",
-                              hintText: "",
+                              hintText: "Digite o título aqui...",
                             ),
                           ),
 
-                          const SizedBox(height: 18),
+                          const SizedBox(height: 45),
 
-                          _LabeledFieldRow(
-                            label: "Pesquisar Membros :",
-                            field: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Row(spacing: 10,children: [
-                                  Expanded(
-                                    child: CustomTextField(
+
+                          _LabeledFieldRowSearch(
+
+                            label: "Adicionar membro",
+                            field: LayoutBuilder(
+                              builder: (context, constr) {
+                                // Ajuste fino dos breakpoints para telas médias (tablets) e grandes (desktop)
+                                final isDesktop = constr.maxWidth > 850;
+                                final isTablet = constr.maxWidth > 500 && constr.maxWidth <= 850;
+
+                                // UX: Se o usuário apagar todo o texto do input, reseta a lista de usuários.
+                                void onSearchChanged(String value) {
+                                  if (value.trim().isEmpty) {
+                                    // Assumindo que fetchUsers() traga a lista inicial sem filtros
+                                    userController.fetchUsers();
+                                  }
+                                }
+
+                                // Campos de texto para os filtros
+                                final nameField = _SearchFieldHighlight(
+                                  title: "Nome",
+
+                                  icon: Icons.person_outline,
+                                  field: CustomTextField(
                                     controller: searchController,
                                     label: "",
-                                    hintText: "Nome...",
-                                    onFieldSubmitted: (_) => userController
-                                        .searchByFullName(searchController.text),
-                                                                    ),
+                                    hintText: "Ex: João Silva",
+                                    onChanged: onSearchChanged,
+                                    onFieldSubmitted: (_) =>
+                                        userController.searchByFullName(searchController.text),
                                   ),
-                                Expanded(
-                                  child: CustomTextField(
+                                );
+
+                                final emailField = _SearchFieldHighlight(
+                                  title: "E-mail",
+                                  icon: Icons.alternate_email,
+                                  field: CustomTextField(
                                     controller: searchEmaiController,
                                     label: "",
-                                    hintText: "Email...",
-                                    onFieldSubmitted: (_) => userController
-                                        .searchByEmail(searchEmaiController.text),
+                                    hintText: "Ex: joao@email.com",
+                                    onChanged: onSearchChanged,
+                                    onFieldSubmitted: (_) =>
+                                        userController.searchByEmail(searchEmaiController.text),
                                   ),
-                                )
-                                ],),
+                                );
 
-                                CustomTextField(
-                                  controller: searchCpfController,
-                                  label: "",
-                                  hintText: "CPF...",
-                                  onFieldSubmitted: (_) => userController
-                                      .searchByCPF(searchCpfController.text),
-                                ),
-                              ],
+                                final cpfField = _SearchFieldHighlight(
+                                  title: "CPF",
+                                  icon: Icons.badge_outlined,
+                                  field: CustomTextField(
+                                    controller: searchCpfController,
+                                    label: "",
+                                    hintText: "000.000.000-00",
+                                    onChanged: onSearchChanged,
+                                    onFieldSubmitted: (_) =>
+                                        userController.searchByCPF(searchCpfController.text),
+                                  ),
+                                );
+
+                                if (isDesktop) {
+                                  // Desktop: Proporção ajustada. Nome e E-mail ganham mais espaço (flex: 5), CPF ganha menos (flex: 4).
+                                  return Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Expanded(flex: 5, child: nameField),
+                                      const SizedBox(width: 16),
+                                      Expanded(flex: 5, child: emailField),
+                                      const SizedBox(width: 16),
+                                      Expanded(flex: 4, child: cpfField),
+                                    ],
+                                  );
+                                } else if (isTablet) {
+                                  // Tablet: Evita espremer os 3 campos na mesma linha. Nome e E-mail em cima, CPF embaixo.
+                                  return Column(
+                                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                                    children: [
+                                      Row(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Expanded(child: nameField),
+                                          const SizedBox(width: 16),
+                                          Expanded(child: emailField),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 16),
+                                      cpfField,
+                                    ],
+                                  );
+                                } else {
+                                  // Mobile: Todos os campos empilhados com espaçamento respiro adequado.
+                                  return Column(
+                                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                                    children: [
+                                      nameField,
+                                      const SizedBox(height: 10),
+                                      emailField,
+                                      const SizedBox(height: 10),
+                                      cpfField,
+                                    ],
+                                  );
+                                }
+                              },
                             ),
                           ),
-                          
-                          const SizedBox(height: 22),
+
+                          const SizedBox(height: 50),
+
                           Obx(() {
                             if (userController.isLoading.value &&
                                 userController.users.isEmpty) {
@@ -247,9 +327,7 @@ final ProcessResponseEntity? process = Get.arguments is ProcessResponseEntity ? 
 
                             if (userController.errorMessage.isNotEmpty) {
                               return Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 20,
-                                ),
+                                padding: const EdgeInsets.symmetric(vertical: 20),
                                 child: Text(
                                   userController.errorMessage.value,
                                   style: theme.textTheme.bodyLarge?.copyWith(
@@ -261,97 +339,74 @@ final ProcessResponseEntity? process = Get.arguments is ProcessResponseEntity ? 
                             }
 
                             final list = userController.users.toList();
-                            final selectedUsersList = userController
-                                .selectedUsers
-                                .values
-                                .toList();
+                            final selectedUsersList =
+                            userController.selectedUsers.values.toList();
 
-                            final Widget grid = list.isEmpty
+                            final Widget membersView = list.isEmpty
                                 ? Center(
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                        vertical: 20,
-                                      ),
-                                      child: Text(
-                                        "Sem resultados!",
-                                        style: theme.textTheme.bodyLarge
-                                            ?.copyWith(
-                                              color: theme.colorScheme.error,
-                                              fontWeight: FontWeight.w700,
-                                            ),
-                                      ),
-                                    ),
-                                  )
-                                : _MembersGrid(
-                                    users: list,
-                                    selectedUsersMap:
-                                        userController.selectedUsers,
-                                    onToggle: userController.toggleUser,
-                                  );
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 20),
+                                child: Text(
+                                  "Sem resultados!",
+                                  style: theme.textTheme.bodyLarge?.copyWith(
+                                    color: theme.colorScheme.error,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                              ),
+                            )
+                                : _MembersList(
+                              users: list,
+                              selectedUsersMap: userController.selectedUsers,
+                              onToggle: userController.toggleUser,
+                            );
 
-                            // 3. Botões de Paginação (Anterior e Próxima)
                             final Widget paginationButtons =
-                                userController.errorMessage.isEmpty
+                            userController.errorMessage.isEmpty
                                 ? Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: 16,
+                              padding: const EdgeInsets.symmetric(vertical: 16),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  OutlinedButton(
+                                    onPressed: userController.isLoading.value ||
+                                        userController.page.value == 0
+                                        ? null
+                                        : () => userController.fetchPreviousPage(),
+                                    child: const Text("Anterior"),
+                                  ),
+                                  const SizedBox(width: 24),
+                                  Text(
+                                    "Página ${userController.page.value + 1}",
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
                                     ),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        // Botão Anterior
-                                        OutlinedButton(
-                                          onPressed:
-                                              userController.isLoading.value ||
-                                                  userController.page.value == 0
-                                              ? null
-                                              : () => userController
-                                                    .fetchPreviousPage(),
-                                          child: const Text("Anterior"),
-                                        ),
-
-                                        const SizedBox(width: 24),
-
-                                        // Indicador de página (ajuda o usuário a saber onde está)
-                                        Text(
-                                          "Página ${userController.page.value + 1}",
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-
-                                        const SizedBox(width: 24),
-
-                                        // Botão Próxima
-                                        OutlinedButton(
-                                          onPressed:
-                                              userController.isLoading.value ||
-                                                  !userController.hasMore.value
-                                              ? null
-                                              : () => userController.fetchUsers(
-                                                  loadMore: true,
-                                                ),
-                                          child: const Text("Próxima"),
-                                        ),
-                                      ],
-                                    ),
-                                  )
+                                  ),
+                                  const SizedBox(width: 24),
+                                  OutlinedButton(
+                                    onPressed: userController.isLoading.value ||
+                                        !userController.hasMore.value
+                                        ? null
+                                        : () => userController.fetchUsers(loadMore: true),
+                                    child: const Text("Próxima"),
+                                  ),
+                                ],
+                              ),
+                            )
                                 : const SizedBox.shrink();
 
                             if (!isDesktop) {
                               return Column(
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: [
-                                  grid,
+                                  membersView,
                                   const SizedBox(height: 12),
                                   paginationButtons,
                                   const SizedBox(height: 16),
                                   _SelectedMembersPanel(
                                     title: "Membros Selecionados :",
                                     selectedUsers: selectedUsersList,
-                                    selectedIdsCount:
-                                        userController.selectedUsers.length,
+                                    selectedIdsCount: userController.selectedUsers.length,
                                     onRemove: userController.removeUserById,
                                   ),
                                 ],
@@ -363,10 +418,9 @@ final ProcessResponseEntity? process = Get.arguments is ProcessResponseEntity ? 
                               children: [
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.stretch,
+                                    crossAxisAlignment: CrossAxisAlignment.stretch,
                                     children: [
-                                      grid,
+                                      membersView,
                                       const SizedBox(height: 12),
                                       paginationButtons,
                                     ],
@@ -374,12 +428,11 @@ final ProcessResponseEntity? process = Get.arguments is ProcessResponseEntity ? 
                                 ),
                                 const SizedBox(width: 18),
                                 SizedBox(
-                                  width: 300,
+                                  width: 320,
                                   child: _SelectedMembersPanel(
                                     title: "Membros Selecionados :",
                                     selectedUsers: selectedUsersList,
-                                    selectedIdsCount:
-                                        userController.selectedUsers.length,
+                                    selectedIdsCount: userController.selectedUsers.length,
                                     onRemove: userController.removeUserById,
                                   ),
                                 ),
@@ -406,12 +459,11 @@ final ProcessResponseEntity? process = Get.arguments is ProcessResponseEntity ? 
                                     );
                                     return;
                                   }
-                            
+
                                   final auxProcess = FirstStageProcess(
                                     idProcess: process?.id,
                                     title: titleController.text.trim(),
-                                    idsUser: userController.selectedUsers.keys
-                                        .toList(),
+                                    idsUser: userController.selectedUsers.keys.toList(),
                                     isEdit: widget.isEditMode,
                                     originalIpTypeId: process?.ipType.id.toString(),
                                     originalFormData: process?.formData,
@@ -453,6 +505,46 @@ final ProcessResponseEntity? process = Get.arguments is ProcessResponseEntity ? 
   }
 }
 
+// Widget auxiliar para os labels de busca
+class _SearchFieldHighlight extends StatelessWidget {
+  final String title;
+  final IconData icon;
+  final Widget field;
+
+  const _SearchFieldHighlight({
+    required this.title,
+    required this.icon,
+    required this.field,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colors = theme.colorScheme;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Icon(icon, size: 18, color: colors.tertiary),
+            const SizedBox(width: 6),
+            Text(
+              title,
+              style: theme.textTheme.bodySmall?.copyWith(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                color: colors.tertiary.withOpacity(0.85),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 10),
+        field,
+      ],
+    );
+  }
+}
+
 class _LabeledFieldRow extends StatelessWidget {
   final String label;
   final Widget field;
@@ -486,14 +578,12 @@ class _LabeledFieldRow extends StatelessWidget {
         }
 
         return Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(
               width: 180,
               child: Padding(
-                padding: const EdgeInsets.only(
-                  top: 25,
-                ), // 👈 O "nudge" milimétrico aqui
+                padding: const EdgeInsets.only(top: 4),
                 child: Text(
                   label,
                   textAlign: TextAlign.end,
@@ -507,23 +597,21 @@ class _LabeledFieldRow extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 15),
-            Expanded(
-              child: field,
-            ),
+            Expanded(child: field),
           ],
         );
-        
       },
     );
   }
 }
 
-class _MembersGrid extends StatelessWidget {
+// Transformado em uma lista limpa e simples
+class _MembersList extends StatelessWidget {
   final List<UserEntity> users;
   final Map<int, UserEntity> selectedUsersMap;
   final void Function(UserEntity user) onToggle;
 
-  const _MembersGrid({
+  const _MembersList({
     required this.users,
     required this.selectedUsersMap,
     required this.onToggle,
@@ -534,136 +622,76 @@ class _MembersGrid extends StatelessWidget {
     final theme = Theme.of(context);
     final colors = theme.colorScheme;
 
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        int crossAxisCount = 1;
-        if (constraints.maxWidth >= 600) crossAxisCount = 2;
-        if (constraints.maxWidth >= 900) crossAxisCount = 3;
+    return ListView.separated(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: users.length,
+      separatorBuilder: (context, index) => const SizedBox(height: 8),
+      itemBuilder: (context, index) {
+        final u = users[index];
+        final id = u.id;
+        final selected = id != null && selectedUsersMap.containsKey(id);
 
-        return GridView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: crossAxisCount,
-            crossAxisSpacing: 12,
-            mainAxisSpacing: 12,
-            childAspectRatio: 2.8,
-          ),
-          itemCount: users.length,
-          itemBuilder: (context, index) {
-            final u = users[index];
-            final id = u.id;
+        final fullName = _safeString(() => u.fullName, fallback: "Nome");
+        final email = _safeString(() => u.email, fallback: "Email");
 
-            final selected = id != null && selectedUsersMap.containsKey(id);
-
-            final fullName = _safeString(() => u.fullName, fallback: "Nome");
-            final email = _safeString(() => u.email, fallback: "Email");
-
-            return InkWell(
-              key: ValueKey(id ?? index),
+        return InkWell(
+          key: ValueKey(id ?? index),
+          borderRadius: BorderRadius.circular(10),
+          onTap: id == null ? null : () => onToggle(u),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            decoration: BoxDecoration(
+              color: selected
+                  ? colors.primary.withOpacity(0.08)
+                  : Colors.transparent,
               borderRadius: BorderRadius.circular(10),
-              onTap: id == null ? null : () => onToggle(u),
-              child: Container(
-                padding: const EdgeInsets.all(14),
-                decoration: BoxDecoration(
-                  color: colors.primary,
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(
-                    color: selected
-                        ? Colors.white.withOpacity(0.85)
-                        : Colors.white.withOpacity(0.12),
-                    width: selected ? 2 : 1,
-                  ),
-
-                  boxShadow: [
-                    // Brilho na borda superior (Inner Highlight)
-                    BoxShadow(
-                      color: Colors.white.withOpacity(0.10),
-                      offset: const Offset(0, 1),
-                      blurRadius: 0,
-                    ),
-                    // Sombra real do card
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.30),
-                      blurRadius: 12,
-                      offset: const Offset(0, 8),
-                    ),
-                  ],
+              border: Border.all(
+                color: selected
+                    ? colors.primary
+                    : Colors.black.withOpacity(0.08),
+                width: selected ? 1.5 : 1,
+              ),
+            ),
+            child: Row(
+              children: [
+                CircleAvatar(
+                  backgroundColor: colors.primary.withOpacity(0.1),
+                  child: Icon(Icons.person, color: colors.primary),
                 ),
-
-                child: Row(
-                  children: [
-                    Container(
-                      height: 56,
-                      width: 56,
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.95),
-                        shape: BoxShape.circle,
+                const SizedBox(width: 14),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        fullName,
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          fontWeight: FontWeight.w700,
+                          color: colors.tertiary,
+                        ),
                       ),
-
-                      child: Icon(
-                        Icons.person,
-                        color: colors.primary.withOpacity(0.7),
-                        size: 34,
-                      ),
-                    ),
-
-                    const SizedBox(width: 12),
-
-                    Expanded(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          _WhiteInfoPill(text: fullName, strong: true),
-                          const SizedBox(height: 8),
-                          _WhiteInfoPill(text: email, strong: false),
-                        ],
-                      ),
-                    ),
-                    if (selected) ...[
-                      const SizedBox(width: 10),
-                      Icon(
-                        Icons.check_circle,
-                        color: Colors.white.withOpacity(0.95),
+                      const SizedBox(height: 2),
+                      Text(
+                        email,
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: colors.tertiary.withOpacity(0.8),
+                        ),
                       ),
                     ],
-                  ],
+                  ),
                 ),
-              ),
-            );
-          },
+                if (selected)
+                  Icon(Icons.check_circle, color: colors.primary)
+                else
+                  Icon(Icons.circle_outlined,
+                      color: Colors.black.withOpacity(0.2)),
+              ],
+            ),
+          ),
         );
       },
-    );
-  }
-}
-
-class _WhiteInfoPill extends StatelessWidget {
-  final String text;
-  final bool strong;
-  const _WhiteInfoPill({required this.text, required this.strong});
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colors = theme.colorScheme;
-
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-      decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.95),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Text(
-        text,
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-        style: theme.textTheme.bodySmall?.copyWith(
-          color: colors.tertiary,
-          fontWeight: strong ? FontWeight.w800 : FontWeight.w600,
-        ),
-      ),
     );
   }
 }
@@ -711,7 +739,6 @@ class _SelectedMembersPanel extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 12),
-
           if (selectedIdsCount == 0)
             Expanded(
               child: Center(
@@ -732,7 +759,6 @@ class _SelectedMembersPanel extends StatelessWidget {
                 itemBuilder: (context, i) {
                   final u = selectedUsers[i];
                   final int id = u.id!;
-
                   final name = _safeString(() => u.fullName, fallback: "Nome");
 
                   return Container(
@@ -758,7 +784,6 @@ class _SelectedMembersPanel extends StatelessWidget {
                             ),
                           ),
                         ),
-
                         IconButton(
                           tooltip: "Remover",
                           visualDensity: VisualDensity.compact,
@@ -781,7 +806,6 @@ class _SelectedMembersPanel extends StatelessWidget {
   }
 }
 
-
 String _safeString(String Function() getter, {required String fallback}) {
   try {
     final v = getter();
@@ -801,7 +825,6 @@ class _DiagonalLinesPainter extends CustomPainter {
     final paint = Paint()
       ..color = color
       ..strokeWidth = 1;
-
     const spacing = 80.0;
     for (double i = -size.height; i < size.width; i += spacing) {
       canvas.drawLine(
@@ -814,4 +837,129 @@ class _DiagonalLinesPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}
+// Wrapper para campos de texto simples (ex: Título do processo)
+class _LabeledFieldRowSimple extends StatelessWidget {
+  final String label;
+  final Widget field;
+
+  const _LabeledFieldRowSimple({required this.label, required this.field});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colors = theme.colorScheme;
+
+    return LayoutBuilder(
+      builder: (context, c) {
+        final wide = c.maxWidth >= 760;
+
+        if (!wide) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                label,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  fontWeight: FontWeight.w700,
+                  color: colors.tertiary,
+                ),
+              ),
+              const SizedBox(height: 8),
+              field,
+            ],
+          );
+        }
+
+        return Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              width: 180,
+              // Padding artificial MANTIDO aqui apenas para alinhar
+              // o texto com o centro da caixa de texto do input.
+              child: Padding(
+                padding: const EdgeInsets.only(top: 14),
+                child: Text(
+                  label,
+                  textAlign: TextAlign.start,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    fontSize: 18.9,
+                    fontWeight: FontWeight.w700,
+                    color: colors.tertiary.withOpacity(0.8),
+                    letterSpacing: -0.4,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(width: 15),
+            Expanded(child: field),
+          ],
+        );
+      },
+    );
+  }
+}
+
+// Wrapper para o bloco complexo de pesquisa (Sem offset artificial)
+class _LabeledFieldRowSearch extends StatelessWidget {
+  final String label;
+  final Widget field;
+
+  const _LabeledFieldRowSearch({required this.label, required this.field});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colors = theme.colorScheme;
+
+    return LayoutBuilder(
+      builder: (context, c) {
+        final wide = c.maxWidth >= 760;
+
+        if (!wide) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                label,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  fontWeight: FontWeight.w700,
+                  color: colors.tertiary,
+                ),
+              ),
+              const SizedBox(height: 8),
+              field,
+            ],
+          );
+        }
+
+        return Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              width: 180,
+              // Offset artificial REMOVIDO para que o "Pesquisar Membros:"
+              // alinhe perfeitamente com os textos "Nome", "E-mail" e "CPF".
+              child: Padding(
+                padding: const EdgeInsets.only(top: 0),
+                child: Text(
+                  label,
+                  textAlign: TextAlign.start,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    fontSize: 18.9,
+                    fontWeight: FontWeight.w700,
+                    color: colors.tertiary.withOpacity(0.8),
+                    letterSpacing: -0.4,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(width: 15),
+            Expanded(child: field),
+          ],
+        );
+      },
+    );
+  }
 }
