@@ -51,6 +51,11 @@ public class Process {
     private IpTypes ipType;
     // Relacionamento Muitos-para-Muitos com Autores (Users)
     // O Spring criará a tabela intermediária 'project_authors'
+
+    @ManyToMany
+    @JoinTable(name = "process_external_authors", joinColumns = @JoinColumn(name = "process_id"), inverseJoinColumns = @JoinColumn(name = "external_author_id"))
+    private List<ExternalAuthor> externalAuthors = new ArrayList<>();
+
     @ManyToMany
     @JoinTable(
             name = "process_authors",

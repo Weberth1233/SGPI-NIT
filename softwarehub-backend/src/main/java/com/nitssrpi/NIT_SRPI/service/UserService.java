@@ -1,5 +1,6 @@
 package com.nitssrpi.NIT_SRPI.service;
 import com.nitssrpi.NIT_SRPI.Infra.security.SecurityService;
+import com.nitssrpi.NIT_SRPI.controller.exceptions.DuplicateRecordException;
 import com.nitssrpi.NIT_SRPI.model.User;
 import com.nitssrpi.NIT_SRPI.repository.UserRepository;
 import com.nitssrpi.NIT_SRPI.repository.specs.UserSpecs;
@@ -26,6 +27,12 @@ public class UserService {
         if(user.getAddress() != null){
             //Diz para o endereço quem é o dono dele
             user.getAddress().setUser(user);
+        }
+        if(repository.existsByCpf(user.getCpf())){
+            throw new DuplicateRecordException("O CPF " + user.getCpf() + " já está cadastrado no sistema!.");
+        }
+        if(repository.existsByEmail(user.getEmail())){
+            throw new DuplicateRecordException("O Email " + user.getEmail() + " já está cadastrado no sistema!.");
         }
         //Todos os usuarios cadastrados vão iniciar com a Role USER
 //        if(user.getRole() == null){
@@ -88,6 +95,13 @@ public class UserService {
         if(user.getId() == null){
             throw new IllegalArgumentException("Para atualizar é necessário que o usuário esteja cadastrado!");
         }
+
+//        if(repository.existsByCpf(user.getCpf())){
+//            throw new DuplicateRecordException("O CPF " + user.getCpf() + " já está cadastrado no sistema!.");
+//        }
+//        if(repository.existsByEmail(user.getEmail())){
+//            throw new DuplicateRecordException("O Email " + user.getEmail() + " já está cadastrado no sistema!.");
+//        }
 //        if(user.getRole() == null){
 //            user.setRole("USER");
 //        }

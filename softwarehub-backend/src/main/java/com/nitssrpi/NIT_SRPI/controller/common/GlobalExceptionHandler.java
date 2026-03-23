@@ -2,6 +2,7 @@ package com.nitssrpi.NIT_SRPI.controller.common;
 import com.nitssrpi.NIT_SRPI.controller.dto.ErroCampo;
 import com.nitssrpi.NIT_SRPI.controller.dto.ErrorResposta;
 import com.nitssrpi.NIT_SRPI.controller.dto.ExceptionTradingRule;
+import com.nitssrpi.NIT_SRPI.controller.exceptions.DuplicateRecordException;
 import jakarta.validation.constraints.Null;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authorization.AuthorizationDeniedException;
@@ -48,13 +49,11 @@ public class GlobalExceptionHandler {
         );
     }
 
-
-//
-//    @ExceptionHandler(RegistroDuplicadoException.class)
-//    @ResponseStatus(HttpStatus.CONFLICT)
-//    public ErrorResposta handleRegistroDuplicadoException(RegistroDuplicadoException e) {
-//        return ErrorResposta.conflito(e.getMessage());
-//    }
+    @ExceptionHandler(DuplicateRecordException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ErrorResposta handleDuplicateRecordException(DuplicateRecordException e) {
+        return ErrorResposta.conflito(e.getMessage());
+    }
 //
 //    @ExceptionHandler(OperacaoNaoPermitidaException.class)
 //    @ResponseStatus(HttpStatus.BAD_REQUEST)

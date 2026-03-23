@@ -1,10 +1,9 @@
 package com.nitssrpi.NIT_SRPI.controller;
 import com.nitssrpi.NIT_SRPI.controller.dto.*;
 import com.nitssrpi.NIT_SRPI.controller.mappers.ProcessMapper;
-import com.nitssrpi.NIT_SRPI.model.IpTypes;
+import com.nitssrpi.NIT_SRPI.model.*;
 import com.nitssrpi.NIT_SRPI.model.Process;
-import com.nitssrpi.NIT_SRPI.model.StatusProcess;
-import com.nitssrpi.NIT_SRPI.model.User;
+import com.nitssrpi.NIT_SRPI.service.ExternalAuthorService;
 import com.nitssrpi.NIT_SRPI.service.IpTypesService;
 import com.nitssrpi.NIT_SRPI.service.ProcessService;
 import com.nitssrpi.NIT_SRPI.service.UserService;
@@ -32,6 +31,7 @@ import org.springframework.data.domain.Page;
 public class ProcessController implements GenericController{
     private final IpTypesService ipTypesService;
     private final UserService userService;
+    private final ExternalAuthorService externalAuthorService;
     private final ProcessService service;
     private final ProcessMapper mapper;
 
@@ -79,6 +79,16 @@ public class ProcessController implements GenericController{
         }
         if(!users.isEmpty()){
             process.setAuthors(users);
+        }
+
+        List<ExternalAuthor> externalAuthorList = new ArrayList<>();
+        for (Long externalAuthorId : dto.externalAuthorsIds()) {
+            System.out.println(externalAuthorId);
+            var externalAuthor = externalAuthorService.getById(externalAuthorId);
+            externalAuthor.ifPresent(externalAuthorList::add);
+        }
+        if(!externalAuthorList.isEmpty()){
+            process.setExternalAuthors(externalAuthorList);
         }
 
         //Pesquisar no service de iptypes

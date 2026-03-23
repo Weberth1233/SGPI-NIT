@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -38,7 +39,7 @@ public class User implements UserDetails {
     @Column(name = "phone_number")
     private String phoneNumber;
 
-    @Column(name = "cpf")
+    @Column(name = "cpf", unique = true)
     private String cpf;
 
     @Column(name = "birth_date")
@@ -60,6 +61,9 @@ public class User implements UserDetails {
     // Relacionamento com os processos onde ele é autor
     @ManyToMany(mappedBy = "authors")
     private List<Process> processesAsAuthor;
+
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ExternalAuthor> myProvisionalUsers = new ArrayList<>();
 
     @CreatedDate
     @Column(name = "created_at", updatable = false)
