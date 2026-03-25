@@ -12,7 +12,10 @@ import 'package:nit_sgpi_frontend/presentation/pages/ip_types/ip_types_page.dart
 import 'package:nit_sgpi_frontend/presentation/pages/justifications/bindings/justification_bindings.dart';
 import 'package:nit_sgpi_frontend/presentation/pages/justifications/justification_page.dart';
 import 'package:nit_sgpi_frontend/presentation/pages/auth/login/login_page.dart';
+import 'package:nit_sgpi_frontend/presentation/pages/process/bindings/external_author_bindigs.dart';
 import 'package:nit_sgpi_frontend/presentation/pages/process/bindings/user_bindings.dart';
+import 'package:nit_sgpi_frontend/presentation/pages/process/process_external_author_form_page.dart';
+import 'package:nit_sgpi_frontend/presentation/pages/process/process_external_author_page.dart';
 import 'package:nit_sgpi_frontend/presentation/pages/process/process_page.dart';
 import 'package:nit_sgpi_frontend/presentation/pages/auth/register/bindings/register_bindings.dart';
 import 'package:nit_sgpi_frontend/presentation/pages/auth/register/register_page.dart';
@@ -64,6 +67,20 @@ class MyRoutes {
       name: "/process",
       page: () => ProcessPage(),
       binding: UserBindings(),
+      middlewares: [AuthMiddleware()],
+    ),
+
+     GetPage(
+      name: "/process/process-external-author",
+      page: () => ProcessExternalAuthorPage(),
+      binding: ExternalAuthorBindigs(),
+      middlewares: [AuthMiddleware()],
+    ),
+    
+     GetPage(
+      name: "/process/process-external-author/forms",
+      page: () => ProcessExternalAuthorFormPage(),
+      binding: ExternalAuthorBindigs(),
       middlewares: [AuthMiddleware()],
     ),
 

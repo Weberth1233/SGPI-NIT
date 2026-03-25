@@ -7,7 +7,6 @@ import 'package:nit_sgpi_frontend/domain/entities/process/process_response_entit
 import 'package:nit_sgpi_frontend/domain/entities/process/process_status_count_entity.dart';
 import 'package:nit_sgpi_frontend/domain/repositories/iprocess_repository.dart';
 import 'package:nit_sgpi_frontend/infra/datasources/process_remote_datasource.dart';
-import 'package:nit_sgpi_frontend/infra/models/process/paged_result_model.dart';
 
 class ProcessRepositoryImpl implements IProcessRepository {
   final IProcessRemoteDataSource remoteDataSource;
@@ -23,15 +22,13 @@ class ProcessRepositoryImpl implements IProcessRepository {
     int size = 10,
   }) async {
     try {
-      final PagedProcessResultModel resultModel = await remoteDataSource
+      final resultEntity = await remoteDataSource
           .getProcesses(
             title: title,
             statusProcess: statusGenero,
             page: page,
             size: size,
           );
-      final PagedResultEntity<ProcessResponseEntity> resultEntity = resultModel
-          .toEntity();
       return Right(resultEntity);
     } on ServerException catch (e) {
       return Left(ServerFailure(e.message));

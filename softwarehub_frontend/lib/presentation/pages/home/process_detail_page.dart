@@ -304,18 +304,24 @@ class _ProcessDetailPageState extends State<ProcessDetailPage> {
               _buildMobileMenuItem(
                 context,
                 index: 2,
+                icon: Icons.group_outlined,
+                title: "Membros Externos",
+              ),
+              _buildMobileMenuItem(
+                context,
+                index: 3,
                 icon: Icons.list_alt_outlined,
                 title: "Dados",
               ),
               _buildMobileMenuItem(
                 context,
-                index: 3,
+                index: 4,
                 icon: Icons.attach_file_outlined,
                 title: "Anexos",
               ),
               _buildMobileMenuItem(
                 context,
-                index: 4,
+                index: 5,
                 icon: Icons.approval,
                 title: "Correção",
               ),
@@ -497,6 +503,14 @@ class _ProcessDetailPageState extends State<ProcessDetailPage> {
           _buildDesktopMenuItem(
             context,
             index: 2,
+            icon: Icons.group_outlined,
+            title: "MEMBROS Externos",
+            subtitle: "Vinculados externos ao processo",
+          ),
+          const SizedBox(height: 10),
+          _buildDesktopMenuItem(
+            context,
+            index: 3,
             icon: Icons.list_alt_outlined,
             title: "DADOS DO PROCESSO",
             subtitle: "Formulário preenchido",
@@ -504,7 +518,7 @@ class _ProcessDetailPageState extends State<ProcessDetailPage> {
           const SizedBox(height: 10),
           _buildDesktopMenuItem(
             context,
-            index: 3,
+            index: 4,
             icon: Icons.attach_file_outlined,
             title: "ANEXOS",
             subtitle: "Arquivos do processo",
@@ -512,7 +526,7 @@ class _ProcessDetailPageState extends State<ProcessDetailPage> {
           const SizedBox(height: 10),
           _buildDesktopMenuItem(
             context,
-            index: 4,
+            index: 5,
             icon: Icons.approval,
             title: "CORREÇÃO",
             subtitle: "Correções do processo",
@@ -714,16 +728,21 @@ class _ProcessDetailPageState extends State<ProcessDetailPage> {
         content = _buildMembersList(context, entity);
         break;
       case 2:
+        title = "MEMBROS Externos";
+        subtitle = "Pessoas externas vinculadas ao processo.";
+        content = _buildExternalMembersList(context, entity);
+        break;
+      case 3:
         title = "DADOS DO PROCESSO";
         subtitle = "Informações preenchidas no formulário.";
         content = _buildDynamicForm(context, entity);
         break;
-      case 3:
+      case 4:
         title = "ANEXOS";
         subtitle = "Arquivos relacionados ao processo. Clique no processo para enviá-lo assinado";
         content = _buildAttachmentsList(context, entity);
         break;
-      case 4:
+      case 5:
         title = "CORREÇÕES / JUSTIFICATIVAS";
         subtitle = "Correções e observações.";
         content = _buildFixesList(context, entity);
@@ -767,6 +786,24 @@ class _ProcessDetailPageState extends State<ProcessDetailPage> {
       separatorBuilder: (_, __) => const SizedBox(height: 12),
       itemBuilder: (context, index) {
         final author = entity.authors[index];
+        return _buildPersonRowCard(
+          context,
+          name: author.fullName,
+          email: author.email,
+          trailingIcon: Icons.person_outline,
+        );
+      },
+    );
+  }
+
+  Widget _buildExternalMembersList(BuildContext context, ProcessResponseEntity entity) {
+    return ListView.separated(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: entity.externalAuthors.length,
+      separatorBuilder: (_, __) => const SizedBox(height: 12),
+      itemBuilder: (context, index) {
+        final author = entity.externalAuthors[index];
         return _buildPersonRowCard(
           context,
           name: author.fullName,

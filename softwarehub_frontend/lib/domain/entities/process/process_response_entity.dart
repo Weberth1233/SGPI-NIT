@@ -1,3 +1,4 @@
+import 'package:nit_sgpi_frontend/domain/entities/external_author/external_author_entity.dart';
 import 'package:nit_sgpi_frontend/domain/entities/process/process_justification_entity.dart';
 import 'package:nit_sgpi_frontend/domain/entities/process/process_ip_type_entity.dart';
 
@@ -15,6 +16,7 @@ class ProcessResponseEntity {
   final List<ProcessUserEntity> authors;
   final List<AttachmentEntity> attachments;
   final List<ProcessJustificationEntity> justifications;
+  final List<ExternalAuthorEntity> externalAuthors;
   final ProcessUserEntity creator;
 
 
@@ -29,6 +31,7 @@ class ProcessResponseEntity {
     required this.authors,
     required this.attachments,
     required this.justifications,
+    required this.externalAuthors,
     required this.creator,
   });
 }

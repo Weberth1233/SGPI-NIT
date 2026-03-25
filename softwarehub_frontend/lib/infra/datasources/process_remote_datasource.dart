@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:nit_sgpi_frontend/domain/entities/paged_result_entity.dart';
 import 'package:nit_sgpi_frontend/domain/entities/process/process_request_entity.dart';
 import 'package:nit_sgpi_frontend/domain/entities/process/process_response_entity.dart';
 import 'package:nit_sgpi_frontend/infra/core/network/api_client.dart';
@@ -12,7 +13,7 @@ import '../models/process/paged_result_model.dart';
 import '../models/process/process_response_model.dart';
 
 abstract class IProcessRemoteDataSource {
-  Future<PagedProcessResultModel> getProcesses({
+  Future<PagedResultEntity<ProcessResponseEntity>> getProcesses({
     String title = "",
     String statusProcess = "",
     int page = 0,
@@ -38,7 +39,7 @@ class ProcessRemoteDataSourceImpl implements IProcessRemoteDataSource {
   ProcessRemoteDataSourceImpl(this.apiClient);
 
   @override
-  Future<PagedProcessResultModel> getProcesses({
+  Future<PagedResultEntity<ProcessResponseEntity>> getProcesses({
     String title = "",
     String statusProcess = "",
     int page = 0,
@@ -64,7 +65,7 @@ class ProcessRemoteDataSourceImpl implements IProcessRemoteDataSource {
 
       if (response.statusCode == 200) {
         final jsonMap = json.decode(response.body);
-        return PagedProcessResultModel.fromJson(jsonMap);
+        return PagedProcessResultModel.fromJson(jsonMap).toEntity();
       } else {
         throw ServerException(
           'Erro ${response.statusCode} ao buscar processos! - Detalhes: ${response.body}',

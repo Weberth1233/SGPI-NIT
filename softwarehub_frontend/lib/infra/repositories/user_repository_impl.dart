@@ -4,8 +4,6 @@ import 'package:nit_sgpi_frontend/domain/entities/paged_result_entity.dart';
 import 'package:nit_sgpi_frontend/domain/entities/user/user_entity.dart';
 import 'package:nit_sgpi_frontend/domain/repositories/iuser_repository.dart';
 import 'package:nit_sgpi_frontend/infra/datasources/user_remote_datasources.dart';
-import 'package:nit_sgpi_frontend/infra/models/user/peged_user_result_model.dart';
-
 import '../../domain/core/errors/exceptions.dart';
 
 class UserRepositoryImpl implements IUserRepository{
@@ -17,8 +15,7 @@ class UserRepositoryImpl implements IUserRepository{
   @override
   Future<Either<Failure, PagedResultEntity<UserEntity>>> getUsers({String userName = "", String fullName= "", String email = "", String cpf="", int page = 0, int size = 10}) async{
     try{
-      final PagedUserResultModel resultModel = await remoteDataSource.getUsers(fullName: fullName, userName: userName, email: email, cpf: cpf, size: size, page: page);
-      final PagedResultEntity<UserEntity> resultEntity = resultModel.toEntity();
+      final resultEntity = await remoteDataSource.getUsers(fullName: fullName, userName: userName, email: email, cpf: cpf, size: size, page: page);
       return Right(resultEntity);
     }on ServerException catch (e) {
       return Left(ServerFailure(e.message));

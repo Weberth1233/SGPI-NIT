@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:nit_sgpi_frontend/domain/entities/paged_result_entity.dart';
 import 'package:nit_sgpi_frontend/domain/entities/user/user_entity.dart';
 import 'package:nit_sgpi_frontend/infra/models/user/user_model.dart';
 import '../../domain/core/errors/exceptions.dart';
@@ -8,7 +9,7 @@ import '../core/network/base_url.dart';
 import '../models/user/peged_user_result_model.dart';
 
 abstract class IUserRemoteDataSource {
-  Future<PagedUserResultModel> getUsers({
+  Future<PagedResultEntity<UserEntity>> getUsers({
     String userName = '',
     String fullName = '',
     String email = '',
@@ -27,7 +28,7 @@ class UserRemoteDatasourcesImpl implements IUserRemoteDataSource {
   UserRemoteDatasourcesImpl(this.apiClient);
   
   @override
-  Future<PagedUserResultModel> getUsers({
+  Future<PagedResultEntity<UserEntity>> getUsers({
     String userName = '',
     String fullName = '',
     String email = '',
@@ -64,7 +65,7 @@ class UserRemoteDatasourcesImpl implements IUserRemoteDataSource {
 
       if (response.statusCode == 200) {
         final jsonMap = json.decode(response.body);
-        return PagedUserResultModel.fromJson(jsonMap);
+        return PagedUserResultModel.fromJson(jsonMap).toEntity();
       } else {
         throw ServerException(
           'Erro ${response.statusCode} ao buscar usuarios! - Detalhes: ${response.body}',

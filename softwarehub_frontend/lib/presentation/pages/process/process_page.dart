@@ -34,8 +34,9 @@ class ProcessPage extends StatefulWidget {
 }
 
 class _ProcessPageState extends State<ProcessPage> {
-  final ProcessResponseEntity? process =
-  Get.arguments is ProcessResponseEntity ? Get.arguments : null;
+  final ProcessResponseEntity? process = Get.arguments is ProcessResponseEntity
+      ? Get.arguments
+      : null;
 
   final TextEditingController titleController = TextEditingController();
   final TextEditingController searchController = TextEditingController();
@@ -52,10 +53,14 @@ class _ProcessPageState extends State<ProcessPage> {
       titleController.text = process!.title;
       WidgetsBinding.instance.addPostFrameCallback((_) {
         final userController = Get.find<ProcessUserController>();
-        final Set<int> pendingIds =
-        process!.authors.map((u) => u.id).whereType<int>().toSet();
+        final Set<int> pendingIds = process!.authors
+            .map((u) => u.id)
+            .whereType<int>()
+            .toSet();
 
-        _usersWorker = ever(userController.users, (List<UserEntity> loadedUsers) {
+        _usersWorker = ever(userController.users, (
+          List<UserEntity> loadedUsers,
+        ) {
           if (pendingIds.isEmpty) return;
 
           for (var user in loadedUsers) {
@@ -207,15 +212,15 @@ class _ProcessPageState extends State<ProcessPage> {
 
                           const SizedBox(height: 45),
 
-
                           _LabeledFieldRowSearch(
-
                             label: "Adicionar membro",
                             field: LayoutBuilder(
                               builder: (context, constr) {
                                 // Ajuste fino dos breakpoints para telas médias (tablets) e grandes (desktop)
                                 final isDesktop = constr.maxWidth > 850;
-                                final isTablet = constr.maxWidth > 500 && constr.maxWidth <= 850;
+                                final isTablet =
+                                    constr.maxWidth > 500 &&
+                                    constr.maxWidth <= 850;
 
                                 // UX: Se o usuário apagar todo o texto do input, reseta a lista de usuários.
                                 void onSearchChanged(String value) {
@@ -236,7 +241,9 @@ class _ProcessPageState extends State<ProcessPage> {
                                     hintText: "Ex: João Silva",
                                     onChanged: onSearchChanged,
                                     onFieldSubmitted: (_) =>
-                                        userController.searchByFullName(searchController.text),
+                                        userController.searchByFullName(
+                                          searchController.text,
+                                        ),
                                   ),
                                 );
 
@@ -249,7 +256,9 @@ class _ProcessPageState extends State<ProcessPage> {
                                     hintText: "Ex: joao@email.com",
                                     onChanged: onSearchChanged,
                                     onFieldSubmitted: (_) =>
-                                        userController.searchByEmail(searchEmaiController.text),
+                                        userController.searchByEmail(
+                                          searchEmaiController.text,
+                                        ),
                                   ),
                                 );
 
@@ -261,15 +270,16 @@ class _ProcessPageState extends State<ProcessPage> {
                                     label: "",
                                     hintText: "000.000.000-00",
                                     onChanged: onSearchChanged,
-                                    onFieldSubmitted: (_) =>
-                                        userController.searchByCPF(searchCpfController.text),
+                                    onFieldSubmitted: (_) => userController
+                                        .searchByCPF(searchCpfController.text),
                                   ),
                                 );
 
                                 if (isDesktop) {
                                   // Desktop: Proporção ajustada. Nome e E-mail ganham mais espaço (flex: 5), CPF ganha menos (flex: 4).
                                   return Row(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Expanded(flex: 5, child: nameField),
                                       const SizedBox(width: 16),
@@ -281,10 +291,12 @@ class _ProcessPageState extends State<ProcessPage> {
                                 } else if (isTablet) {
                                   // Tablet: Evita espremer os 3 campos na mesma linha. Nome e E-mail em cima, CPF embaixo.
                                   return Column(
-                                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.stretch,
                                     children: [
                                       Row(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           Expanded(child: nameField),
                                           const SizedBox(width: 16),
@@ -298,7 +310,8 @@ class _ProcessPageState extends State<ProcessPage> {
                                 } else {
                                   // Mobile: Todos os campos empilhados com espaçamento respiro adequado.
                                   return Column(
-                                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.stretch,
                                     children: [
                                       nameField,
                                       const SizedBox(height: 10),
@@ -327,7 +340,9 @@ class _ProcessPageState extends State<ProcessPage> {
 
                             if (userController.errorMessage.isNotEmpty) {
                               return Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 20),
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 20,
+                                ),
                                 child: Text(
                                   userController.errorMessage.value,
                                   style: theme.textTheme.bodyLarge?.copyWith(
@@ -339,60 +354,93 @@ class _ProcessPageState extends State<ProcessPage> {
                             }
 
                             final list = userController.users.toList();
-                            final selectedUsersList =
-                            userController.selectedUsers.values.toList();
+                            final selectedUsersList = userController
+                                .selectedUsers
+                                .values
+                                .toList();
 
                             final Widget membersView = list.isEmpty
                                 ? Center(
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 20),
-                                child: Text(
-                                  "Sem resultados!",
-                                  style: theme.textTheme.bodyLarge?.copyWith(
-                                    color: theme.colorScheme.error,
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                ),
-                              ),
-                            )
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 20,
+                                      ),
+                                      child: Column(
+                                        children: [
+                                          Text(
+                                            "Sem resultados!",
+                                            style: theme.textTheme.bodyLarge
+                                                ?.copyWith(
+                                                  color:
+                                                      theme.colorScheme.error,
+                                                  fontWeight: FontWeight.w700,
+                                                ),
+                                          ),
+                                          SizedBox(height: 20,),
+                                          ElevatedButton(
+                                            onPressed: () {
+                                              Get.toNamed(
+                                                "/process/process-external-author",
+                                              );
+                                            },
+                                            child: Text("Adc usuário externo",style: theme.textTheme.bodyLarge
+                                                ?.copyWith(
+                                                  color:
+                                                      theme.colorScheme.onSecondary,
+                                                  fontWeight: FontWeight.w700,
+                                                ),),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  )
                                 : _MembersList(
-                              users: list,
-                              selectedUsersMap: userController.selectedUsers,
-                              onToggle: userController.toggleUser,
-                            );
+                                    users: list,
+                                    selectedUsersMap:
+                                        userController.selectedUsers,
+                                    onToggle: userController.toggleUser,
+                                  );
 
                             final Widget paginationButtons =
-                            userController.errorMessage.isEmpty
+                                userController.errorMessage.isEmpty
                                 ? Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 16),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  OutlinedButton(
-                                    onPressed: userController.isLoading.value ||
-                                        userController.page.value == 0
-                                        ? null
-                                        : () => userController.fetchPreviousPage(),
-                                    child: const Text("Anterior"),
-                                  ),
-                                  const SizedBox(width: 24),
-                                  Text(
-                                    "Página ${userController.page.value + 1}",
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 16,
                                     ),
-                                  ),
-                                  const SizedBox(width: 24),
-                                  OutlinedButton(
-                                    onPressed: userController.isLoading.value ||
-                                        !userController.hasMore.value
-                                        ? null
-                                        : () => userController.fetchUsers(loadMore: true),
-                                    child: const Text("Próxima"),
-                                  ),
-                                ],
-                              ),
-                            )
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        OutlinedButton(
+                                          onPressed:
+                                              userController.isLoading.value ||
+                                                  userController.page.value == 0
+                                              ? null
+                                              : () => userController
+                                                    .fetchPreviousPage(),
+                                          child: const Text("Anterior"),
+                                        ),
+                                        const SizedBox(width: 24),
+                                        Text(
+                                          "Página ${userController.page.value + 1}",
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        const SizedBox(width: 24),
+                                        OutlinedButton(
+                                          onPressed:
+                                              userController.isLoading.value ||
+                                                  !userController.hasMore.value
+                                              ? null
+                                              : () => userController.fetchUsers(
+                                                  loadMore: true,
+                                                ),
+                                          child: const Text("Próxima"),
+                                        ),
+                                      ],
+                                    ),
+                                  )
                                 : const SizedBox.shrink();
 
                             if (!isDesktop) {
@@ -406,7 +454,8 @@ class _ProcessPageState extends State<ProcessPage> {
                                   _SelectedMembersPanel(
                                     title: "Membros Selecionados :",
                                     selectedUsers: selectedUsersList,
-                                    selectedIdsCount: userController.selectedUsers.length,
+                                    selectedIdsCount:
+                                        userController.selectedUsers.length,
                                     onRemove: userController.removeUserById,
                                   ),
                                 ],
@@ -418,7 +467,8 @@ class _ProcessPageState extends State<ProcessPage> {
                               children: [
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.stretch,
                                     children: [
                                       membersView,
                                       const SizedBox(height: 12),
@@ -432,7 +482,8 @@ class _ProcessPageState extends State<ProcessPage> {
                                   child: _SelectedMembersPanel(
                                     title: "Membros Selecionados :",
                                     selectedUsers: selectedUsersList,
-                                    selectedIdsCount: userController.selectedUsers.length,
+                                    selectedIdsCount:
+                                        userController.selectedUsers.length,
                                     onRemove: userController.removeUserById,
                                   ),
                                 ),
@@ -463,9 +514,11 @@ class _ProcessPageState extends State<ProcessPage> {
                                   final auxProcess = FirstStageProcess(
                                     idProcess: process?.id,
                                     title: titleController.text.trim(),
-                                    idsUser: userController.selectedUsers.keys.toList(),
+                                    idsUser: userController.selectedUsers.keys
+                                        .toList(),
                                     isEdit: widget.isEditMode,
-                                    originalIpTypeId: process?.ipType.id.toString(),
+                                    originalIpTypeId: process?.ipType.id
+                                        .toString(),
                                     originalFormData: process?.formData,
                                   );
 
@@ -685,8 +738,10 @@ class _MembersList extends StatelessWidget {
                 if (selected)
                   Icon(Icons.check_circle, color: colors.primary)
                 else
-                  Icon(Icons.circle_outlined,
-                      color: Colors.black.withOpacity(0.2)),
+                  Icon(
+                    Icons.circle_outlined,
+                    color: Colors.black.withOpacity(0.2),
+                  ),
               ],
             ),
           ),
@@ -838,6 +893,7 @@ class _DiagonalLinesPainter extends CustomPainter {
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
+
 // Wrapper para campos de texto simples (ex: Título do processo)
 class _LabeledFieldRowSimple extends StatelessWidget {
   final String label;

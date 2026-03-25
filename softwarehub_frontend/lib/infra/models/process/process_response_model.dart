@@ -1,4 +1,5 @@
 import 'package:nit_sgpi_frontend/infra/models/base_model.dart';
+import 'package:nit_sgpi_frontend/infra/models/external_author/external_author_model.dart';
 import 'package:nit_sgpi_frontend/infra/models/process/process_justification_model.dart';
 
 import '../../../domain/entities/process/process_response_entity.dart';
@@ -18,6 +19,7 @@ class ProcessResponseModel implements BaseModel{
   final List<ProcessUserModel> authors;
   final List<AttachmentModel> attachments;
   final List<ProcessJustificationModel> justifications;
+  final List<ExternalAuthorModel> externalAuthors;
   final ProcessUserModel creator;
 
   ProcessResponseModel({
@@ -31,6 +33,7 @@ class ProcessResponseModel implements BaseModel{
     required this.authors,
     required this.attachments,
     required this.justifications,
+    required this.externalAuthors,
     required this.creator,
   });
 
@@ -53,6 +56,10 @@ class ProcessResponseModel implements BaseModel{
           .map((e) => ProcessJustificationModel.fromJson(e))
           .toList(),
       creator: ProcessUserModel.fromJson(json['creator']),
+
+      externalAuthors: (json['externalAuthors'] as List)
+          .map((e) => ExternalAuthorModel.fromJson(e))
+          .toList(),
     );
   }
 
@@ -88,6 +95,7 @@ class ProcessResponseModel implements BaseModel{
       attachments: attachments.map((e) => e.toEntity()).toList(),
       creator: creator.toEntity(),
       justifications: justifications.map((e) => e.toEntity(),).toList(),
+      externalAuthors: externalAuthors.map((e) => e.toEntity(),).toList(),
     );
   }
 }
