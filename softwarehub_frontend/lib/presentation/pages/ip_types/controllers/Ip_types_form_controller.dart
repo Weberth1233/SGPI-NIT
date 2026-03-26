@@ -77,6 +77,8 @@ class IpTypesFormController extends GetxController {
           ProcessRequestEntity(
             title: secondStageProcess.firstStageProcess.title,
             ipTypeId: secondStageProcess.item.id,
+            externalAuthorIds:
+                secondStageProcess.firstStageProcess.idsExternalAuthors,
             isFeatured: true,
             authorIds: secondStageProcess.firstStageProcess.idsUser,
             formData: result,
@@ -89,6 +91,8 @@ class IpTypesFormController extends GetxController {
             ipTypeId: secondStageProcess.item.id,
             isFeatured: true,
             authorIds: secondStageProcess.firstStageProcess.idsUser,
+            externalAuthorIds:
+                secondStageProcess.firstStageProcess.idsExternalAuthors,
             formData: result,
           ),
         );

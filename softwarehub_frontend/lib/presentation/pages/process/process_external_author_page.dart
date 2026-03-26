@@ -42,7 +42,7 @@ class _ProcessExternalAuthorPageState extends State<ProcessExternalAuthorPage> {
                 child: IconButton(
                   padding: EdgeInsets.zero,
                   icon: Icon(Icons.arrow_back, color: colors.primary),
-                  onPressed: () => Get.back(),
+                  onPressed: () => Get.back(result: externalAuthorController.selectedExternalAuthor),
                   tooltip: "Voltar",
                 ),
               ),

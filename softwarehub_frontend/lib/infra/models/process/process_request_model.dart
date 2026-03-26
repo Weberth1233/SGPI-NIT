@@ -5,6 +5,7 @@ class ProcessRequestModel {
   final int ipTypeId;
   final bool isFeatured;
   final List<int> authorIds;
+  final List<int> externalAuthorIds;
   final Map<String, dynamic> formData;
 
   ProcessRequestModel({
@@ -12,6 +13,7 @@ class ProcessRequestModel {
     required this.ipTypeId,
     required this.isFeatured,
     required this.authorIds,
+    required this.externalAuthorIds,
     required this.formData,
   });
 
@@ -21,6 +23,7 @@ class ProcessRequestModel {
       ipTypeId: json['ipTypeId'] as int,
       isFeatured: json['isFeatured'] as bool,
       authorIds: List<int>.from(json['authorIds'] as List),
+      externalAuthorIds: List<int>.from(json['externalAuthorsIds'] as List),
       formData: Map<String, dynamic>.from(json['formData'] as Map),
     );
   }
@@ -31,6 +34,7 @@ class ProcessRequestModel {
       'ipTypeId': ipTypeId,
       'isFeatured': isFeatured,
       'authorIds': authorIds,
+      'externalAuthorsIds': externalAuthorIds,
       'formData': formData,
     };
   }
@@ -41,6 +45,7 @@ class ProcessRequestModel {
       ipTypeId: entity.ipTypeId,
       isFeatured: entity.isFeatured,
       authorIds: entity.authorIds,
+      externalAuthorIds: entity.externalAuthorIds,
       formData: entity.formData,
     );
   }
@@ -49,6 +54,7 @@ class ProcessRequestModel {
     return ProcessRequestEntity(
       title: title,
       authorIds: authorIds,
+      externalAuthorIds: externalAuthorIds,
       formData: formData,
       ipTypeId: ipTypeId,
       isFeatured: isFeatured,

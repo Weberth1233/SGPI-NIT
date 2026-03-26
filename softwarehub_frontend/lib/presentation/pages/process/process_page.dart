@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nit_sgpi_frontend/domain/entities/user/user_entity.dart';
 import 'package:nit_sgpi_frontend/presentation/pages/process/controllers/process_user_controller.dart';
+import '../../../domain/entities/external_author/external_author_entity.dart';
 import '../../../domain/entities/process/process_response_entity.dart';
 import '../../shared/utils/responsive.dart';
 import '../../shared/widgets/custom_text_field.dart';
@@ -10,6 +11,7 @@ class FirstStageProcess {
   final int? idProcess;
   final String title;
   final List<int> idsUser;
+  final List<int> idsExternalAuthors;
   final bool isEdit;
   final String? originalIpTypeId;
   final Map<String, dynamic>? originalFormData;
@@ -18,6 +20,7 @@ class FirstStageProcess {
     this.idProcess,
     required this.title,
     required this.idsUser,
+    required this.idsExternalAuthors,
     this.isEdit = false,
     this.originalIpTypeId,
     this.originalFormData,
@@ -42,6 +45,10 @@ class _ProcessPageState extends State<ProcessPage> {
   final TextEditingController searchController = TextEditingController();
   final TextEditingController searchEmaiController = TextEditingController();
   final TextEditingController searchCpfController = TextEditingController();
+
+  List<int> idsExternalAuthors = [];
+  List<ExternalAuthorEntity> listExternalAuthor = [];
+  Map<int, ExternalAuthorEntity> result = {};
 
   final userController = Get.find<ProcessUserController>();
   Worker? _usersWorker;
@@ -376,19 +383,55 @@ class _ProcessPageState extends State<ProcessPage> {
                                                   fontWeight: FontWeight.w700,
                                                 ),
                                           ),
-                                          SizedBox(height: 20,),
+                                          SizedBox(height: 20),
                                           ElevatedButton(
-                                            onPressed: () {
-                                              Get.toNamed(
+                                            onPressed: () async {
+                                              var result = await Get.toNamed(
                                                 "/process/process-external-author",
                                               );
+                                              if (result != null &&
+                                                  result
+                                                      is Map<
+                                                        int,
+                                                        ExternalAuthorEntity
+                                                      >) {
+                                                setState(() {
+                                                  listExternalAuthor = result
+                                                      .values
+                                                      .toList();
+                                                  idsExternalAuthors = result
+                                                      .keys
+                                                      .toList();
+                                                });
+
+                                                print(
+                                                  "Total de autores convertidos para lista: ${listExternalAuthor.length}",
+                                                );
+                                              }
                                             },
-                                            child: Text("Adc usuário externo",style: theme.textTheme.bodyLarge
-                                                ?.copyWith(
-                                                  color:
-                                                      theme.colorScheme.onSecondary,
-                                                  fontWeight: FontWeight.w700,
-                                                ),),
+                                            child: Text(
+                                              "Adc usuário externo",
+                                              style: theme.textTheme.bodyLarge
+                                                  ?.copyWith(
+                                                    color: theme
+                                                        .colorScheme
+                                                        .onSecondary,
+                                                    fontWeight: FontWeight.w700,
+                                                  ),
+                                            ),
+                                          ),
+
+                                          Column(
+                                            children: listExternalAuthor
+                                                .map(
+                                                  (autor) => Text(
+                                                    autor.fullName,
+                                                    style: TextStyle(
+                                                      color: Colors.red,
+                                                    ),
+                                                  ),
+                                                )
+                                                .toList(),
                                           ),
                                         ],
                                       ),
@@ -516,6 +559,7 @@ class _ProcessPageState extends State<ProcessPage> {
                                     title: titleController.text.trim(),
                                     idsUser: userController.selectedUsers.keys
                                         .toList(),
+                                    idsExternalAuthors: idsExternalAuthors,
                                     isEdit: widget.isEditMode,
                                     originalIpTypeId: process?.ipType.id
                                         .toString(),
