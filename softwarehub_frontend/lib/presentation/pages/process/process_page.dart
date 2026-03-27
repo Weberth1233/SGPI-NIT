@@ -81,6 +81,8 @@ class _ProcessPageState extends State<ProcessPage> {
         if (userController.users.isEmpty) {
           userController.fetchUsers();
         }
+
+        listExternalAuthor = process!.externalAuthors;
       });
     }
   }
@@ -183,29 +185,73 @@ class _ProcessPageState extends State<ProcessPage> {
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          Text(
-                            widget.isEditMode
-                                ? "Editar seu Processo"
-                                : "Cadastre seu Processo",
-                            style: theme.textTheme.headlineSmall?.copyWith(
-                              fontWeight: FontWeight.w900,
-                              color: colors.primary,
-                              letterSpacing: -0.1,
-                              fontSize: 35,
-                            ),
+                          Row(
+                            
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      widget.isEditMode
+                                          ? "Editar seu Processo"
+                                          : "Cadastre seu Processo",
+                                      style: theme.textTheme.headlineSmall
+                                          ?.copyWith(
+                                            fontWeight: FontWeight.w900,
+                                            color: colors.primary,
+                                            letterSpacing: -0.1,
+                                            fontSize: 35,
+                                          ),
+                                    ),
+                                    Text(
+                                      widget.isEditMode
+                                          ? "Insira as informações necessárias para atualizar seu processo no sistema."
+                                          : "Insira as informações necessárias para cadastrar seu processo no sistema.",
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: theme.textTheme.bodySmall
+                                          ?.copyWith(
+                                            color: colors.tertiary.withOpacity(
+                                              0.75,
+                                            ),
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 20,
+                                          ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              ElevatedButton(
+                                onPressed: () async {
+                                  var result = await Get.toNamed(
+                                    "/process/process-external-author",
+                                  );
+                                  if (result != null &&
+                                      result
+                                          is Map<int, ExternalAuthorEntity>) {
+                                    setState(() {
+                                      listExternalAuthor = result.values
+                                          .toList();
+                                      idsExternalAuthors = result.keys.toList();
+                                    });
+
+                                    print(
+                                      "Total de autores convertidos para lista: ${listExternalAuthor.length}",
+                                    );
+                                  }
+                                },
+                                child: Text(
+                                  "Adc usuário externo",
+                                  style: theme.textTheme.bodyMedium?.copyWith(
+                                    color: theme.colorScheme.onSecondary,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                          Text(
-                            widget.isEditMode
-                                ? "Insira as informações necessárias para atualizar seu processo no sistema."
-                                : "Insira as informações necessárias para cadastrar seu processo no sistema.",
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: theme.textTheme.bodySmall?.copyWith(
-                              color: colors.tertiary.withOpacity(0.75),
-                              fontWeight: FontWeight.w500,
-                              fontSize: 20,
-                            ),
-                          ),
+
                           const SizedBox(height: 30),
 
                           _LabeledFieldRowSimple(
@@ -384,55 +430,19 @@ class _ProcessPageState extends State<ProcessPage> {
                                                 ),
                                           ),
                                           SizedBox(height: 20),
-                                          ElevatedButton(
-                                            onPressed: () async {
-                                              var result = await Get.toNamed(
-                                                "/process/process-external-author",
-                                              );
-                                              if (result != null &&
-                                                  result
-                                                      is Map<
-                                                        int,
-                                                        ExternalAuthorEntity
-                                                      >) {
-                                                setState(() {
-                                                  listExternalAuthor = result
-                                                      .values
-                                                      .toList();
-                                                  idsExternalAuthors = result
-                                                      .keys
-                                                      .toList();
-                                                });
 
-                                                print(
-                                                  "Total de autores convertidos para lista: ${listExternalAuthor.length}",
-                                                );
-                                              }
-                                            },
-                                            child: Text(
-                                              "Adc usuário externo",
-                                              style: theme.textTheme.bodyLarge
-                                                  ?.copyWith(
-                                                    color: theme
-                                                        .colorScheme
-                                                        .onSecondary,
-                                                    fontWeight: FontWeight.w700,
-                                                  ),
-                                            ),
-                                          ),
-
-                                          Column(
-                                            children: listExternalAuthor
-                                                .map(
-                                                  (autor) => Text(
-                                                    autor.fullName,
-                                                    style: TextStyle(
-                                                      color: Colors.red,
-                                                    ),
-                                                  ),
-                                                )
-                                                .toList(),
-                                          ),
+                                          // Column(
+                                          //   children: listExternalAuthor
+                                          //       .map(
+                                          //         (autor) => Text(
+                                          //           autor.fullName,
+                                          //           style: TextStyle(
+                                          //             color: Colors.red,
+                                          //           ),
+                                          //         ),
+                                          //       )
+                                          //       .toList(),
+                                          // ),
                                         ],
                                       ),
                                     ),
@@ -501,6 +511,14 @@ class _ProcessPageState extends State<ProcessPage> {
                                         userController.selectedUsers.length,
                                     onRemove: userController.removeUserById,
                                   ),
+                                  SizedBox(height: 10,),
+                                  SizedBox(
+                                      width: 320,
+                                      child: _SelectedMembersExternalPanel(
+                                        title: "Membros Externos Selecionados :",
+                                        externalAuthors: listExternalAuthor,
+                                      ),
+                                    ),
                                 ],
                               );
                             }
@@ -520,15 +538,27 @@ class _ProcessPageState extends State<ProcessPage> {
                                   ),
                                 ),
                                 const SizedBox(width: 18),
-                                SizedBox(
-                                  width: 320,
-                                  child: _SelectedMembersPanel(
-                                    title: "Membros Selecionados :",
-                                    selectedUsers: selectedUsersList,
-                                    selectedIdsCount:
-                                        userController.selectedUsers.length,
-                                    onRemove: userController.removeUserById,
-                                  ),
+                                Column(
+                                  spacing: 5,
+                                  children: [
+                                    SizedBox(
+                                      width: 320,
+                                      child: _SelectedMembersPanel(
+                                        title: "Membros Selecionados :",
+                                        selectedUsers: selectedUsersList,
+                                        selectedIdsCount:
+                                            userController.selectedUsers.length,
+                                        onRemove: userController.removeUserById,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 320,
+                                      child: _SelectedMembersExternalPanel(
+                                        title: "Membros Externos Selecionados :",
+                                        externalAuthors: listExternalAuthor,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ],
                             );
@@ -544,7 +574,8 @@ class _ProcessPageState extends State<ProcessPage> {
                               child: ElevatedButton(
                                 onPressed: () async {
                                   if (titleController.text.trim().isEmpty ||
-                                      (userController.selectedUsers.isEmpty && listExternalAuthor.isEmpty)) {
+                                      (userController.selectedUsers.isEmpty &&
+                                          listExternalAuthor.isEmpty)) {
                                     Get.snackbar(
                                       "Campos inválidos!",
                                       "Necessário inserir os campos abaixo para prosseguir...",
@@ -893,6 +924,104 @@ class _SelectedMembersPanel extends StatelessWidget {
                             color: colors.primary.withOpacity(0.85),
                           ),
                         ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class _SelectedMembersExternalPanel extends StatelessWidget {
+  final String title;
+  final List<ExternalAuthorEntity> externalAuthors;
+  
+
+  const _SelectedMembersExternalPanel({
+    required this.title,
+    required this.externalAuthors,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colors = theme.colorScheme;
+
+    return Container(
+      height: 420,
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: colors.primary,
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.10),
+            blurRadius: 10,
+            offset: const Offset(0, 6),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: colors.onSecondary,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+          const SizedBox(height: 12),
+          if (externalAuthors.isEmpty)
+            Expanded(
+              child: Center(
+                child: Text(
+                  "Nenhum selecionado",
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: colors.onSecondary.withOpacity(0.85),
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            )
+          else
+            Expanded(
+              child: ListView.separated(
+                itemCount: externalAuthors.length,
+                separatorBuilder: (_, __) => const SizedBox(height: 10),
+                itemBuilder: (context, i) {
+                  final u = externalAuthors[i];
+                  final int id = u.id!;
+                  final name = _safeString(() => u.fullName, fallback: "Nome");
+
+                  return Container(
+                    key: ValueKey(id),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 10,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.95),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            name,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: colors.tertiary,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                        ),
+                        
                       ],
                     ),
                   );
