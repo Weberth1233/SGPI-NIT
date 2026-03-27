@@ -19,7 +19,8 @@ public class ExternalAuthor {
     @Column(unique = true)
     private String cpf;
     private String email;
-
+    @Column(name = "active")
+    private boolean active;
     // O Usuário que "dono" deste cadastro provisório
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_user_id", nullable = false)

@@ -29,6 +29,7 @@ public class ExternalAuthorService {
         }
         User user = securityService.getAuthenticatedUser();
         externalAuthor.setOwner(user);
+        externalAuthor.setActive(true);
         return repository.save(externalAuthor);
     }
 
@@ -48,14 +49,17 @@ public class ExternalAuthorService {
     }
 
     public void delete(ExternalAuthor externalAuthor){
-        repository.delete(externalAuthor);
+        externalAuthor.setActive(false);
+        repository.save(externalAuthor);
     }
 
     public Page<ExternalAuthor> userExternalAuthors(String fullName, String cpf, String email, Integer page, Integer pageSize) {
         // 1. Pega o usuário logado
         User user = securityService.getAuthenticatedUser();
 
-        Specification<ExternalAuthor> specs = Specification.where(ExternalAuthorSpecs.equalOwnerId(user.getId()));
+        Specification<ExternalAuthor> specs = Specification
+                .where(ExternalAuthorSpecs.isActive()) // <-- NOVIDADE AQUI!
+                .and(ExternalAuthorSpecs.equalOwnerId(user.getId()));
             // 3. Adiciona os filtros dinâmicos (igual ao searchProcess)
         if (fullName != null && !fullName.isEmpty()) {
             specs = specs.and(ExternalAuthorSpecs.likeFullName(fullName));

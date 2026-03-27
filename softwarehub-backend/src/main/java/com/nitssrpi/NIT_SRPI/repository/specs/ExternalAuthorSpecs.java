@@ -5,6 +5,11 @@ import org.springframework.data.jpa.domain.Specification;
 
 public class ExternalAuthorSpecs {
 
+    public static Specification<ExternalAuthor> isActive() {
+        return (root, query, cb) ->
+                cb.equal(root.get("active"), true);
+    }
+
     public static Specification<ExternalAuthor> likeFullName(String fullName){
         return (root, query, cb) -> cb.like(cb.upper(root.get("fullName")), "%" + fullName.toUpperCase() + "%");
     }

@@ -544,7 +544,7 @@ class _ProcessPageState extends State<ProcessPage> {
                               child: ElevatedButton(
                                 onPressed: () async {
                                   if (titleController.text.trim().isEmpty ||
-                                      userController.selectedUsers.isEmpty) {
+                                      (userController.selectedUsers.isEmpty && listExternalAuthor.isEmpty)) {
                                     Get.snackbar(
                                       "Campos inválidos!",
                                       "Necessário inserir os campos abaixo para prosseguir...",
