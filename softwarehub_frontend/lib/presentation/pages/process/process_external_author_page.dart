@@ -7,7 +7,8 @@ import '../../shared/utils/responsive.dart';
 import '../home/home_page.dart';
 
 class ProcessExternalAuthorPage extends StatefulWidget {
-  const ProcessExternalAuthorPage({super.key});
+  final bool isEditMode;
+  const ProcessExternalAuthorPage({super.key, this.isEditMode = false});
 
   @override
   State<ProcessExternalAuthorPage> createState() =>
@@ -15,10 +16,27 @@ class ProcessExternalAuthorPage extends StatefulWidget {
 }
 
 class _ProcessExternalAuthorPageState extends State<ProcessExternalAuthorPage> {
+  final externalAuthorController = Get.find<ProcessExternalAuthorController>();
+
+  final List<ExternalAuthorEntity>? externalAuthors =
+      Get.arguments is List<ExternalAuthorEntity> ? Get.arguments : null;
+
+  @override
+  void initState() {
+    super.initState();
+    
+    if (externalAuthors != null && externalAuthors!.isNotEmpty) {
+      externalAuthorController.externalAuthors.value = externalAuthors!;
+      for (var author in externalAuthors!) {
+        if (author.id != null) {
+          externalAuthorController.selectedExternalAuthor[author.id!] = author;
+        }
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final externalAuthorController =
-        Get.find<ProcessExternalAuthorController>();
     final theme = Theme.of(context);
     final colors = theme.colorScheme;
 
@@ -42,7 +60,9 @@ class _ProcessExternalAuthorPageState extends State<ProcessExternalAuthorPage> {
                 child: IconButton(
                   padding: EdgeInsets.zero,
                   icon: Icon(Icons.arrow_back, color: colors.primary),
-                  onPressed: () => Get.back(result: externalAuthorController.selectedExternalAuthor),
+                  onPressed: () => Get.back(
+                    result: externalAuthorController.selectedExternalAuthor,
+                  ),
                   tooltip: "Voltar",
                 ),
               ),
@@ -682,14 +702,12 @@ class _MembersList extends StatelessWidget {
                           ),
 
                           IconButton(
-                            onPressed: () async{
+                            onPressed: () async {
                               await Get.toNamed(
-                                    "/process/process-external-author/forms",
-                                    arguments: u,
-                                  );
-                                  controller.fetchExternalAuthors(
-                                    loadMore: false,
-                                  );
+                                "/process/process-external-author/forms",
+                                arguments: u,
+                              );
+                              controller.fetchExternalAuthors(loadMore: false);
                             },
                             icon: Icon(
                               Icons.edit,

@@ -226,6 +226,7 @@ class _ProcessPageState extends State<ProcessPage> {
                                 onPressed: () async {
                                   var result = await Get.toNamed(
                                     "/process/process-external-author",
+                                    arguments: listExternalAuthor,
                                   );
                                   if (result != null &&
                                       result

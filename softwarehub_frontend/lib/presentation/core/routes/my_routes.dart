@@ -70,24 +70,24 @@ class MyRoutes {
       middlewares: [AuthMiddleware()],
     ),
 
-     GetPage(
+    GetPage(
+      name: "/process-edit",
+      page: () => ProcessPage(isEditMode: true),
+      binding: UserBindings(),
+      middlewares: [AuthMiddleware()],
+    ),
+    
+    GetPage(
       name: "/process/process-external-author",
       page: () => ProcessExternalAuthorPage(),
       binding: ExternalAuthorBindigs(),
       middlewares: [AuthMiddleware()],
     ),
-    
-     GetPage(
+
+    GetPage(
       name: "/process/process-external-author/forms",
       page: () => ProcessExternalAuthorFormPage(),
       binding: ExternalAuthorBindigs(),
-      middlewares: [AuthMiddleware()],
-    ),
-
-    GetPage(
-      name: "/process-edit",
-      page: () => ProcessPage(isEditMode: true),
-      binding: UserBindings(),
       middlewares: [AuthMiddleware()],
     ),
 
