@@ -4,7 +4,10 @@ import 'package:nit_sgpi_frontend/domain/entities/external_author/external_autho
 import 'package:nit_sgpi_frontend/presentation/pages/process/controllers/process_external_author_controller.dart';
 
 import '../../shared/utils/responsive.dart';
+import '../../shared/widgets/custom_text_field.dart';
 import '../home/home_page.dart';
+import 'widgets/labeled_field_row.dart';
+import 'widgets/search_field_high_light.dart';
 
 class ProcessExternalAuthorPage extends StatefulWidget {
   final bool isEditMode;
@@ -21,6 +24,11 @@ class _ProcessExternalAuthorPageState extends State<ProcessExternalAuthorPage> {
   final List<ExternalAuthorEntity>? externalAuthors =
       Get.arguments is List<ExternalAuthorEntity> ? Get.arguments : null;
 
+  final TextEditingController searchController = TextEditingController();
+  final TextEditingController searchEmaiController = TextEditingController();
+  final TextEditingController searchCpfController = TextEditingController();
+
+
   @override
   void initState() {
     super.initState();
@@ -33,6 +41,15 @@ class _ProcessExternalAuthorPageState extends State<ProcessExternalAuthorPage> {
         }
       }
     }
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    searchController.dispose();
+    searchEmaiController.dispose();
+    searchCpfController.dispose();
   }
 
   @override
@@ -161,109 +178,109 @@ class _ProcessExternalAuthorPageState extends State<ProcessExternalAuthorPage> {
                             ],
                           ),
 
-                          // _LabeledFieldRowSearch(
+                          LabeledFieldRowSearch(
 
-                          //   label: "Adicionar membro",
-                          //   field: LayoutBuilder(
-                          //     builder: (context, constr) {
-                          //       // Ajuste fino dos breakpoints para telas médias (tablets) e grandes (desktop)
-                          //       final isDesktop = constr.maxWidth > 850;
-                          //       final isTablet = constr.maxWidth > 500 && constr.maxWidth <= 850;
+                            label: "Adicionar membro",
+                            field: LayoutBuilder(
+                              builder: (context, constr) {
+                                // Ajuste fino dos breakpoints para telas médias (tablets) e grandes (desktop)
+                                final isDesktop = constr.maxWidth > 850;
+                                final isTablet = constr.maxWidth > 500 && constr.maxWidth <= 850;
 
-                          //       // UX: Se o usuário apagar todo o texto do input, reseta a lista de usuários.
-                          //       void onSearchChanged(String value) {
-                          //         if (value.trim().isEmpty) {
-                          //           // Assumindo que fetchUsers() traga a lista inicial sem filtros
-                          //           userController.fetchUsers();
-                          //         }
-                          //       }
+                                // UX: Se o usuário apagar todo o texto do input, reseta a lista de usuários.
+                                void onSearchChanged(String value) {
+                                  if (value.trim().isEmpty) {
+                                    // Assumindo que fetchUsers() traga a lista inicial sem filtros
+                                    externalAuthorController.fetchExternalAuthors();
+                                  }
+                                }
 
-                          //       // Campos de texto para os filtros
-                          //       final nameField = _SearchFieldHighlight(
-                          //         title: "Nome",
+                                // Campos de texto para os filtros
+                                final nameField = SearchFieldHighlight(
+                                  title: "Nome",
 
-                          //         icon: Icons.person_outline,
-                          //         field: CustomTextField(
-                          //           controller: searchController,
-                          //           label: "",
-                          //           hintText: "Ex: João Silva",
-                          //           onChanged: onSearchChanged,
-                          //           onFieldSubmitted: (_) =>
-                          //               userController.searchByFullName(searchController.text),
-                          //         ),
-                          //       );
+                                  icon: Icons.person_outline,
+                                  field: CustomTextField(
+                                    controller: searchController,
+                                    label: "",
+                                    hintText: "Ex: João Silva",
+                                    onChanged: onSearchChanged,
+                                    onFieldSubmitted: (_) =>
+                                        externalAuthorController.searchByFullName(searchController.text),
+                                  ),
+                                );
 
-                          //       final emailField = _SearchFieldHighlight(
-                          //         title: "E-mail",
-                          //         icon: Icons.alternate_email,
-                          //         field: CustomTextField(
-                          //           controller: searchEmaiController,
-                          //           label: "",
-                          //           hintText: "Ex: joao@email.com",
-                          //           onChanged: onSearchChanged,
-                          //           onFieldSubmitted: (_) =>
-                          //               userController.searchByEmail(searchEmaiController.text),
-                          //         ),
-                          //       );
+                                final emailField = SearchFieldHighlight(
+                                  title: "E-mail",
+                                  icon: Icons.alternate_email,
+                                  field: CustomTextField(
+                                    controller: searchEmaiController,
+                                    label: "",
+                                    hintText: "Ex: joao@email.com",
+                                    onChanged: onSearchChanged,
+                                    onFieldSubmitted: (_) =>
+                                        externalAuthorController.searchByEmail(searchEmaiController.text),
+                                  ),
+                                );
 
-                          //       final cpfField = _SearchFieldHighlight(
-                          //         title: "CPF",
-                          //         icon: Icons.badge_outlined,
-                          //         field: CustomTextField(
-                          //           controller: searchCpfController,
-                          //           label: "",
-                          //           hintText: "000.000.000-00",
-                          //           onChanged: onSearchChanged,
-                          //           onFieldSubmitted: (_) =>
-                          //               userController.searchByCPF(searchCpfController.text),
-                          //         ),
-                          //       );
+                                final cpfField = SearchFieldHighlight(
+                                  title: "CPF",
+                                  icon: Icons.badge_outlined,
+                                  field: CustomTextField(
+                                    controller: searchCpfController,
+                                    label: "",
+                                    hintText: "000.000.000-00",
+                                    onChanged: onSearchChanged,
+                                    onFieldSubmitted: (_) =>
+                                        externalAuthorController.searchByCPF(searchCpfController.text),
+                                  ),
+                                );
 
-                          //       if (isDesktop) {
-                          //         // Desktop: Proporção ajustada. Nome e E-mail ganham mais espaço (flex: 5), CPF ganha menos (flex: 4).
-                          //         return Row(
-                          //           crossAxisAlignment: CrossAxisAlignment.start,
-                          //           children: [
-                          //             Expanded(flex: 5, child: nameField),
-                          //             const SizedBox(width: 16),
-                          //             Expanded(flex: 5, child: emailField),
-                          //             const SizedBox(width: 16),
-                          //             Expanded(flex: 4, child: cpfField),
-                          //           ],
-                          //         );
-                          //       } else if (isTablet) {
-                          //         // Tablet: Evita espremer os 3 campos na mesma linha. Nome e E-mail em cima, CPF embaixo.
-                          //         return Column(
-                          //           crossAxisAlignment: CrossAxisAlignment.stretch,
-                          //           children: [
-                          //             Row(
-                          //               crossAxisAlignment: CrossAxisAlignment.start,
-                          //               children: [
-                          //                 Expanded(child: nameField),
-                          //                 const SizedBox(width: 16),
-                          //                 Expanded(child: emailField),
-                          //               ],
-                          //             ),
-                          //             const SizedBox(height: 16),
-                          //             cpfField,
-                          //           ],
-                          //         );
-                          //       } else {
-                          //         // Mobile: Todos os campos empilhados com espaçamento respiro adequado.
-                          //         return Column(
-                          //           crossAxisAlignment: CrossAxisAlignment.stretch,
-                          //           children: [
-                          //             nameField,
-                          //             const SizedBox(height: 10),
-                          //             emailField,
-                          //             const SizedBox(height: 10),
-                          //             cpfField,
-                          //           ],
-                          //         );
-                          //       }
-                          //     },
-                          //   ),
-                          // ),
+                                if (isDesktop) {
+                                  // Desktop: Proporção ajustada. Nome e E-mail ganham mais espaço (flex: 5), CPF ganha menos (flex: 4).
+                                  return Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Expanded(flex: 5, child: nameField),
+                                      const SizedBox(width: 16),
+                                      Expanded(flex: 5, child: emailField),
+                                      const SizedBox(width: 16),
+                                      Expanded(flex: 4, child: cpfField),
+                                    ],
+                                  );
+                                } else if (isTablet) {
+                                  // Tablet: Evita espremer os 3 campos na mesma linha. Nome e E-mail em cima, CPF embaixo.
+                                  return Column(
+                                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                                    children: [
+                                      Row(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Expanded(child: nameField),
+                                          const SizedBox(width: 16),
+                                          Expanded(child: emailField),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 16),
+                                      cpfField,
+                                    ],
+                                  );
+                                } else {
+                                  // Mobile: Todos os campos empilhados com espaçamento respiro adequado.
+                                  return Column(
+                                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                                    children: [
+                                      nameField,
+                                      const SizedBox(height: 10),
+                                      emailField,
+                                      const SizedBox(height: 10),
+                                      cpfField,
+                                    ],
+                                  );
+                                }
+                              },
+                            ),
+                          ),
                           const SizedBox(height: 50),
 
                           Obx(() {

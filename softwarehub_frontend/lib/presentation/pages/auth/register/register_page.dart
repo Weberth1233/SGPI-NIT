@@ -71,7 +71,7 @@ class _RegisterPageState extends State<RegisterPage> {
       nameController.text = user.fullName;
       userController.text = user.userName;
       emailController.text = user.email;
-      cpfController.text =user.cpf;
+      cpfController.text = user.cpf;
       professionController.text = user.profession;
       phoneController.text = user.phoneNumber;
 
@@ -664,7 +664,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                           state: stateController.text,
                                         ),
                                       );
-
+                                      print(userEntityToSave.role);
                                       if (widget.isEditMode) {
                                         print(
                                           userControllerGet.user.value!.id!,

@@ -6,6 +6,8 @@ import '../../../domain/entities/external_author/external_author_entity.dart';
 import '../../../domain/entities/process/process_response_entity.dart';
 import '../../shared/utils/responsive.dart';
 import '../../shared/widgets/custom_text_field.dart';
+import 'widgets/labeled_field_row.dart';
+import 'widgets/search_field_high_light.dart';
 
 class FirstStageProcess {
   final int? idProcess;
@@ -255,7 +257,7 @@ class _ProcessPageState extends State<ProcessPage> {
 
                           const SizedBox(height: 30),
 
-                          _LabeledFieldRowSimple(
+                          LabeledFieldRowSimple(
                             label: "Título do processo",
                             field: CustomTextField(
                               controller: titleController,
@@ -266,7 +268,7 @@ class _ProcessPageState extends State<ProcessPage> {
 
                           const SizedBox(height: 45),
 
-                          _LabeledFieldRowSearch(
+                          LabeledFieldRowSearch(
                             label: "Adicionar membro",
                             field: LayoutBuilder(
                               builder: (context, constr) {
@@ -285,7 +287,7 @@ class _ProcessPageState extends State<ProcessPage> {
                                 }
 
                                 // Campos de texto para os filtros
-                                final nameField = _SearchFieldHighlight(
+                                final nameField = SearchFieldHighlight(
                                   title: "Nome",
 
                                   icon: Icons.person_outline,
@@ -301,7 +303,7 @@ class _ProcessPageState extends State<ProcessPage> {
                                   ),
                                 );
 
-                                final emailField = _SearchFieldHighlight(
+                                final emailField = SearchFieldHighlight(
                                   title: "E-mail",
                                   icon: Icons.alternate_email,
                                   field: CustomTextField(
@@ -316,7 +318,7 @@ class _ProcessPageState extends State<ProcessPage> {
                                   ),
                                 );
 
-                                final cpfField = _SearchFieldHighlight(
+                                final cpfField = SearchFieldHighlight(
                                   title: "CPF",
                                   icon: Icons.badge_outlined,
                                   field: CustomTextField(
@@ -633,107 +635,6 @@ class _ProcessPageState extends State<ProcessPage> {
     );
   }
 }
-
-// Widget auxiliar para os labels de busca
-class _SearchFieldHighlight extends StatelessWidget {
-  final String title;
-  final IconData icon;
-  final Widget field;
-
-  const _SearchFieldHighlight({
-    required this.title,
-    required this.icon,
-    required this.field,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colors = theme.colorScheme;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Icon(icon, size: 18, color: colors.tertiary),
-            const SizedBox(width: 6),
-            Text(
-              title,
-              style: theme.textTheme.bodySmall?.copyWith(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: colors.tertiary.withOpacity(0.85),
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 10),
-        field,
-      ],
-    );
-  }
-}
-
-class _LabeledFieldRow extends StatelessWidget {
-  final String label;
-  final Widget field;
-
-  const _LabeledFieldRow({required this.label, required this.field});
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colors = theme.colorScheme;
-
-    return LayoutBuilder(
-      builder: (context, c) {
-        final wide = c.maxWidth >= 760;
-
-        if (!wide) {
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Text(
-                label,
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  fontWeight: FontWeight.w700,
-                  color: colors.tertiary,
-                ),
-              ),
-              const SizedBox(height: 8),
-              field,
-            ],
-          );
-        }
-
-        return Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              width: 180,
-              child: Padding(
-                padding: const EdgeInsets.only(top: 4),
-                child: Text(
-                  label,
-                  textAlign: TextAlign.end,
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    fontSize: 18.9,
-                    fontWeight: FontWeight.w700,
-                    color: colors.tertiary.withOpacity(0.8),
-                    letterSpacing: -0.4,
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(width: 15),
-            Expanded(child: field),
-          ],
-        );
-      },
-    );
-  }
-}
-
 // Transformado em uma lista limpa e simples
 class _MembersList extends StatelessWidget {
   final List<UserEntity> users;
@@ -1066,130 +967,4 @@ class _DiagonalLinesPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
-}
-
-// Wrapper para campos de texto simples (ex: Título do processo)
-class _LabeledFieldRowSimple extends StatelessWidget {
-  final String label;
-  final Widget field;
-
-  const _LabeledFieldRowSimple({required this.label, required this.field});
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colors = theme.colorScheme;
-
-    return LayoutBuilder(
-      builder: (context, c) {
-        final wide = c.maxWidth >= 760;
-
-        if (!wide) {
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Text(
-                label,
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  fontWeight: FontWeight.w700,
-                  color: colors.tertiary,
-                ),
-              ),
-              const SizedBox(height: 8),
-              field,
-            ],
-          );
-        }
-
-        return Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              width: 180,
-              // Padding artificial MANTIDO aqui apenas para alinhar
-              // o texto com o centro da caixa de texto do input.
-              child: Padding(
-                padding: const EdgeInsets.only(top: 14),
-                child: Text(
-                  label,
-                  textAlign: TextAlign.start,
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    fontSize: 18.9,
-                    fontWeight: FontWeight.w700,
-                    color: colors.tertiary.withOpacity(0.8),
-                    letterSpacing: -0.4,
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(width: 15),
-            Expanded(child: field),
-          ],
-        );
-      },
-    );
-  }
-}
-
-// Wrapper para o bloco complexo de pesquisa (Sem offset artificial)
-class _LabeledFieldRowSearch extends StatelessWidget {
-  final String label;
-  final Widget field;
-
-  const _LabeledFieldRowSearch({required this.label, required this.field});
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colors = theme.colorScheme;
-
-    return LayoutBuilder(
-      builder: (context, c) {
-        final wide = c.maxWidth >= 760;
-
-        if (!wide) {
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Text(
-                label,
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  fontWeight: FontWeight.w700,
-                  color: colors.tertiary,
-                ),
-              ),
-              const SizedBox(height: 8),
-              field,
-            ],
-          );
-        }
-
-        return Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              width: 180,
-              // Offset artificial REMOVIDO para que o "Pesquisar Membros:"
-              // alinhe perfeitamente com os textos "Nome", "E-mail" e "CPF".
-              child: Padding(
-                padding: const EdgeInsets.only(top: 0),
-                child: Text(
-                  label,
-                  textAlign: TextAlign.start,
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    fontSize: 18.9,
-                    fontWeight: FontWeight.w700,
-                    color: colors.tertiary.withOpacity(0.8),
-                    letterSpacing: -0.4,
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(width: 15),
-            Expanded(child: field),
-          ],
-        );
-      },
-    );
-  }
 }
