@@ -180,7 +180,7 @@ class _ProcessExternalAuthorPageState extends State<ProcessExternalAuthorPage> {
 
                           LabeledFieldRowSearch(
 
-                            label: "Adicionar membro",
+                            label: "Pesquisar membro",
                             field: LayoutBuilder(
                               builder: (context, constr) {
                                 // Ajuste fino dos breakpoints para telas médias (tablets) e grandes (desktop)
