@@ -3,6 +3,7 @@ import com.nitssrpi.NIT_SRPI.controller.dto.ErroCampo;
 import com.nitssrpi.NIT_SRPI.controller.dto.ErrorResposta;
 import com.nitssrpi.NIT_SRPI.controller.dto.ExceptionTradingRule;
 import com.nitssrpi.NIT_SRPI.controller.exceptions.DuplicateRecordException;
+import com.nitssrpi.NIT_SRPI.controller.exceptions.NullListException;
 import jakarta.validation.constraints.Null;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authorization.AuthorizationDeniedException;
@@ -53,6 +54,12 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.CONFLICT)
     public ErrorResposta handleDuplicateRecordException(DuplicateRecordException e) {
         return ErrorResposta.conflito(e.getMessage());
+    }
+
+    @ExceptionHandler(NullListException.class)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public ErrorResposta handleNullListException(NullListException e) {
+        return new ErrorResposta(HttpStatus.NO_CONTENT.value(), e.getMessage(), List.of());
     }
 //
 //    @ExceptionHandler(OperacaoNaoPermitidaException.class)

@@ -77,20 +77,14 @@ public class ProcessController implements GenericController{
             var user = userService.getUserById(authorId);
             user.ifPresent(users::add);
         }
-        if(!users.isEmpty()){
-            process.setAuthors(users);
-        }
-
+        process.setAuthors(users);
         List<ExternalAuthor> externalAuthorList = new ArrayList<>();
         for (Long externalAuthorId : dto.externalAuthorsIds()) {
             System.out.println(externalAuthorId);
             var externalAuthor = externalAuthorService.getById(externalAuthorId);
             externalAuthor.ifPresent(externalAuthorList::add);
         }
-        if(!externalAuthorList.isEmpty()){
-            process.setExternalAuthors(externalAuthorList);
-        }
-
+        process.setExternalAuthors(externalAuthorList);
         //Pesquisar no service de iptypes
         Optional<IpTypes> ipTypes = ipTypesService.getById(dto.ipTypeId());
         System.out.println(ipTypes);

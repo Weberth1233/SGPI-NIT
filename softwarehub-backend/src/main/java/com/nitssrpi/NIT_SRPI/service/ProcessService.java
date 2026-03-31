@@ -3,6 +3,7 @@ package com.nitssrpi.NIT_SRPI.service;
 import com.nitssrpi.NIT_SRPI.Infra.security.SecurityService;
 import com.nitssrpi.NIT_SRPI.controller.dto.OperationNotAllowedException;
 import com.nitssrpi.NIT_SRPI.controller.dto.ProcessStatusCountDTO;
+import com.nitssrpi.NIT_SRPI.controller.exceptions.NullListException;
 import com.nitssrpi.NIT_SRPI.model.*;
 import com.nitssrpi.NIT_SRPI.model.Process;
 import com.nitssrpi.NIT_SRPI.repository.IpTypesRepository;
@@ -10,6 +11,7 @@ import com.nitssrpi.NIT_SRPI.repository.ProcessRepository;
 import com.nitssrpi.NIT_SRPI.repository.UserRepository;
 import com.nitssrpi.NIT_SRPI.repository.specs.ProcessSpecs;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.constraints.Null;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -66,11 +68,17 @@ public class ProcessService {
         if (process.getId() == null) {
             throw new IllegalArgumentException("Para atualizar é necessário que o processo esteja cadastrado!");
         }
+        if(process.getExternalAuthors().isEmpty() && process.getAuthors().isEmpty()){
+           throw new NullPointerException("Necessário adicionar pelo menos um membro interno ou externo ao processo!");
+        }
         // 1. Buscar o processo real no banco
         Process processDb = repository.findById(process.getId())
                 .orElseThrow(() -> new EntityNotFoundException("Processo não encontrado"));
         // 2. Atualizar apenas os campos necessários
         processDb.setTitle(process.getTitle());
+
+        processDb.setExternalAuthors(process.getExternalAuthors());
+
         //Atualizando a lista de autores também
         processDb.setAuthors(process.getAuthors());
         // Se quiser permitir alterar o tipo de PI:
@@ -79,7 +87,7 @@ public class ProcessService {
                     .orElseThrow(() -> new RuntimeException("Tipo de PI não encontrado!"));
             processDb.setIpType(type);
         }
-        processDb.setStatus(StatusProcess.CORRECAO);
+//        processDb.setStatus(StatusProcess.);
         repository.save(processDb);
     }
 
