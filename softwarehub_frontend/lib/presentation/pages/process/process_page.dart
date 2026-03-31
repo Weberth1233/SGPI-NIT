@@ -85,6 +85,11 @@ class _ProcessPageState extends State<ProcessPage> {
         }
 
         listExternalAuthor = process!.externalAuthors;
+        for (var item in listExternalAuthor) {
+          if (item.id != null) {
+            idsExternalAuthors.add(item.id!);
+          }
+        }
       });
     }
   }
@@ -188,7 +193,6 @@ class _ProcessPageState extends State<ProcessPage> {
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           Row(
-                            
                             children: [
                               Expanded(
                                 child: Column(
@@ -514,14 +518,14 @@ class _ProcessPageState extends State<ProcessPage> {
                                         userController.selectedUsers.length,
                                     onRemove: userController.removeUserById,
                                   ),
-                                  SizedBox(height: 10,),
+                                  SizedBox(height: 10),
                                   SizedBox(
-                                      width: 320,
-                                      child: _SelectedMembersExternalPanel(
-                                        title: "Membros Externos Selecionados :",
-                                        externalAuthors: listExternalAuthor,
-                                      ),
+                                    width: 320,
+                                    child: _SelectedMembersExternalPanel(
+                                      title: "Membros Externos Selecionados :",
+                                      externalAuthors: listExternalAuthor,
                                     ),
+                                  ),
                                 ],
                               );
                             }
@@ -557,7 +561,8 @@ class _ProcessPageState extends State<ProcessPage> {
                                     SizedBox(
                                       width: 320,
                                       child: _SelectedMembersExternalPanel(
-                                        title: "Membros Externos Selecionados :",
+                                        title:
+                                            "Membros Externos Selecionados :",
                                         externalAuthors: listExternalAuthor,
                                       ),
                                     ),
@@ -587,7 +592,7 @@ class _ProcessPageState extends State<ProcessPage> {
                                     );
                                     return;
                                   }
-
+                                  print(idsExternalAuthors);
                                   final auxProcess = FirstStageProcess(
                                     idProcess: process?.id,
                                     title: titleController.text.trim(),
@@ -635,6 +640,7 @@ class _ProcessPageState extends State<ProcessPage> {
     );
   }
 }
+
 // Transformado em uma lista limpa e simples
 class _MembersList extends StatelessWidget {
   final List<UserEntity> users;
@@ -841,7 +847,6 @@ class _SelectedMembersPanel extends StatelessWidget {
 class _SelectedMembersExternalPanel extends StatelessWidget {
   final String title;
   final List<ExternalAuthorEntity> externalAuthors;
-  
 
   const _SelectedMembersExternalPanel({
     required this.title,
@@ -923,7 +928,6 @@ class _SelectedMembersExternalPanel extends StatelessWidget {
                             ),
                           ),
                         ),
-                        
                       ],
                     ),
                   );
