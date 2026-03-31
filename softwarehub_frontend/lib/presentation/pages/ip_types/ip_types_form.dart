@@ -42,8 +42,8 @@ class IpTypesForm extends GetView<IpTypesFormController> {
                   child: Row(
                     children: [
                       Container(
-                        height: 52, 
-                        width: 52, 
+                        height: 40,
+                        width: 40,
                         decoration: BoxDecoration(
                           color: surfaceColor,
                           borderRadius: BorderRadius.circular(12),
