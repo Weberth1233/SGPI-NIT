@@ -85,6 +85,11 @@ class _ProcessPageState extends State<ProcessPage> {
         }
 
         listExternalAuthor = process!.externalAuthors;
+        for (var item in listExternalAuthor) {
+          if (item.id != null) {
+            idsExternalAuthors.add(item.id!);
+          }
+        }
       });
     }
   }
@@ -137,8 +142,8 @@ class _ProcessPageState extends State<ProcessPage> {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: theme.textTheme.titleLarge?.copyWith(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w600,
+                  color: colors.onSecondary,
+                  fontWeight: FontWeight.w800,
                   letterSpacing: -0.2,
                 ),
               ),
@@ -146,14 +151,13 @@ class _ProcessPageState extends State<ProcessPage> {
           ],
         ),
       ),
-
-      backgroundColor: Colors.grey.shade200,
+      backgroundColor: const Color(0xFFCBD5E1),
       body: Stack(
         children: [
           Positioned.fill(
             child: CustomPaint(
               painter: _DiagonalLinesPainter(
-                color: Colors.black.withOpacity(0.03),
+                color: theme.colorScheme.primary.withOpacity(0.08),
               ),
             ),
           ),
@@ -170,16 +174,16 @@ class _ProcessPageState extends State<ProcessPage> {
                 child: Container(
                   padding: const EdgeInsets.all(24),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: colors.onSecondary,
                     borderRadius: BorderRadius.circular(16),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.08),
+                        color: Colors.black.withOpacity(0.12),
                         blurRadius: 18,
                         offset: const Offset(0, 10),
                       ),
                     ],
-                    border: Border.all(color: Colors.grey.shade300),
+                    border: Border.all(color: Colors.black.withOpacity(0.06)),
                   ),
                   child: LayoutBuilder(
                     builder: (context, constraints) {
@@ -198,12 +202,13 @@ class _ProcessPageState extends State<ProcessPage> {
                                       widget.isEditMode
                                           ? "Editar seu Processo"
                                           : "Cadastre seu Processo",
-                                      style: theme.textTheme.headlineSmall?.copyWith(
-                                        fontWeight: FontWeight.w900,
-                                        color: Colors.black87,
-                                        letterSpacing: -0.1,
-                                        fontSize: 35,
-                                      ),
+                                      style: theme.textTheme.headlineSmall
+                                          ?.copyWith(
+                                            fontWeight: FontWeight.w900,
+                                            color: colors.primary,
+                                            letterSpacing: -0.1,
+                                            fontSize: 35,
+                                          ),
                                     ),
                                     Text(
                                       widget.isEditMode
@@ -211,60 +216,44 @@ class _ProcessPageState extends State<ProcessPage> {
                                           : "Insira as informações necessárias para cadastrar seu processo no sistema.",
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
-                                      style: theme.textTheme.bodySmall?.copyWith(
-                                        color: Colors.grey.shade600,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 20,
-                                      ),
+                                      style: theme.textTheme.bodySmall
+                                          ?.copyWith(
+                                            color: colors.tertiary.withOpacity(
+                                              0.75,
+                                            ),
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 20,
+                                          ),
                                     ),
                                   ],
                                 ),
                               ),
-
                               ElevatedButton(
                                 onPressed: () async {
                                   var result = await Get.toNamed(
                                     "/process/process-external-author",
                                     arguments: listExternalAuthor,
                                   );
-
                                   if (result != null &&
-                                      result is Map<int, ExternalAuthorEntity>) {
+                                      result
+                                          is Map<int, ExternalAuthorEntity>) {
                                     setState(() {
-                                      listExternalAuthor = result.values.toList();
+                                      listExternalAuthor = result.values
+                                          .toList();
                                       idsExternalAuthors = result.keys.toList();
                                     });
+
+                                    print(
+                                      "Total de autores convertidos para lista: ${listExternalAuthor.length}",
+                                    );
                                   }
                                 },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: colors.primary,
-                                  foregroundColor: Colors.white,
-                                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(6),
+                                child: Text(
+                                  "Adc usuário externo",
+                                  style: theme.textTheme.bodyMedium?.copyWith(
+                                    color: theme.colorScheme.onSecondary,
+                                    fontWeight: FontWeight.w700,
                                   ),
-                                  elevation: 6,
-                                  shadowColor: colors.primary.withOpacity(0.4),
-                                  animationDuration: const Duration(milliseconds: 200),
-                                ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    const Icon(
-                                      Icons.settings_sharp,
-                                      color: Colors.white,
-                                      size: 22,
-                                    ),
-                                    const SizedBox(width: 10),
-                                    Text(
-                                      "Gerenciar autores externos",
-                                      style: theme.textTheme.bodyMedium?.copyWith(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 19,
-                                      ),
-                                    ),
-                                  ],
                                 ),
                               ),
                             ],
@@ -284,22 +273,27 @@ class _ProcessPageState extends State<ProcessPage> {
                           const SizedBox(height: 45),
 
                           LabeledFieldRowSearch(
-                            label: "Pesquisar membro",
+                            label: "Adicionar membro",
                             field: LayoutBuilder(
                               builder: (context, constr) {
-                                final isDesktopSearch = constr.maxWidth > 850;
-                                final isTabletSearch =
+                                // Ajuste fino dos breakpoints para telas médias (tablets) e grandes (desktop)
+                                final isDesktop = constr.maxWidth > 850;
+                                final isTablet =
                                     constr.maxWidth > 500 &&
-                                        constr.maxWidth <= 850;
+                                    constr.maxWidth <= 850;
 
+                                // UX: Se o usuário apagar todo o texto do input, reseta a lista de usuários.
                                 void onSearchChanged(String value) {
                                   if (value.trim().isEmpty) {
+                                    // Assumindo que fetchUsers() traga a lista inicial sem filtros
                                     userController.fetchUsers();
                                   }
                                 }
 
+                                // Campos de texto para os filtros
                                 final nameField = SearchFieldHighlight(
                                   title: "Nome",
+
                                   icon: Icons.person_outline,
                                   field: CustomTextField(
                                     controller: searchController,
@@ -341,9 +335,11 @@ class _ProcessPageState extends State<ProcessPage> {
                                   ),
                                 );
 
-                                if (isDesktopSearch) {
+                                if (isDesktop) {
+                                  // Desktop: Proporção ajustada. Nome e E-mail ganham mais espaço (flex: 5), CPF ganha menos (flex: 4).
                                   return Row(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Expanded(flex: 5, child: nameField),
                                       const SizedBox(width: 16),
@@ -352,12 +348,15 @@ class _ProcessPageState extends State<ProcessPage> {
                                       Expanded(flex: 4, child: cpfField),
                                     ],
                                   );
-                                } else if (isTabletSearch) {
+                                } else if (isTablet) {
+                                  // Tablet: Evita espremer os 3 campos na mesma linha. Nome e E-mail em cima, CPF embaixo.
                                   return Column(
-                                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.stretch,
                                     children: [
                                       Row(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           Expanded(child: nameField),
                                           const SizedBox(width: 16),
@@ -369,8 +368,10 @@ class _ProcessPageState extends State<ProcessPage> {
                                     ],
                                   );
                                 } else {
+                                  // Mobile: Todos os campos empilhados com espaçamento respiro adequado.
                                   return Column(
-                                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.stretch,
                                     children: [
                                       nameField,
                                       const SizedBox(height: 10),
@@ -392,18 +393,20 @@ class _ProcessPageState extends State<ProcessPage> {
                               return const Padding(
                                 padding: EdgeInsets.symmetric(vertical: 40),
                                 child: Center(
-                                  child: CircularProgressIndicator(color: Colors.black),
+                                  child: CircularProgressIndicator(),
                                 ),
                               );
                             }
 
                             if (userController.errorMessage.isNotEmpty) {
                               return Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 20),
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 20,
+                                ),
                                 child: Text(
                                   userController.errorMessage.value,
                                   style: theme.textTheme.bodyLarge?.copyWith(
-                                    color: Colors.red.shade800,
+                                    color: theme.colorScheme.error,
                                     fontWeight: FontWeight.w700,
                                   ),
                                 ),
@@ -411,191 +414,159 @@ class _ProcessPageState extends State<ProcessPage> {
                             }
 
                             final list = userController.users.toList();
-                            final selectedUsersList =
-                            userController.selectedUsers.values.toList();
+                            final selectedUsersList = userController
+                                .selectedUsers
+                                .values
+                                .toList();
 
                             final Widget membersView = list.isEmpty
                                 ? Center(
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 20),
-                                child: Column(
-                                  children: [
-                                    Text(
-                                      "Sem resultados!",
-                                      style: theme.textTheme.bodyLarge?.copyWith(
-                                        color: Colors.grey.shade600,
-                                        fontWeight: FontWeight.w700,
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 20,
+                                      ),
+                                      child: Column(
+                                        children: [
+                                          Text(
+                                            "Sem resultados!",
+                                            style: theme.textTheme.bodyLarge
+                                                ?.copyWith(
+                                                  color:
+                                                      theme.colorScheme.error,
+                                                  fontWeight: FontWeight.w700,
+                                                ),
+                                          ),
+                                          SizedBox(height: 20),
+
+                                          // Column(
+                                          //   children: listExternalAuthor
+                                          //       .map(
+                                          //         (autor) => Text(
+                                          //           autor.fullName,
+                                          //           style: TextStyle(
+                                          //             color: Colors.red,
+                                          //           ),
+                                          //         ),
+                                          //       )
+                                          //       .toList(),
+                                          // ),
+                                        ],
                                       ),
                                     ),
-                                    const SizedBox(height: 20),
-                                  ],
-                                ),
-                              ),
-                            )
+                                  )
                                 : _MembersList(
-                              users: list,
-                              selectedUsersMap: userController.selectedUsers,
-                              onToggle: userController.toggleUser,
-                            );
+                                    users: list,
+                                    selectedUsersMap:
+                                        userController.selectedUsers,
+                                    onToggle: userController.toggleUser,
+                                  );
 
                             final Widget paginationButtons =
-                            userController.errorMessage.isEmpty
+                                userController.errorMessage.isEmpty
                                 ? Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 16),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  OutlinedButton(
-                                    onPressed: userController.isLoading.value ||
-                                        userController.page.value == 0
-                                        ? null
-                                        : () => userController.fetchPreviousPage(),
-                                    style: OutlinedButton.styleFrom(
-                                      foregroundColor: Colors.black87,
-                                      side: BorderSide(color: Colors.grey.shade300),
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 16,
                                     ),
-                                    child: const Text("Anterior"),
-                                  ),
-                                  const SizedBox(width: 24),
-                                  Text(
-                                    "Página ${userController.page.value + 1}",
-                                    style: const TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                                  const SizedBox(width: 24),
-                                  OutlinedButton(
-                                    onPressed: userController.isLoading.value ||
-                                        !userController.hasMore.value
-                                        ? null
-                                        : () => userController.fetchUsers(loadMore: true),
-                                    style: OutlinedButton.styleFrom(
-                                      foregroundColor: Colors.black87,
-                                      side: BorderSide(color: Colors.grey.shade300),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        OutlinedButton(
+                                          onPressed:
+                                              userController.isLoading.value ||
+                                                  userController.page.value == 0
+                                              ? null
+                                              : () => userController
+                                                    .fetchPreviousPage(),
+                                          child: const Text("Anterior"),
+                                        ),
+                                        const SizedBox(width: 24),
+                                        Text(
+                                          "Página ${userController.page.value + 1}",
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        const SizedBox(width: 24),
+                                        OutlinedButton(
+                                          onPressed:
+                                              userController.isLoading.value ||
+                                                  !userController.hasMore.value
+                                              ? null
+                                              : () => userController.fetchUsers(
+                                                  loadMore: true,
+                                                ),
+                                          child: const Text("Próxima"),
+                                        ),
+                                      ],
                                     ),
-                                    child: const Text("Próxima"),
-                                  ),
-                                ],
-                              ),
-                            )
+                                  )
                                 : const SizedBox.shrink();
 
                             if (!isDesktop) {
                               return Column(
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: [
-                                  // Container List Builder Mobile/Tablet
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(8),
-                                      border: Border.all(color: Colors.grey.shade300),
-                                    ),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                                      children: [
-                                        Container(
-                                          padding: const EdgeInsets.all(12),
-                                          decoration: BoxDecoration(
-                                            color: Colors.grey.shade50,
-                                            border: Border(
-                                                bottom: BorderSide(
-                                                    color: Colors.grey.shade200)),
-                                          ),
-                                          child: Text(
-                                            "Membros Disponíveis",
-                                            style: theme.textTheme.bodyMedium?.copyWith(
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.all(12),
-                                          child: membersView,
-                                        ),
-                                        paginationButtons,
-                                      ],
-                                    ),
-                                  ),
+                                  membersView,
+                                  const SizedBox(height: 12),
+                                  paginationButtons,
                                   const SizedBox(height: 16),
                                   _SelectedMembersPanel(
-                                    title: "Membros Selecionados",
+                                    title: "Membros Selecionados :",
                                     selectedUsers: selectedUsersList,
-                                    selectedIdsCount: userController.selectedUsers.length,
+                                    selectedIdsCount:
+                                        userController.selectedUsers.length,
                                     onRemove: userController.removeUserById,
                                   ),
-                                  const SizedBox(height: 10),
-                                  _SelectedMembersExternalPanel(
-                                    title: "Membros Externos Selecionados",
-                                    externalAuthors: listExternalAuthor,
+                                  SizedBox(height: 10),
+                                  SizedBox(
+                                    width: 320,
+                                    child: _SelectedMembersExternalPanel(
+                                      title: "Membros Externos Selecionados :",
+                                      externalAuthors: listExternalAuthor,
+                                    ),
                                   ),
                                 ],
                               );
                             }
 
-                            // Layout Desktop List Builder (Split-view)
                             return Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Expanded(
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(8),
-                                      border: Border.all(color: Colors.grey.shade300),
-                                    ),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                                      children: [
-                                        Container(
-                                          padding: const EdgeInsets.all(12),
-                                          decoration: BoxDecoration(
-                                            color: Colors.grey.shade50,
-                                            border: Border(
-                                                bottom: BorderSide(
-                                                    color: Colors.grey.shade200)),
-                                          ),
-                                          child: Text(
-                                            "Membros Disponíveis",
-                                            style: theme.textTheme.bodyMedium?.copyWith(
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.all(12),
-                                          child: membersView,
-                                        ),
-                                        paginationButtons,
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 16, vertical: 40),
                                   child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.stretch,
                                     children: [
-                                      Icon(Icons.chevron_right,
-                                          color: Colors.grey.shade400, size: 30),
-                                      Icon(Icons.chevron_left,
-                                          color: Colors.grey.shade400, size: 30),
+                                      membersView,
+                                      const SizedBox(height: 12),
+                                      paginationButtons,
                                     ],
                                   ),
                                 ),
-                                Expanded(
-                                  child: Column(
-                                    children: [
-                                      _SelectedMembersPanel(
-                                        title: "Membros Selecionados",
+                                const SizedBox(width: 18),
+                                Column(
+                                  spacing: 5,
+                                  children: [
+                                    SizedBox(
+                                      width: 320,
+                                      child: _SelectedMembersPanel(
+                                        title: "Membros Selecionados :",
                                         selectedUsers: selectedUsersList,
                                         selectedIdsCount:
-                                        userController.selectedUsers.length,
+                                            userController.selectedUsers.length,
                                         onRemove: userController.removeUserById,
                                       ),
-                                      const SizedBox(height: 16),
-                                      _SelectedMembersExternalPanel(
-                                        title: "Membros Externos Selecionados",
+                                    ),
+                                    SizedBox(
+                                      width: 320,
+                                      child: _SelectedMembersExternalPanel(
+                                        title:
+                                            "Membros Externos Selecionados :",
                                         externalAuthors: listExternalAuthor,
                                       ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
                               ],
                             );
@@ -616,28 +587,31 @@ class _ProcessPageState extends State<ProcessPage> {
                                     Get.snackbar(
                                       "Campos inválidos!",
                                       "Necessário inserir os campos abaixo para prosseguir...",
-                                      backgroundColor: Colors.grey.shade800,
-                                      colorText: Colors.white,
+                                      backgroundColor: theme.colorScheme.error,
+                                      colorText: colors.onSecondary,
                                     );
                                     return;
                                   }
-
+                                  print(idsExternalAuthors);
                                   final auxProcess = FirstStageProcess(
                                     idProcess: process?.id,
                                     title: titleController.text.trim(),
-                                    idsUser: userController.selectedUsers.keys.toList(),
+                                    idsUser: userController.selectedUsers.keys
+                                        .toList(),
                                     idsExternalAuthors: idsExternalAuthors,
                                     isEdit: widget.isEditMode,
-                                    originalIpTypeId: process?.ipType.id.toString(),
+                                    originalIpTypeId: process?.ipType.id
+                                        .toString(),
                                     originalFormData: process?.formData,
                                   );
+
                                   await Get.toNamed(
                                     "/process/ip_types",
                                     arguments: auxProcess,
                                   );
                                 },
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.black87,
+                                  backgroundColor: colors.primary,
                                   elevation: 0,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10),
@@ -646,7 +620,7 @@ class _ProcessPageState extends State<ProcessPage> {
                                 child: Text(
                                   "Próximo",
                                   style: theme.textTheme.bodyMedium?.copyWith(
-                                    color: Colors.white,
+                                    color: colors.onSecondary,
                                     fontWeight: FontWeight.w800,
                                   ),
                                 ),
@@ -667,6 +641,7 @@ class _ProcessPageState extends State<ProcessPage> {
   }
 }
 
+// Transformado em uma lista limpa e simples
 class _MembersList extends StatelessWidget {
   final List<UserEntity> users;
   final Map<int, UserEntity> selectedUsersMap;
@@ -681,6 +656,7 @@ class _MembersList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final colors = theme.colorScheme;
 
     return ListView.separated(
       shrinkWrap: true,
@@ -697,25 +673,29 @@ class _MembersList extends StatelessWidget {
 
         return InkWell(
           key: ValueKey(id ?? index),
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(10),
           onTap: id == null ? null : () => onToggle(u),
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             decoration: BoxDecoration(
-              color: selected ? Colors.grey.shade100 : Colors.transparent,
-              borderRadius: BorderRadius.circular(8),
+              color: selected
+                  ? colors.primary.withOpacity(0.08)
+                  : Colors.transparent,
+              borderRadius: BorderRadius.circular(10),
               border: Border.all(
-                color: selected ? Colors.grey.shade400 : Colors.grey.shade200,
+                color: selected
+                    ? colors.primary
+                    : Colors.black.withOpacity(0.08),
+                width: selected ? 1.5 : 1,
               ),
             ),
             child: Row(
               children: [
                 CircleAvatar(
-                  radius: 16,
-                  backgroundColor: Colors.grey.shade200,
-                  child: const Icon(Icons.person, color: Colors.grey, size: 18),
+                  backgroundColor: colors.primary.withOpacity(0.1),
+                  child: Icon(Icons.person, color: colors.primary),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: 14),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -725,23 +705,26 @@ class _MembersList extends StatelessWidget {
                         fullName,
                         style: theme.textTheme.bodyMedium?.copyWith(
                           fontWeight: FontWeight.w700,
-                          color: Colors.black87,
+                          color: colors.tertiary,
                         ),
                       ),
                       const SizedBox(height: 2),
                       Text(
                         email,
                         style: theme.textTheme.bodySmall?.copyWith(
-                          color: Colors.grey.shade700,
+                          color: colors.tertiary.withOpacity(0.8),
                         ),
                       ),
                     ],
                   ),
                 ),
                 if (selected)
-                  const Icon(Icons.check, color: Colors.black54)
+                  Icon(Icons.check_circle, color: colors.primary)
                 else
-                  const Icon(Icons.add_circle_outline, color: Colors.black87),
+                  Icon(
+                    Icons.circle_outlined,
+                    color: Colors.black.withOpacity(0.2),
+                  ),
               ],
             ),
           ),
@@ -767,97 +750,94 @@ class _SelectedMembersPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final colors = theme.colorScheme;
 
     return Container(
-      height: 300,
+      height: 420,
+      padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.grey.shade300),
+        color: colors.primary,
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.10),
+            blurRadius: 10,
+            offset: const Offset(0, 6),
+          ),
+        ],
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-            decoration: BoxDecoration(
-              color: Colors.grey.shade50,
-              border: Border(bottom: BorderSide(color: Colors.grey.shade200)),
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(8)),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  title,
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    color: Colors.black87,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade300,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Text(
-                    "$selectedIdsCount",
-                    style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.black87),
-                  ),
-                ),
-              ],
+          Text(
+            title,
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: colors.onSecondary,
+              fontWeight: FontWeight.w800,
             ),
           ),
-          Expanded(
-            child: selectedIdsCount == 0
-                ? Center(
-              child: Text(
-                "Nenhum selecionado",
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: Colors.grey.shade500,
-                  fontWeight: FontWeight.w600,
-                  fontStyle: FontStyle.italic,
+          const SizedBox(height: 12),
+          if (selectedIdsCount == 0)
+            Expanded(
+              child: Center(
+                child: Text(
+                  "Nenhum selecionado",
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: colors.onSecondary.withOpacity(0.85),
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
             )
-                : ListView.separated(
-              padding: const EdgeInsets.all(12),
-              itemCount: selectedUsers.length,
-              separatorBuilder: (_, __) => const Divider(height: 1),
-              itemBuilder: (context, i) {
-                final u = selectedUsers[i];
-                final int id = u.id!;
-                final name = _safeString(() => u.fullName, fallback: "Nome");
+          else
+            Expanded(
+              child: ListView.separated(
+                itemCount: selectedUsers.length,
+                separatorBuilder: (_, __) => const SizedBox(height: 10),
+                itemBuilder: (context, i) {
+                  final u = selectedUsers[i];
+                  final int id = u.id!;
+                  final name = _safeString(() => u.fullName, fallback: "Nome");
 
-                return ListTile(
-                  contentPadding: EdgeInsets.zero,
-                  dense: true,
-                  title: Text(
-                    name,
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: Colors.black87,
-                      fontWeight: FontWeight.w800,
+                  return Container(
+                    key: ValueKey(id),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 10,
                     ),
-                  ),
-                  subtitle: Text(
-                    _safeString(() => u.email, fallback: "Email"),
-                    style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
-                  ),
-                  trailing: IconButton(
-                    tooltip: "Remover",
-                    visualDensity: VisualDensity.compact,
-                    onPressed: () => onRemove(id),
-                    icon: Icon(
-                      Icons.close,
-                      size: 20,
-                      color: Colors.grey.shade700,
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.95),
+                      borderRadius: BorderRadius.circular(8),
                     ),
-                  ),
-                );
-              },
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            name,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: colors.tertiary,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                        ),
+                        IconButton(
+                          tooltip: "Remover",
+                          visualDensity: VisualDensity.compact,
+                          onPressed: () => onRemove(id),
+                          icon: Icon(
+                            Icons.close,
+                            size: 18,
+                            color: colors.primary.withOpacity(0.85),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
             ),
-          ),
         ],
       ),
     );
@@ -876,84 +856,84 @@ class _SelectedMembersExternalPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final colors = theme.colorScheme;
 
     return Container(
-      height: 300,
+      height: 420,
+      padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.grey.shade300),
+        color: colors.primary,
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.10),
+            blurRadius: 10,
+            offset: const Offset(0, 6),
+          ),
+        ],
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-            decoration: BoxDecoration(
-              color: Colors.grey.shade50,
-              border: Border(bottom: BorderSide(color: Colors.grey.shade200)),
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(8)),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  title,
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    color: Colors.black87,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade300,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Text(
-                    "${externalAuthors.length}",
-                    style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.black87),
-                  ),
-                ),
-              ],
+          Text(
+            title,
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: colors.onSecondary,
+              fontWeight: FontWeight.w800,
             ),
           ),
-          Expanded(
-            child: externalAuthors.isEmpty
-                ? Center(
-              child: Text(
-                "Nenhum selecionado",
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: Colors.grey.shade500,
-                  fontWeight: FontWeight.w600,
-                  fontStyle: FontStyle.italic,
+          const SizedBox(height: 12),
+          if (externalAuthors.isEmpty)
+            Expanded(
+              child: Center(
+                child: Text(
+                  "Nenhum selecionado",
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: colors.onSecondary.withOpacity(0.85),
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
             )
-                : ListView.separated(
-              padding: const EdgeInsets.all(12),
-              itemCount: externalAuthors.length,
-              separatorBuilder: (_, __) => const Divider(height: 1),
-              itemBuilder: (context, i) {
-                final u = externalAuthors[i];
-                final int id = u.id!;
-                final name = _safeString(() => u.fullName, fallback: "Nome");
+          else
+            Expanded(
+              child: ListView.separated(
+                itemCount: externalAuthors.length,
+                separatorBuilder: (_, __) => const SizedBox(height: 10),
+                itemBuilder: (context, i) {
+                  final u = externalAuthors[i];
+                  final int id = u.id!;
+                  final name = _safeString(() => u.fullName, fallback: "Nome");
 
-                return ListTile(
-                  contentPadding: EdgeInsets.zero,
-                  dense: true,
-                  title: Text(
-                    name,
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: Colors.black87,
-                      fontWeight: FontWeight.w800,
+                  return Container(
+                    key: ValueKey(id),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 10,
                     ),
-                  ),
-
-                );
-              },
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.95),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            name,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: colors.tertiary,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
             ),
-          ),
         ],
       ),
     );
