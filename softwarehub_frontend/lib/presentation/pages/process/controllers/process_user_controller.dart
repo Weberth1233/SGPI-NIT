@@ -7,17 +7,17 @@ class ProcessUserController extends GetxController {
   ProcessUserController(this.getUsers);
 
   final RxMap<int, UserEntity> selectedUsers = <int, UserEntity>{}.obs;
-  
+
   final RxBool isLoading = false.obs;
   final RxList<UserEntity> users = <UserEntity>[].obs;
   final RxString errorMessage = ''.obs;
-  
+
   final RxString fullNameFilter = ''.obs;
   final RxString emailFilter = ''.obs;
   final RxString cpfFilter = ''.obs;
 
   final RxInt page = 0.obs;
-  final int size = 9;
+  final int size = 6;
   final RxBool hasMore = true.obs;
 
   @override
@@ -28,7 +28,7 @@ class ProcessUserController extends GetxController {
 
   void toggleUser(UserEntity user) {
     if (user.id == null) return;
-    
+
     if (selectedUsers.containsKey(user.id)) {
       selectedUsers.remove(user.id);
     } else {
@@ -78,11 +78,11 @@ class ProcessUserController extends GetxController {
     );
 
     result.fold(
-      (failure) {
+          (failure) {
         errorMessage.value = failure.message;
         if (loadMore && page.value > 0) page.value--;
       },
-      (pagedResult) {
+          (pagedResult) {
         users.assignAll(pagedResult.content);
         hasMore.value = pagedResult.content.length >= size;
       },
@@ -91,12 +91,12 @@ class ProcessUserController extends GetxController {
     isLoading.value = false;
   }
 
-Future<void> fetchPreviousPage() async {
+  Future<void> fetchPreviousPage() async {
     if (isLoading.value || page.value == 0) return;
 
     isLoading.value = true;
     errorMessage.value = '';
-    
+
     page.value--;
 
     final result = await getUsers(
@@ -106,13 +106,13 @@ Future<void> fetchPreviousPage() async {
     );
 
     result.fold(
-      (failure) {
+          (failure) {
         errorMessage.value = failure.message;
-        page.value++; 
+        page.value++;
       },
-      (pagedResult) {
-        users.assignAll(pagedResult.content); 
-        hasMore.value = true; 
+          (pagedResult) {
+        users.assignAll(pagedResult.content);
+        hasMore.value = true;
       },
     );
 
