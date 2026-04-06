@@ -10,12 +10,9 @@ import '../models/user/peged_user_result_model.dart';
 
 abstract class IUserRemoteDataSource {
   Future<PagedResultEntity<UserEntity>> getUsers({
-    String userName = '',
-    String fullName = '',
-    String email = '',
-    String cpf = '',
+    String search,
     int page = 0,
-    int size = 10,
+    int size = 8,
   });
 
   Future<UserEntity> getUserLogged();
@@ -29,12 +26,9 @@ class UserRemoteDatasourcesImpl implements IUserRemoteDataSource {
   
   @override
   Future<PagedResultEntity<UserEntity>> getUsers({
-    String userName = '',
-    String fullName = '',
-    String email = '',
-    String cpf = '',
+    String search = '',
     int page = 0,
-    int size = 10,
+    int size = 8,
   }) async{
     try {
       final queryParams = <String, String>{
@@ -42,17 +36,8 @@ class UserRemoteDatasourcesImpl implements IUserRemoteDataSource {
         'page-size': size.toString(),
       };
 
-      if (userName.isNotEmpty) {
-        queryParams['user-name'] = userName;
-      }
-      if (fullName.isNotEmpty) {
-        queryParams['full-name'] = fullName;
-      }
-      if(email.isNotEmpty){
-        queryParams['email'] = email;
-      }
-      if(cpf.isNotEmpty){
-        queryParams['cpf'] = cpf;
+      if (search.isNotEmpty) {
+        queryParams['search'] = search;
       }
 
       final uri = Uri.http(

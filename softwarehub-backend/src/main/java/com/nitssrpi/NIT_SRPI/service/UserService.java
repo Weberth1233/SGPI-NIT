@@ -69,19 +69,16 @@ public class UserService {
         return repository.findById(id);
     }
 
-    public Page<User> searchUsers(String username, String fullName,String email, String cpf, Integer page, Integer pageSize){
+    public Page<User> searchUsers(String search, Integer page, Integer pageSize){
         Specification<User> specs = Specification.where((root, query, cb) -> cb.conjunction());
-        if(username != null){
-            specs = specs.and(UserSpecs.likeUserName(username));
-        }
-        if(fullName != null){
-            specs = specs.and(UserSpecs.likeFullName(fullName));
-        }
-        if(email != null){
-            specs = specs.and(UserSpecs.likeEmail(email));
-        }
-        if(cpf != null){
-            specs = specs.and(UserSpecs.equalCPF(cpf));
+
+        if (search != null && !search.trim().isEmpty()) {
+            specs = specs.and((root, query, cb) -> cb.or(
+                    cb.like(cb.lower(root.get("userName")), "%" + search.toLowerCase() + "%"),
+                    cb.like(cb.lower(root.get("fullName")), "%" + search.toLowerCase() + "%"),
+                    cb.like(cb.lower(root.get("email")), "%" + search.toLowerCase() + "%"),
+                    cb.equal(root.get("cpf"), search)
+            ));
         }
         Pageable pageRequest = PageRequest.of(page, pageSize);
         return repository.findAll(specs, pageRequest);

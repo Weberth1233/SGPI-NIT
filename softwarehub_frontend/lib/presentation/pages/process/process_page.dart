@@ -242,54 +242,54 @@ class _ProcessPageState extends State<ProcessPage> {
                                   }
                                 }
 
-                                final nameField = SearchFieldHighlight(
-                                  title: "Nome",
+                                final filter = SearchFieldHighlight(
+                                  title: "Nome, cpf ou Email",
                                   icon: Icons.person_outline,
                                   field: CustomTextField(
                                     controller: searchController,
                                     label: "",
-                                    hintText: "Ex: João Silva",
+                                    hintText: "Digite nome, cpf ou email",
                                     onChanged: onSearchChanged,
                                     onFieldSubmitted: (_) =>
-                                        userController.searchByFullName(searchController.text),
+                                        userController.searchByFilter(searchController.text),
                                   ),
                                 );
 
-                                final emailField = SearchFieldHighlight(
-                                  title: "E-mail",
-                                  icon: Icons.alternate_email,
-                                  field: CustomTextField(
-                                    controller: searchEmaiController,
-                                    label: "",
-                                    hintText: "Ex: joao@email.com",
-                                    onChanged: onSearchChanged,
-                                    onFieldSubmitted: (_) =>
-                                        userController.searchByEmail(searchEmaiController.text),
-                                  ),
-                                );
+                                // final emailField = SearchFieldHighlight(
+                                //   title: "E-mail",
+                                //   icon: Icons.alternate_email,
+                                //   field: CustomTextField(
+                                //     controller: searchEmaiController,
+                                //     label: "",
+                                //     hintText: "Ex: joao@email.com",
+                                //     onChanged: onSearchChanged,
+                                //     onFieldSubmitted: (_) =>
+                                //         userController.searchByEmail(searchEmaiController.text),
+                                //   ),
+                                // );
 
-                                final cpfField = SearchFieldHighlight(
-                                  title: "CPF",
-                                  icon: Icons.badge_outlined,
-                                  field: CustomTextField(
-                                    controller: searchCpfController,
-                                    label: "",
-                                    hintText: "000.000.000-00",
-                                    onChanged: onSearchChanged,
-                                    onFieldSubmitted: (_) =>
-                                        userController.searchByCPF(searchCpfController.text),
-                                  ),
-                                );
+                                // final cpfField = SearchFieldHighlight(
+                                //   title: "CPF",
+                                //   icon: Icons.badge_outlined,
+                                //   field: CustomTextField(
+                                //     controller: searchCpfController,
+                                //     label: "",
+                                //     hintText: "00000000000",
+                                //     onChanged: onSearchChanged,
+                                //     onFieldSubmitted: (_) =>
+                                //         userController.searchByCPF(searchCpfController.text),
+                                //   ),
+                                // );
 
                                 if (isDesktopSearch) {
                                   return Row(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Expanded(flex: 5, child: nameField),
+                                      Expanded(flex: 5, child: filter),
                                       const SizedBox(width: 16),
-                                      Expanded(flex: 5, child: emailField),
-                                      const SizedBox(width: 16),
-                                      Expanded(flex: 4, child: cpfField),
+                                      // Expanded(flex: 5, child: emailField),
+                                      // const SizedBox(width: 16),
+                                      // Expanded(flex: 4, child: cpfField),
                                     ],
                                   );
                                 } else if (isTabletSearch) {
@@ -299,24 +299,24 @@ class _ProcessPageState extends State<ProcessPage> {
                                       Row(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          Expanded(child: nameField),
+                                          Expanded(child: filter),
                                           const SizedBox(width: 16),
-                                          Expanded(child: emailField),
+                                          // Expanded(child: emailField),
                                         ],
                                       ),
                                       const SizedBox(height: 16),
-                                      cpfField,
+                                      // cpfField,
                                     ],
                                   );
                                 } else {
                                   return Column(
                                     crossAxisAlignment: CrossAxisAlignment.stretch,
                                     children: [
-                                      nameField,
+                                      filter,
                                       const SizedBox(height: 10),
-                                      emailField,
+                                      // emailField,
                                       const SizedBox(height: 10),
-                                      cpfField,
+                                      // cpfField,
                                     ],
                                   );
                                 }

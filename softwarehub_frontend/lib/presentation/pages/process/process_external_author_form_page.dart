@@ -211,7 +211,7 @@ class _ProcessExternalAuthorFormPageState
                   child: CustomTextField(
                     controller: cpfController,
                     label: "CPF",
-                    hintText: "000.000.000-00",
+                    hintText: "00000000000",
                     keyboardType: TextInputType.number,
                     validator: Validators.cpf,
                     prefixIcon: const Icon(Icons.badge_outlined),

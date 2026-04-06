@@ -11,13 +11,15 @@ class ProcessUserController extends GetxController {
   final RxBool isLoading = false.obs;
   final RxList<UserEntity> users = <UserEntity>[].obs;
   final RxString errorMessage = ''.obs;
-  
-  final RxString fullNameFilter = ''.obs;
-  final RxString emailFilter = ''.obs;
-  final RxString cpfFilter = ''.obs;
+
+  final RxString searchFilter = ''.obs;
+
+  // final RxString fullNameFilter = ''.obs;
+  // final RxString emailFilter = ''.obs;
+  // final RxString cpfFilter = ''.obs;
 
   final RxInt page = 0.obs;
-  final int size = 9;
+  final int size = 8;
   final RxBool hasMore = true.obs;
 
   @override
@@ -40,20 +42,20 @@ class ProcessUserController extends GetxController {
     selectedUsers.remove(id);
   }
 
-  void searchByFullName(String query) {
-    fullNameFilter.value = query;
+  void searchByFilter(String query) {
+    searchFilter.value = query;
     fetchUsers(loadMore: false);
   }
 
-  void searchByEmail(String query) {
-    emailFilter.value = query;
-    fetchUsers(loadMore: false);
-  }
+  // void searchByEmail(String query) {
+  //   emailFilter.value = query;
+  //   fetchUsers(loadMore: false);
+  // }
 
-  void searchByCPF(String query) {
-    cpfFilter.value = query;
-    fetchUsers(loadMore: false);
-  }
+  // void searchByCPF(String query) {
+  //   cpfFilter.value = query;
+  //   fetchUsers(loadMore: false);
+  // }
 
   Future<void> fetchUsers({bool loadMore = false}) async {
     if (isLoading.value || (loadMore && !hasMore.value)) return;
@@ -70,9 +72,7 @@ class ProcessUserController extends GetxController {
     }
 
     final result = await getUsers(
-      fullName: fullNameFilter.value,
-      email: emailFilter.value,
-      cpf: cpfFilter.value,
+      search: searchFilter.value,
       page: page.value,
       size: size,
     );
@@ -100,7 +100,7 @@ Future<void> fetchPreviousPage() async {
     page.value--;
 
     final result = await getUsers(
-      fullName: fullNameFilter.value,
+      search: searchFilter.value,
       page: page.value,
       size: size,
     );
