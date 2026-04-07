@@ -159,7 +159,7 @@ class _ProcessPageState extends State<ProcessPage> {
           ],
         ),
       ),
-      backgroundColor: Colors.grey.shade200,
+        backgroundColor: const Color(0xFFCBD5E1),
       body: Stack(
         children: [
           Positioned.fill(
@@ -354,12 +354,12 @@ class _ProcessPageState extends State<ProcessPage> {
                                 }
 
                                 final filter = SearchFieldHighlight(
-                                  title: "Nome, cpf ou Email",
-                                  icon: Icons.person_outline,
+                                  title: "Pesquisar membros",
+                                  icon: Icons.search_outlined,
                                   field: CustomTextField(
                                     controller: searchController,
                                     label: "",
-                                    hintText: "Digite nome, cpf ou email",
+                                    hintText: "Procure por nome, cpf ou email",
                                     onChanged: onSearchChanged,
                                     onFieldSubmitted: (_) =>
                                         userController.searchByFilter(searchController.text),
@@ -476,16 +476,15 @@ class _ProcessPageState extends State<ProcessPage> {
 
                                   const SizedBox(height: 16),
                                   _SelectedMembersPanel(
-                                    title: "Colaboradores Selecionados",
+                                    title: "Colaboradores selecionados",
                                     selectedUsers: selectedUsersList,
                                     selectedIdsCount: userController.selectedUsers.length,
                                     onRemove: userController.removeUserById,
                                   ),
                                   const SizedBox(height: 10),
 
-                                  // Adicionado o parâmetro 'onManage' aqui
                                   _SelectedMembersExternalPanel(
-                                    title: "Colaboradores Externos Selecionados",
+                                    title: "Colaboradores Externos selecionados",
                                     externalAuthors: listExternalAuthor,
                                     onManage: handleManageExternals,
                                   ),
@@ -838,7 +837,7 @@ class _SelectedMembersPanel extends StatelessWidget {
   }
 }
 
-// O botão agora é construído como parte estrutural deste painel!
+
 class _SelectedMembersExternalPanel extends StatelessWidget {
   final String title;
   final List<ExternalAuthorEntity> externalAuthors;
@@ -943,22 +942,17 @@ class _SelectedMembersExternalPanel extends StatelessWidget {
                 style: theme.textTheme.bodyMedium?.copyWith(
                   color: Colors.white,
                   fontWeight: FontWeight.w700,
+                  fontSize: 16,
                 ),
               ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: ThemeColor.primaryColor,
                   foregroundColor: Colors.white,
-
-                  padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
                   elevation: 3,
                   shadowColor: ThemeColor.primaryColor.withOpacity(0.5),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
-                  ),
-                  textStyle: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w700,
-                    letterSpacing: 0.5,
                   ),
                 ),
             ),
