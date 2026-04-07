@@ -53,23 +53,22 @@ public class ExternalAuthorService {
         repository.save(externalAuthor);
     }
 
-    public Page<ExternalAuthor> userExternalAuthors(String fullName, String cpf, String email, Integer page, Integer pageSize) {
+    public Page<ExternalAuthor> userExternalAuthors(String search, Integer page, Integer pageSize) {
         // 1. Pega o usuário logado
         User user = securityService.getAuthenticatedUser();
 
         Specification<ExternalAuthor> specs = Specification
                 .where(ExternalAuthorSpecs.isActive()) // <-- NOVIDADE AQUI!
                 .and(ExternalAuthorSpecs.equalOwnerId(user.getId()));
-            // 3. Adiciona os filtros dinâmicos (igual ao searchProcess)
-        if (fullName != null && !fullName.isEmpty()) {
-            specs = specs.and(ExternalAuthorSpecs.likeFullName(fullName));
+
+        if (search != null && !search.trim().isEmpty()) {
+            specs = specs.and((root, query, cb) -> cb.or(
+                    cb.like(cb.lower(root.get("fullName")), "%" + search.toLowerCase() + "%"),
+                    cb.like(cb.lower(root.get("email")), "%" + search.toLowerCase() + "%"),
+                    cb.equal(root.get("cpf"), search)
+            ));
         }
-        if (cpf != null && !cpf.isEmpty()) {
-            specs = specs.and(ExternalAuthorSpecs.equalCpf(cpf));
-        }
-        if (email != null && !email.isEmpty()) {
-            specs = specs.and(ExternalAuthorSpecs.likeEmail(email));
-        }
+
         // 4. Configura a paginação
         Pageable pageable = PageRequest.of(page, pageSize);
         // 5. Chama o findAll (que vem do JpaSpecificationExecutor)

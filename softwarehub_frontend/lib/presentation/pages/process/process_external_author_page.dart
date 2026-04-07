@@ -25,8 +25,8 @@ class _ProcessExternalAuthorPageState extends State<ProcessExternalAuthorPage> {
       Get.arguments is List<ExternalAuthorEntity> ? Get.arguments : null;
 
   final TextEditingController searchController = TextEditingController();
-  final TextEditingController searchEmaiController = TextEditingController();
-  final TextEditingController searchCpfController = TextEditingController();
+  // final TextEditingController searchEmaiController = TextEditingController();
+  // final TextEditingController searchCpfController = TextEditingController();
 
 
   @override
@@ -48,8 +48,8 @@ class _ProcessExternalAuthorPageState extends State<ProcessExternalAuthorPage> {
     // TODO: implement dispose
     super.dispose();
     searchController.dispose();
-    searchEmaiController.dispose();
-    searchCpfController.dispose();
+    // searchEmaiController.dispose();
+    // searchCpfController.dispose();
   }
 
   @override
@@ -196,56 +196,56 @@ class _ProcessExternalAuthorPageState extends State<ProcessExternalAuthorPage> {
                                 }
 
                                 // Campos de texto para os filtros
-                                final nameField = SearchFieldHighlight(
-                                  title: "Nome",
+                                final searchField = SearchFieldHighlight(
+                                  title: "Nome, cpf ou email",
 
                                   icon: Icons.person_outline,
                                   field: CustomTextField(
                                     controller: searchController,
                                     label: "",
-                                    hintText: "Ex: João Silva",
+                                    hintText: "Ex: Nome, cpf ou email",
                                     onChanged: onSearchChanged,
                                     onFieldSubmitted: (_) =>
-                                        externalAuthorController.searchByFullName(searchController.text),
+                                        externalAuthorController.search(searchController.text),
                                   ),
                                 );
 
-                                final emailField = SearchFieldHighlight(
-                                  title: "E-mail",
-                                  icon: Icons.alternate_email,
-                                  field: CustomTextField(
-                                    controller: searchEmaiController,
-                                    label: "",
-                                    hintText: "Ex: joao@email.com",
-                                    onChanged: onSearchChanged,
-                                    onFieldSubmitted: (_) =>
-                                        externalAuthorController.searchByEmail(searchEmaiController.text),
-                                  ),
-                                );
+                                // final emailField = SearchFieldHighlight(
+                                //   title: "E-mail",
+                                //   icon: Icons.alternate_email,
+                                //   field: CustomTextField(
+                                //     controller: searchEmaiController,
+                                //     label: "",
+                                //     hintText: "Ex: joao@email.com",
+                                //     onChanged: onSearchChanged,
+                                //     onFieldSubmitted: (_) =>
+                                //         externalAuthorController.searchByEmail(searchEmaiController.text),
+                                //   ),
+                                // );
 
-                                final cpfField = SearchFieldHighlight(
-                                  title: "CPF",
-                                  icon: Icons.badge_outlined,
-                                  field: CustomTextField(
-                                    controller: searchCpfController,
-                                    label: "",
-                                    hintText: "000.000.000-00",
-                                    onChanged: onSearchChanged,
-                                    onFieldSubmitted: (_) =>
-                                        externalAuthorController.searchByCPF(searchCpfController.text),
-                                  ),
-                                );
+                                // final cpfField = SearchFieldHighlight(
+                                //   title: "CPF",
+                                //   icon: Icons.badge_outlined,
+                                //   field: CustomTextField(
+                                //     controller: searchCpfController,
+                                //     label: "",
+                                //     hintText: "000.000.000-00",
+                                //     onChanged: onSearchChanged,
+                                //     onFieldSubmitted: (_) =>
+                                //         externalAuthorController.searchByCPF(searchCpfController.text),
+                                //   ),
+                                // );
 
                                 if (isDesktop) {
                                   // Desktop: Proporção ajustada. Nome e E-mail ganham mais espaço (flex: 5), CPF ganha menos (flex: 4).
                                   return Row(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Expanded(flex: 5, child: nameField),
+                                      Expanded(flex: 5, child: searchField),
                                       const SizedBox(width: 16),
-                                      Expanded(flex: 5, child: emailField),
-                                      const SizedBox(width: 16),
-                                      Expanded(flex: 4, child: cpfField),
+                                      // Expanded(flex: 5, child: emailField),
+                                      // const SizedBox(width: 16),
+                                      // Expanded(flex: 4, child: cpfField),
                                     ],
                                   );
                                 } else if (isTablet) {
@@ -256,13 +256,13 @@ class _ProcessExternalAuthorPageState extends State<ProcessExternalAuthorPage> {
                                       Row(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          Expanded(child: nameField),
+                                          Expanded(child: searchField),
                                           const SizedBox(width: 16),
-                                          Expanded(child: emailField),
+                                          // Expanded(child: emailField),
                                         ],
                                       ),
                                       const SizedBox(height: 16),
-                                      cpfField,
+                                      // cpfField,
                                     ],
                                   );
                                 } else {
@@ -270,11 +270,11 @@ class _ProcessExternalAuthorPageState extends State<ProcessExternalAuthorPage> {
                                   return Column(
                                     crossAxisAlignment: CrossAxisAlignment.stretch,
                                     children: [
-                                      nameField,
+                                      searchField,
                                       const SizedBox(height: 10),
-                                      emailField,
+                                      // emailField,
                                       const SizedBox(height: 10),
-                                      cpfField,
+                                      // cpfField,
                                     ],
                                   );
                                 }

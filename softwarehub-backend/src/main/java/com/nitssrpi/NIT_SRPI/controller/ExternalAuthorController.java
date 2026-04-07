@@ -105,14 +105,12 @@ public class ExternalAuthorController implements GenericController{
             @ApiResponse(responseCode = "404", description = "Recurso não encontrado!"),
     })
     public ResponseEntity<Page<ExternalAuthorResponseDTO>> pagedUserExternalAuthors(
-            @RequestParam(value = "full-name", required = false) String fullName,
-            @RequestParam(value = "cpf", required = false) String cpf,
-            @RequestParam(value = "email", required = false) String email,
+            @RequestParam(value = "search", required = false) String search,
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(name = "page-size", defaultValue = "10") Integer pageSize
     ) {
         Page<ExternalAuthorResponseDTO> result =
-                service.userExternalAuthors(fullName,cpf, email, page, pageSize)
+                service.userExternalAuthors(search,page, pageSize)
                         .map(mapper::toDTO);
 
         return ResponseEntity.ok(result);

@@ -27,10 +27,10 @@ class ProcessExternalAuthorController extends GetxController {
       <ExternalAuthorEntity>[].obs;
   final RxString errorMessage = ''.obs;
   final RxString message = "".obs;
-
-  final RxString fullNameFilter = ''.obs;
-  final RxString emailFilter = ''.obs;
-  final RxString cpfFilter = ''.obs;
+  final RxString searchFilter = ''.obs;
+  // final RxString fullNameFilter = ''.obs;
+  // final RxString emailFilter = ''.obs;
+  // final RxString cpfFilter = ''.obs;
 
   final RxInt page = 0.obs;
   final int size = 9;
@@ -56,20 +56,20 @@ class ProcessExternalAuthorController extends GetxController {
     selectedExternalAuthor.remove(id);
   }
 
-  void searchByFullName(String query) {
-    fullNameFilter.value = query;
+  void search(String query) {
+    searchFilter.value = query;
     fetchExternalAuthors(loadMore: false);
   }
 
-  void searchByEmail(String query) {
-    emailFilter.value = query;
-    fetchExternalAuthors(loadMore: false);
-  }
+  // void searchByEmail(String query) {
+  //   emailFilter.value = query;
+  //   fetchExternalAuthors(loadMore: false);
+  // }
 
-  void searchByCPF(String query) {
-    cpfFilter.value = query;
-    fetchExternalAuthors(loadMore: false);
-  }
+  // void searchByCPF(String query) {
+  //   cpfFilter.value = query;
+  //   fetchExternalAuthors(loadMore: false);
+  // }
 
   Future<void> fetchExternalAuthors({bool loadMore = false}) async {
     if (isLoading.value || (loadMore && !hasMore.value)) return;
@@ -86,9 +86,7 @@ class ProcessExternalAuthorController extends GetxController {
     }
 
     final result = await _getExternalAuthors(
-      fullName: fullNameFilter.value,
-      email: emailFilter.value,
-      cpf: cpfFilter.value,
+      search: searchFilter.value,
       page: page.value,
       size: size,
     );
@@ -116,7 +114,7 @@ class ProcessExternalAuthorController extends GetxController {
     page.value--;
 
     final result = await _getExternalAuthors(
-      fullName: fullNameFilter.value,
+      search: searchFilter.value,
       page: page.value,
       size: size,
     );

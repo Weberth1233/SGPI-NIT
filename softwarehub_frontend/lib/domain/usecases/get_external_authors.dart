@@ -11,12 +11,11 @@ class GetExternalAuthors {
   GetExternalAuthors({required this.repository});
 
   Future<Either<Failure, PagedResultEntity<ExternalAuthorEntity>>> call({
-    String fullName ="",
-    String email = "",
-    String cpf = "",
+    String search ="",
+   
     int page = 0,
     int size = 10,
   }) {
-    return repository.getExternalAuthors(fullName:fullName,email: email,cpf: cpf, page: page,size: size);
+    return repository.getExternalAuthors(search: search, page: page,size: size);
   }
 }

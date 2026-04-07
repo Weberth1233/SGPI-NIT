@@ -10,9 +10,7 @@ import '../models/external_author/paged_external_author_result_model.dart';
 
 abstract class IExternalAuthorRemoteDataSource {
   Future<PagedResultEntity<ExternalAuthorEntity>> getExternalAuthors({
-    String fullName = '',
-    String email = '',
-    String cpf = '',
+    String search = '',
     int page = 0,
     int size = 10,
   });
@@ -28,22 +26,17 @@ class ExternalAuthorDatasource implements IExternalAuthorRemoteDataSource{
   ExternalAuthorDatasource( this.apiClient);
   
   @override
-  Future<PagedResultEntity<ExternalAuthorEntity>> getExternalAuthors({String fullName = '', String email = '', String cpf = '', int page = 0, int size = 10}) async{
+  Future<PagedResultEntity<ExternalAuthorEntity>> getExternalAuthors({String search = '', int page = 0, int size = 10}) async{
     try {
       final queryParams = <String, String>{
         'page': page.toString(),
         'page-size': size.toString(),
       };
 
-      if (fullName.isNotEmpty) {
-        queryParams['full-name'] = fullName;
+      if (search.isNotEmpty) {
+        queryParams['search'] = search;
       }
-      if(email.isNotEmpty){
-        queryParams['email'] = email;
-      }
-      if(cpf.isNotEmpty){
-        queryParams['cpf'] = cpf;
-      }
+     
 
       final uri = Uri.http(
         BaseUrl.url,

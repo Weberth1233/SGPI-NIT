@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:dartz/dartz.dart';
 import '../../domain/core/errors/exceptions.dart';
 import '../../domain/core/errors/failures.dart';
@@ -15,9 +13,9 @@ class ExternalAuthorRepositoryImpl implements IExternalAuthorRepository{
   ExternalAuthorRepositoryImpl({required this.remoteDataSource});
 
   @override
-  Future<Either<Failure, PagedResultEntity<ExternalAuthorEntity>>> getExternalAuthors({String fullName = "", String email="", String cpf="", int page = 0, int size = 10}) async{
+  Future<Either<Failure, PagedResultEntity<ExternalAuthorEntity>>> getExternalAuthors({String search = "", int page = 0, int size = 10}) async{
      try{
-      final resultEntity = await remoteDataSource.getExternalAuthors(fullName: fullName, email: email, cpf: cpf, size: size, page: page);
+      final resultEntity = await remoteDataSource.getExternalAuthors(search:search, size: size, page: page);
       return Right(resultEntity);
     }on ServerException catch (e) {
       return Left(ServerFailure(e.message));
