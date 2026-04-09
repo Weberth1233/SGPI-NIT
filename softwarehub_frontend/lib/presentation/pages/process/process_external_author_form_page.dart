@@ -20,7 +20,7 @@ class _ProcessExternalAuthorFormPageState
   final controller = Get.find<ProcessExternalAuthorController>();
   final _formKey = GlobalKey<FormState>();
 
-  // Tenta recuperar a entidade para edição vinda dos argumentos
+  
   final ExternalAuthorEntity? editingEntity = Get.arguments as ExternalAuthorEntity?;
 
   late final TextEditingController fullNameController;
@@ -57,21 +57,22 @@ class _ProcessExternalAuthorFormPageState
       );
 
       // Decide qual método do controller chamar
-      final bool isSuccess = isEditing 
-          ? await controller.updateExternalAuthor(entity.id!, entity) // Você precisa criar esse método no controller
+      final bool isSuccess = isEditing
+          ? await controller.updateExternalAuthor(entity.id!, entity)
           : await controller.postExternalAuthor(entity);
 
       if (isSuccess) {
         Get.snackbar(
           "Sucesso",
           isEditing ? "Cadastro atualizado!" : "Cadastro realizado!",
-          backgroundColor: Colors.green.withOpacity(0.8),
+          backgroundColor: Colors.green.withOpacity(0.8), // Cor original mantida
           colorText: Colors.white,
           snackPosition: SnackPosition.TOP,
           margin: const EdgeInsets.all(16),
+          borderRadius: 12,
+          icon: const Icon(Icons.check_circle, color: Colors.white),
         );
 
-        // Fluxo: Se editou, volta. Se cadastrou, limpa (ou volta se preferir)
         if (!isEditing) {
           clear();
         }
@@ -79,10 +80,12 @@ class _ProcessExternalAuthorFormPageState
         Get.snackbar(
           "Erro",
           controller.errorMessage.value,
-          backgroundColor: Colors.red.withOpacity(0.8),
+          backgroundColor: Colors.red.withOpacity(0.8), // Cor original mantida
           colorText: Colors.white,
           snackPosition: SnackPosition.TOP,
           margin: const EdgeInsets.all(16),
+          borderRadius: 12,
+          icon: const Icon(Icons.error_outline, color: Colors.white),
         );
       }
     }
@@ -101,15 +104,18 @@ class _ProcessExternalAuthorFormPageState
     final colors = theme.colorScheme;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF1F5F9),
+      backgroundColor: const Color(0xFFF1F5F9), // Cor original mantida
       appBar: _buildAppBar(colors, theme),
       body: Stack(
+        fit: StackFit.expand,
         children: [
           _buildBackground(colors),
           SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
             padding: EdgeInsets.symmetric(
               horizontal: Responsive.getPadding(context).left,
               vertical: 32,
+              
             ),
             child: Center(
               child: ConstrainedBox(
@@ -126,7 +132,7 @@ class _ProcessExternalAuthorFormPageState
   AppBar _buildAppBar(ColorScheme colors, ThemeData theme) {
     return AppBar(
       elevation: 0,
-      backgroundColor: colors.primary,
+      backgroundColor: colors.primary, // Cor original mantida
       automaticallyImplyLeading: false,
       toolbarHeight: 80,
       title: Row(
@@ -135,19 +141,22 @@ class _ProcessExternalAuthorFormPageState
             onPressed: () => Get.back(),
             icon: const Icon(Icons.arrow_back_ios_new, size: 20),
             style: IconButton.styleFrom(
-              backgroundColor: colors.onPrimary.withOpacity(0.2),
-              foregroundColor: colors.onPrimary,
+              backgroundColor: colors.onPrimary.withOpacity(0.2), // Cor original mantida
+              foregroundColor: colors.onPrimary, // Cor original mantida
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
             ),
           ),
           const SizedBox(width: 16),
-          Text(
-            isEditing ? "Editar Autor Externo" : "Cadastrar Autor Externo",
-            style: theme.textTheme.titleLarge?.copyWith(
-              color: colors.onPrimary,
-              fontWeight: FontWeight.bold,
+          Expanded(
+            child: Text(
+              isEditing ? "Editar colaborador externo" : "Formulário para cadastro de colaborador externo",
+              style: theme.textTheme.titleLarge?.copyWith(
+                color: colors.onPrimary, // Cor original mantida
+                fontWeight: FontWeight.bold,
+              ),
+              overflow: TextOverflow.ellipsis,
             ),
           ),
         ],
@@ -156,9 +165,14 @@ class _ProcessExternalAuthorFormPageState
   }
 
   Widget _buildBackground(ColorScheme colors) {
-    // Mantendo seu painter customizado
-    return const SizedBox.shrink(); 
-    // Se o DiagonalLinesPainter estiver em outro arquivo, mantenha o CustomPaint aqui
+    // ✅ CustomPaint implementado ocupando a tela toda (Positioned.fill)
+    return Positioned.fill(
+      child: CustomPaint(
+        painter: _DiagonalLinesPainter(
+          color: colors.primary.withOpacity(0.05), // Uma opacidade bem suave para não atrapalhar a leitura
+        ),
+      ),
+    );
   }
 
   Widget _buildFormCard(ColorScheme colors, ThemeData theme) {
@@ -169,7 +183,7 @@ class _ProcessExternalAuthorFormPageState
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withOpacity(0.05), // Cor da sombra original mantida
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),
@@ -180,18 +194,57 @@ class _ProcessExternalAuthorFormPageState
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              isEditing ? "Alterar Dados do Autor" : "Informações Pessoais", 
-              style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)
+            // Novo layout do cabeçalho interno do Card (sem alterar cores)
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: colors.primary.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Icon(
+                    isEditing ? Icons.manage_accounts : Icons.person_add_alt_1,
+                    color: colors.primary,
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        isEditing ? "Alterar dados" : "Informações Pessoais",
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                          color: Colors.black,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        "Preencha os campos abaixo com atenção.",
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: Colors.grey[800],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: 24),
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 24),
+              child: Divider(height: 1, thickness: 1),
+            ),
+
             CustomTextField(
               controller: fullNameController,
               label: "Nome completo",
               validator: Validators.required,
               prefixIcon: const Icon(Icons.person_outline),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 20),
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -211,7 +264,7 @@ class _ProcessExternalAuthorFormPageState
                   child: CustomTextField(
                     controller: cpfController,
                     label: "CPF",
-                    hintText: "00000000000",
+                    hintText: "000.000.000-00",
                     keyboardType: TextInputType.number,
                     validator: Validators.cpf,
                     prefixIcon: const Icon(Icons.badge_outlined),
@@ -221,11 +274,27 @@ class _ProcessExternalAuthorFormPageState
             ),
             const SizedBox(height: 40),
             Obx(
-              () => SizedBox(
+                  () => SizedBox(
                 width: double.infinity,
                 height: 56,
-                child: ElevatedButton(
+                child: ElevatedButton.icon(
                   onPressed: controller.isLoading.value ? null : _submitForm,
+                  icon: controller.isLoading.value
+                      ? const SizedBox.shrink()
+                      : const Icon(Icons.check_circle_outline),
+                  label: controller.isLoading.value
+                      ? const SizedBox(
+                    height: 24,
+                    width: 24,
+                    child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                  )
+                      : Text(
+                    isEditing ? 'Salvar Alterações' : 'Salvar Cadastro',
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: colors.primary,
                     foregroundColor: colors.onPrimary,
@@ -234,19 +303,6 @@ class _ProcessExternalAuthorFormPageState
                     ),
                     elevation: 0,
                   ),
-                  child: controller.isLoading.value
-                      ? const SizedBox(
-                          height: 24,
-                          width: 24,
-                          child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
-                        )
-                      : Text(
-                          isEditing ? 'Salvar Alterações' : 'Salvar Cadastro',
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
                 ),
               ),
             ),
@@ -255,4 +311,28 @@ class _ProcessExternalAuthorFormPageState
       ),
     );
   }
+}
+
+class _DiagonalLinesPainter extends CustomPainter {
+  final Color color;
+
+  _DiagonalLinesPainter({required this.color});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = color
+      ..strokeWidth = 1;
+    const spacing = 80.0;
+    for (double i = -size.height; i < size.width; i += spacing) {
+      canvas.drawLine(
+        Offset(i, 0),
+        Offset(i + size.height, size.height),
+        paint,
+      );
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

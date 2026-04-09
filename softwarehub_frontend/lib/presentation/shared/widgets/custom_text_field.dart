@@ -21,9 +21,13 @@ class CustomTextField extends StatelessWidget {
   final String? hintText;
   final void Function(String)? onChanged;
 
-  // ✅ Novos parâmetros
+  // ✅ Parâmetros de tamanho
   final int? maxLines;
   final int? minLines;
+
+  // ✅ Novas propriedades de UX adicionadas
+  final TextCapitalization textCapitalization;
+  final TextInputAction? textInputAction;
 
   const CustomTextField({
     super.key,
@@ -45,7 +49,10 @@ class CustomTextField extends StatelessWidget {
     this.maxLines = 1,
     this.minLines,
     this.expands = false,
+    this.textCapitalization = TextCapitalization.none, // Padrão do Flutter (não afeta outros usos)
+    this.textInputAction,
   });
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -65,6 +72,10 @@ class CustomTextField extends StatelessWidget {
       onFieldSubmitted: onFieldSubmitted,
       inputFormatters: inputFormatters,
       onChanged: onChanged,
+
+      // ✅ Repassando as novas propriedades para o TextFormField interno
+      textCapitalization: textCapitalization,
+      textInputAction: textInputAction,
 
       // ✅ 2. A regra de ouro do Flutter: se usa 'expands: true', maxLines e minLines PRECISAM ser nulos
       expands: expands,
@@ -133,6 +144,5 @@ class CustomTextField extends StatelessWidget {
           SizedBox(width: size, child: textField),
       ],
     );
-
   }
 }

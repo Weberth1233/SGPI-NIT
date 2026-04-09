@@ -52,12 +52,12 @@ class _ProcessExternalAuthorPageState extends State<ProcessExternalAuthorPage> {
 
     // Barra de Pesquisa Unificada
     final Widget searchFieldWidget = SearchFieldHighlight(
-      title: "Nome, CPF ou E-mail",
+      title: "Pesquise",
       icon: Icons.search,
       field: CustomTextField(
         controller: searchController,
         label: "",
-        hintText: "Ex: Nome, CPF ou E-mail...",
+        hintText: "Procure por Nome, CPF ou E-mail...",
         onChanged: (value) {
           if (value.trim().isEmpty) {
             externalAuthorController.fetchExternalAuthors();
@@ -116,8 +116,10 @@ class _ProcessExternalAuthorPageState extends State<ProcessExternalAuthorPage> {
           ],
         ),
       ),
+
       backgroundColor: const Color(0xFFCBD5E1),
       body: Stack(
+        fit: StackFit.expand,
         children: [
           Positioned.fill(
             child: CustomPaint(
@@ -161,39 +163,46 @@ class _ProcessExternalAuthorPageState extends State<ProcessExternalAuthorPage> {
                             children: [
                               Expanded(
                                 child: Text(
-                                  "Colaboradores externos",
+                                  "Gerenciamento",
                                   style: theme.textTheme.headlineSmall?.copyWith(
                                     fontWeight: FontWeight.w900,
-                                    color: colors.primary,
-                                    letterSpacing: -0.1,
+                                    color: Colors.black,
+
                                     fontSize: 35,
                                   ),
                                 ),
                               ),
-                              ElevatedButton.icon(
-                                onPressed: () async {
-                                  await Get.toNamed("/process/process-external-author/forms");
-                                  externalAuthorController.fetchExternalAuthors(loadMore: false);
-                                },
-                                icon: const Icon(Icons.add, size: 20),
-                                label: Text(
-                                  "Cadastrar novo",
-                                  style: theme.textTheme.bodyMedium?.copyWith(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w700,
+
+                              Tooltip(
+                                message: "Clique para cadastrar um novo colaborador que não possui conta no sistema",
+                                child: ElevatedButton.icon(
+                                  onPressed: () async {
+                                    await Get.toNamed("/process/process-external-author/forms");
+                                    externalAuthorController.fetchExternalAuthors(loadMore: false);
+                                  },
+                                  // Ícone muito mais semântico para "adicionar pessoa"
+                                  icon: const Icon(Icons.person_add_alt_1, size: 22),
+                                  label: Text(
+                                    "Novo Cadastro", // Funcionalidade 100% clara
+                                    style: theme.textTheme.bodyMedium?.copyWith(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 15, // Opcional: um leve ajuste de tamanho para leitura
+                                    ),
+                                  ),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: colors.primary,
+                                    foregroundColor: Colors.white,
+                                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                                    elevation: 3, // Leve reduzida para não gritar tanto na tela
+                                    shadowColor: colors.primary.withOpacity(0.4),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
                                   ),
                                 ),
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: colors.primary,
-                                  foregroundColor: Colors.white,
-                                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-                                  elevation: 4,
-                                  shadowColor: colors.primary.withOpacity(0.5),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                ),
-                              ),
+                              )
+
                             ],
                           ),
 
@@ -305,7 +314,7 @@ class _ProcessExternalAuthorPageState extends State<ProcessExternalAuthorPage> {
                                             border: Border(bottom: BorderSide(color: Colors.grey.shade200)),
                                           ),
                                           child: Text(
-                                            "Autores Disponíveis",
+                                            "Cadastrados",
                                             style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
                                           ),
                                         ),
@@ -323,7 +332,7 @@ class _ProcessExternalAuthorPageState extends State<ProcessExternalAuthorPage> {
                                   ),
                                   const SizedBox(height: 16),
                                   _SelectedMembersPanel(
-                                    title: "Colaboradores selecionados",
+                                    title: "Selecionados",
                                     selectedUsers: selectedUsersList,
                                     selectedIdsCount: externalAuthorController.selectedExternalAuthor.length,
                                     onRemove: externalAuthorController.removeUserById,
@@ -353,7 +362,7 @@ class _ProcessExternalAuthorPageState extends State<ProcessExternalAuthorPage> {
                                             border: Border(bottom: BorderSide(color: Colors.grey.shade200)),
                                           ),
                                           child: Text(
-                                            "Autores Disponíveis",
+                                            "Cadastrados",
                                             style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
                                           ),
                                         ),
@@ -383,7 +392,7 @@ class _ProcessExternalAuthorPageState extends State<ProcessExternalAuthorPage> {
                                   child: Column(
                                     children: [
                                       _SelectedMembersPanel(
-                                        title: "Colaboradores Selecionados",
+                                        title: "Selecionados",
                                         selectedUsers: selectedUsersList,
                                         selectedIdsCount: externalAuthorController.selectedExternalAuthor.length,
                                         onRemove: externalAuthorController.removeUserById,
@@ -416,6 +425,18 @@ class _SelectedMembersPanel extends StatelessWidget {
   final void Function(int id) onRemove;
   final VoidCallback onSave; // Recebe a função de salvar
 
+  String _safeString(String? Function() getter, {required String fallback}) {
+    try {
+      final value = getter();
+      if (value != null && value.trim().isNotEmpty) {
+        return value;
+      }
+      return fallback;
+    } catch (_) {
+      return fallback;
+    }
+  }
+
   const _SelectedMembersPanel({
     required this.title,
     required this.selectedUsers,
@@ -430,7 +451,7 @@ class _SelectedMembersPanel extends StatelessWidget {
     final colors = theme.colorScheme;
 
     return Container(
-      height: 480, // Aumentei um pouco para acomodar o novo botão confortavelmente
+      height: 480,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(8),
@@ -490,16 +511,17 @@ class _SelectedMembersPanel extends StatelessWidget {
                 return ListTile(
                   contentPadding: EdgeInsets.zero,
                   dense: true,
-                  title: Text(name, style: const TextStyle(fontWeight: FontWeight.w600)),
+                  title: Text(
+                      name,style: const TextStyle(fontWeight: FontWeight.w600, color: Colors.black)),
                   subtitle: Text(
                       _safeString(() => u.email, fallback: "Email"),
-                      style: TextStyle(fontSize: 12, color: Colors.grey.shade600)
+                      style: TextStyle(fontSize: 12, color: Colors.black)
                   ),
                   trailing: IconButton(
                     tooltip: "Remover",
                     visualDensity: VisualDensity.compact,
                     onPressed: () => onRemove(id),
-                    icon: const Icon(Icons.close, size: 20, color: Colors.redAccent),
+                    icon: const Icon(Icons.close_rounded, size: 25, color: Colors.redAccent),
                   ),
                 );
               },
@@ -525,7 +547,7 @@ class _SelectedMembersPanel extends StatelessWidget {
                 ),
               ),
               style: ElevatedButton.styleFrom(
-                backgroundColor: colors.primary, // Transmite segurança sendo a cor principal
+                backgroundColor: colors.primary,
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
                 elevation: 3,
@@ -555,6 +577,17 @@ class _MembersList extends StatelessWidget {
     required this.onToggle,
   });
 
+  String _safeString(String? Function() getter, {required String fallback}) {
+    try {
+      final value = getter();
+      if (value != null && value.trim().isNotEmpty) {
+        return value;
+      }
+      return fallback;
+    } catch (_) {
+      return fallback;
+    }
+  }
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -564,7 +597,7 @@ class _MembersList extends StatelessWidget {
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       itemCount: externalAuthors.length,
-      separatorBuilder: (context, index) => const SizedBox(height: 8),
+      separatorBuilder: (context, index) => const SizedBox(height: 12),
       itemBuilder: (context, index) {
         final u = externalAuthors[index];
         final id = u.id;
@@ -573,81 +606,103 @@ class _MembersList extends StatelessWidget {
         final fullName = _safeString(() => u.fullName, fallback: "Nome");
         final email = _safeString(() => u.email, fallback: "Email");
 
-        return InkWell(
-          key: ValueKey(id ?? index),
-          borderRadius: BorderRadius.circular(8),
-          onTap: id == null ? null : () => onToggle(u),
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-            decoration: BoxDecoration(
-              color: selected ? Colors.grey.shade100 : Colors.transparent,
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(
-                color: selected ? Colors.grey.shade400 : Colors.grey.shade200,
-              ),
+        return AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          decoration: BoxDecoration(
+            color: selected ? Colors.grey.shade100 : Colors.transparent,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: selected ? Colors.grey.shade400 : Colors.grey.shade200,
+              width: selected ? 1.5 : 1.0,
             ),
-            child: Row(
-              children: [
-                CircleAvatar(
-                  radius: 16,
-                  backgroundColor: Colors.grey.shade200,
-                  child: const Icon(Icons.person, color: Colors.grey, size: 18),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        fullName,
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          fontWeight: FontWeight.w700,
-                          color: Colors.black87,
-                        ),
-                      ),
-                      const SizedBox(height: 2),
-                      Text(
-                        email,
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          color: Colors.grey.shade700,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Row(
+          ),
+          child: Material(
+            color: Colors.transparent,
+            borderRadius: BorderRadius.circular(12),
+            child: InkWell(
+              key: ValueKey(id ?? index),
+              borderRadius: BorderRadius.circular(12),
+              onTap: id == null ? null : () => onToggle(u),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                child: Row(
+                  children: [
+                    CircleAvatar(
+                      radius: 20,
+                      backgroundColor: Colors.grey.shade200,
+                      child: const Icon(Icons.person_outline, color: Colors.grey, size: 22),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          InkWell(
-                            onTap: () {
-                              if (id != null) {
-                                controller.deleteExternalAuthor(id);
-                              }
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.all(4.0),
-                              child: Icon(Icons.delete_outline, size: 18, color: colors.error),
+                          Text(
+                            fullName,
+                            style: theme.textTheme.titleSmall?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black87,
                             ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
-                          const SizedBox(width: 8),
-                          InkWell(
-                            onTap: () async {
-                              await Get.toNamed("/process/process-external-author/forms", arguments: u);
-                              controller.fetchExternalAuthors(loadMore: false);
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.all(4.0),
-                              child: Icon(Icons.edit_outlined, size: 18, color: colors.primary),
+                          const SizedBox(height: 4),
+                          Text(
+                            email,
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: Colors.grey.shade600,
                             ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ],
                       ),
-                    ],
-                  ),
+                    ),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                          onPressed: () async {
+                            await Get.toNamed("/process/process-external-author/forms", arguments: u);
+                            controller.fetchExternalAuthors(loadMore: false);
+                          },
+                          icon: const Icon(Icons.edit_outlined),
+                          iconSize: 24,
+                          color: colors.primary,
+                          tooltip: "Editar",
+                          constraints: const BoxConstraints(),
+                          padding: const EdgeInsets.all(10),
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            if (id != null) {
+                              controller.deleteExternalAuthor(id);
+                            }
+                          },
+                          icon: const Icon(Icons.delete_forever),
+                          iconSize: 24,
+                          color: colors.error,
+                          tooltip: "Excluir",
+                          constraints: const BoxConstraints(),
+                          padding: const EdgeInsets.all(8),
+                        ),
+                        Container(
+                          height: 45,
+                          width: 2,
+                          margin: const EdgeInsets.symmetric(horizontal: 11),
+                          color: Colors.grey.shade300,
+                        ),
+                        Icon(
+                          selected ? Icons.check_circle : Icons.add_circle_outline,
+                          color: selected ? Colors.green : Colors.black54,
+                          size: 28,
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
-                if (selected)
-                  const Icon(Icons.check, color: Colors.black54)
-                else
-                  const Icon(Icons.add_circle_outline, color: Colors.black87),
-              ],
+              ),
             ),
           ),
         );
