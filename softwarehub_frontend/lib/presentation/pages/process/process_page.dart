@@ -251,8 +251,10 @@ class _ProcessPageState extends State<ProcessPage> {
                                 child: CustomTextField(
                                   controller: titleController,
                                   label: "",
-                                  hintText: "Ex: Registro de Patente de Software",
-                                  textCapitalization: TextCapitalization.sentences,
+                                  hintText:
+                                      "Ex: Registro de Patente de Software",
+                                  textCapitalization:
+                                      TextCapitalization.sentences,
                                   textInputAction: TextInputAction.next,
                                 ),
                               ),
@@ -403,7 +405,7 @@ class _ProcessPageState extends State<ProcessPage> {
                                 }
 
                                 final filter = SearchFieldHighlight(
-                                  title: "Pesquise",
+                                  title: "Pesquise por colaboradores",
                                   icon: Icons.search_outlined,
                                   field: CustomTextField(
                                     controller: searchController,
@@ -559,13 +561,15 @@ class _ProcessPageState extends State<ProcessPage> {
                                                 ),
                                               ),
                                               child: Text(
-                                                "Disponíveis no sistema",
+                                                "Adicione pelo menos um colaborador ao processo",
                                                 style: theme
                                                     .textTheme
                                                     .bodyMedium
                                                     ?.copyWith(
                                                       fontWeight:
                                                           FontWeight.bold,
+                                                      fontSize: 16,
+                                                  color: Colors.redAccent,
                                                     ),
                                               ),
                                             ),
@@ -614,7 +618,7 @@ class _ProcessPageState extends State<ProcessPage> {
                                   child: Column(
                                     children: [
                                       _SelectedMembersPanel(
-                                        title: "Colaboradores selecionados",
+                                        title: "Selecionados",
                                         selectedUsers: selectedUsersList,
                                         selectedIdsCount:
                                             userController.selectedUsers.length,

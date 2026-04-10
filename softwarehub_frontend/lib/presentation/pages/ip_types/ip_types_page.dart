@@ -21,8 +21,32 @@ class SecondStageProcess {
   });
 }
 
-class IpTypesPage extends StatelessWidget {
+// CustomPainter para as linhas diagonais de fundo
+class _DiagonalLinesPainter extends CustomPainter {
+  final Color color;
 
+  _DiagonalLinesPainter({required this.color});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = color
+      ..strokeWidth = 1;
+    const spacing = 80.0;
+    for (double i = -size.height; i < size.width; i += spacing) {
+      canvas.drawLine(
+        Offset(i, 0),
+        Offset(i + size.height, size.height),
+        paint,
+      );
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}
+
+class IpTypesPage extends StatelessWidget {
   const IpTypesPage({super.key});
 
   static const Color _backgroundColor = Color(0xFF004294);
@@ -36,200 +60,177 @@ class IpTypesPage extends StatelessWidget {
     final textTheme = theme.textTheme;
 
     return Scaffold(
-      backgroundColor: _backgroundColor,
-      body: SafeArea(
-        child: Padding(
-          padding: Responsive.getPadding(context),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 16),
-              _Header(
-                title: "Categoria de propriedade intelectual",
-                subtitle: "Selecione o tipo de propriedade intelectual",
-                onBack: Get.back,
+      backgroundColor: Color(0xFFCBD5E1),
+
+      // --- SEU NOVO APPBAR AQUI ---
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: _backgroundColor,
+        automaticallyImplyLeading: false,
+        toolbarHeight: 74,
+        titleSpacing: 12,
+        title: Row(
+          children: [
+
+            SizedBox(
+              height: 46,
+              width: 46,
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                child: IconButton(
+                  padding: EdgeInsets.zero,
+                  icon: Icon(Icons.arrow_back, color: Colors.grey.shade900),
+                  onPressed: () => Get.back(),
+                  tooltip: "Voltar",
+                ),
               ),
-              const SizedBox(height: 80),
+            ),
+            const SizedBox(width: 16),
 
-              Expanded(
-                child: Obx(() {
-                  if (ipTypesController.isLoading.value) {
-                    return const _LoadingState();
-                  }
+            // Textos do Header integrados ao AppBar
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "Categoria de propriedade intelectual",
+                    style: textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w700,
+                      color: Colors.white,
+                      fontSize: 23,
+                    ),
+                    ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
 
-                  final list = ipTypesController.ipTypes.toList();
-                  if (list.isEmpty) {
-                    return const _EmptyState(
-                      title: "Sem resultados",
-                      message: "Nenhuma categoria disponível no momento.",
-                    );
-                  }
+      body: Stack(
+        children: [
+          // Textura de Fundo
+          Positioned.fill(
+            child: CustomPaint(
+              painter: _DiagonalLinesPainter(
+                color: Colors.black.withOpacity(0.04),
+              ),
+            ),
+          ),
 
-                  return LayoutBuilder(
-                    builder: (context, constraints) {
-                      final w = constraints.maxWidth;
+          // Conteúdo Principal
+          Positioned.fill(
+            child: Padding(
+              padding: Responsive.getPadding(context),
+              child: Obx(() {
+                if (ipTypesController.isLoading.value) {
+                  return const _LoadingState();
+                }
 
-                      // Grid responsiva
-                      final int columns = w >= 1100
-                          ? 4
-                          : w >= 840
-                          ? 3
-                          : w >=
-                                600 // Ajuste leve no breakpoint
-                          ? 2
-                          : 1;
+                final list = ipTypesController.ipTypes.toList();
+                if (list.isEmpty) {
+                  return const _EmptyState(
+                    title: "Sem resultados",
+                    message: "Nenhuma categoria disponível no momento.",
+                  );
+                }
 
-                      return Scrollbar(
-                        child: SingleChildScrollView(
-                          padding: const EdgeInsets.fromLTRB(4, 0, 4, 24),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Center(
-                                child: Container(
-                                  constraints: const BoxConstraints(
-                                    maxWidth: 600,
-                                  ),
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 16,
-                                    vertical: 12,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white.withOpacity(0.95),
-                                    borderRadius: BorderRadius.circular(30),
-                                  ),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Icon(
-                                        Icons.touch_app_rounded,
-                                        size: 20,
-                                        color: _backgroundColor.withOpacity(
-                                          0.8,
+                return LayoutBuilder(
+                  builder: (context, constraints) {
+                    final w = constraints.maxWidth;
+
+                    // Grid responsiva
+                    final int columns = w >= 1100
+                        ? 4
+                        : w >= 840
+                        ? 3
+                        : w >= 600
+                        ? 2
+                        : 1;
+
+                    return Scrollbar(
+                      child: SingleChildScrollView(
+                        padding: const EdgeInsets.fromLTRB(4, 24, 4, 32), // Aumentei o padding superior para descolar do AppBar
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Center(
+                              child: Container(
+                                constraints: const BoxConstraints(maxWidth: 600),
+                                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withOpacity(0.9),
+                                  borderRadius: BorderRadius.circular(30),
+                                  border: Border.all(color: Colors.grey.shade200),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(
+                                      Icons.touch_app_rounded,
+                                      size: 20,
+                                      color: _backgroundColor.withOpacity(0.7),
+                                    ),
+                                    const SizedBox(width: 10),
+                                    Flexible(
+                                      child: Text(
+                                        "Escolha e clique em uma categoria para avançar.",
+                                        style: textTheme.bodyMedium?.copyWith(
+                                          color: _backgroundColor.withOpacity(0.9),
+                                          fontWeight: FontWeight.w600,
                                         ),
                                       ),
-                                      const SizedBox(width: 10),
-                                      Flexible(
-                                        child: Text(
-                                          "Escolha e clique em uma categoria para avançar.",
-                                          style: textTheme.bodyMedium?.copyWith(
-                                            color: _backgroundColor,
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                              const SizedBox(height: 30),
+                            ),
+                            const SizedBox(height: 32),
 
-                              _ResponsiveGrid(
-                                columns: columns,
-                                gap: 20,
-                                children: list.map((item) {
-                                  return _IpTypeCard(
-                                    title: item.name,
-                                    dominantColor: _backgroundColor,
-                                    onTap: () {
-                                      final secondStageProcess = SecondStageProcess(
-                                        firstStageProcess: auxProcess,
-                                        item: item,
-                                        isEdit: auxProcess.isEdit,
-                                        originalIpTypeId:
-                                            auxProcess.originalIpTypeId,
-                                        originalFormData:
-                                            auxProcess.originalFormData,
-                                      );
+                            _ResponsiveGrid(
+                              columns: columns,
+                              gap: 20,
+                              children: list.map((item) {
+                                return _IpTypeCard(
+                                  title: item.name,
+                                  dominantColor: _backgroundColor,
+                                  onTap: () {
+                                    final secondStageProcess = SecondStageProcess(
+                                      firstStageProcess: auxProcess,
+                                      item: item,
+                                      isEdit: auxProcess.isEdit,
+                                      originalIpTypeId: auxProcess.originalIpTypeId,
+                                      originalFormData: auxProcess.originalFormData,
+                                    );
 
-                                      Get.toNamed(
-                                        "/process/ip_types/form",
-                                        arguments: secondStageProcess,
-                                      );
-                                    },
-                                  );
-                                }).toList(),
-                              ),
-                            ],
-                          ),
+                                    Get.toNamed(
+                                      "/process/ip_types/form",
+                                      arguments: secondStageProcess,
+                                    );
+                                  },
+                                );
+                              }).toList(),
+                            ),
+                          ],
                         ),
-                      );
-                    },
-                  );
-                }),
-              ),
-            ],
+                      ),
+                    );
+                  },
+                );
+              }),
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
 }
 
 /* ------------------------------ UI pieces ------------------------------ */
-
-class _Header extends StatelessWidget {
-  final String title;
-  final String subtitle;
-  final VoidCallback onBack;
-
-  const _Header({
-    required this.title,
-    required this.subtitle,
-    required this.onBack,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Material(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          child: InkWell(
-            borderRadius: BorderRadius.circular(12),
-            onTap: onBack,
-            child: const Padding(
-              padding: EdgeInsets.all(12.0),
-              child: Icon(
-                Icons.arrow_back_rounded,
-                size: 24,
-                color: Color(0XFF004093),
-              ),
-            ),
-          ),
-        ),
-
-        const SizedBox(width: 20),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.w700,
-                  color: Colors.white,
-                  letterSpacing: -0.5,
-                ),
-              ),
-              const SizedBox(height: 6),
-              Text(
-                subtitle,
-                style: textTheme.bodyMedium?.copyWith(
-                  color: Colors.white.withOpacity(0.8),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-}
 
 class _LoadingState extends StatelessWidget {
   const _LoadingState();
@@ -244,14 +245,14 @@ class _LoadingState extends StatelessWidget {
             width: 24,
             height: 24,
             child: CircularProgressIndicator(
-              color: Colors.white,
+              color: IpTypesPage._backgroundColor,
               strokeWidth: 3,
             ),
           ),
           SizedBox(height: 16),
           Text(
             "Carregando categorias...",
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
+            style: TextStyle(color: IpTypesPage._backgroundColor, fontWeight: FontWeight.w500),
           ),
         ],
       ),
@@ -277,29 +278,29 @@ class _EmptyState extends StatelessWidget {
           Icon(
             Icons.saved_search_rounded,
             size: 64,
-            color: Colors.white.withOpacity(0.5),
+            color: IpTypesPage._backgroundColor.withOpacity(0.5),
           ),
           const SizedBox(height: 16),
           Text(
             title,
             style: textTheme.titleLarge?.copyWith(
               fontWeight: FontWeight.bold,
-              color: Colors.white,
+              color: IpTypesPage._backgroundColor,
             ),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 8),
           Text(
             message,
-            style: textTheme.bodyMedium?.copyWith(color: Colors.white70),
+            style: textTheme.bodyMedium?.copyWith(color: IpTypesPage._backgroundColor.withOpacity(0.7)),
             textAlign: TextAlign.center,
           ),
           if (onRetry != null) ...[
             const SizedBox(height: 24),
             ElevatedButton.icon(
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.white,
-                foregroundColor: IpTypesPage._backgroundColor,
+                backgroundColor: IpTypesPage._backgroundColor,
+                foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(
                   horizontal: 24,
                   vertical: 12,
@@ -333,76 +334,61 @@ class _IpTypeCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    const double borderRadiusValue = 24.0;
+    const double borderRadiusValue = 16.0;
 
     return Container(
-      // Margem vertical pequena para garantir que a sombra não seja cortada por outros elementos
-      margin: const EdgeInsets.symmetric(vertical: 2),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(borderRadiusValue),
         boxShadow: [
           BoxShadow(
-            color: dominantColor.withOpacity(0.1),
-            blurRadius: 15,
-            offset: const Offset(0, 8), // Deslocamento vertical para baixo
-            spreadRadius: -2, // Faz a sombra parecer "sair" de baixo do card
+            color: Colors.black.withOpacity(0.06),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
           ),
         ],
+        border: Border.all(color: Colors.grey.shade200, width: 1),
       ),
-      // Material é usado aqui apenas para cortar o efeito de "splash" do InkWell nas bordas arredondadas
       child: Material(
         color: Colors.transparent,
         borderRadius: BorderRadius.circular(borderRadiusValue),
         child: InkWell(
           onTap: onTap,
           borderRadius: BorderRadius.circular(borderRadiusValue),
-          // Cores de feedback ao toque ajustadas para combinar
-          splashColor: dominantColor.withOpacity(0.08),
-          highlightColor: dominantColor.withOpacity(0.04),
+          splashColor: dominantColor.withOpacity(0.06),
+          highlightColor: dominantColor.withOpacity(0.03),
           child: Padding(
-            padding: const EdgeInsets.all(20.0),
+            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 24.0),
             child: Row(
               children: [
-                // --- Contêiner do ícone ---
                 Container(
-                  padding: const EdgeInsets.all(14),
+                  padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    // Fundo azul bem clarinho
                     color: dominantColor.withOpacity(0.08),
-                    borderRadius: BorderRadius.circular(18),
+                    borderRadius: BorderRadius.circular(12),
                   ),
                   child: Icon(
-                    Icons.psychology_outlined, // Ícone de cérebro
+                    Icons.folder_special_outlined,
                     color: dominantColor,
-                    size: 30,
+                    size: 28,
                   ),
                 ),
-                const SizedBox(width: 18),
-
-                // --- Título ---
+                const SizedBox(width: 16),
                 Expanded(
                   child: Text(
                     title,
                     style: textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.w700,
                       color: const Color(0xFF2D3748),
-                      fontSize: 16.5,
-                      height: 1.3,
+                      fontSize: 16.0,
                     ),
                   ),
                 ),
-                const SizedBox(width: 8),
-
+                const SizedBox(width: 12),
                 Icon(
                   Icons.arrow_forward_ios_rounded,
-                  color: const Color.fromARGB(
-                    255,
-                    7,
-                    84,
-                    228,
-                  ), // Cinza claro e sutil
-                  size: 20,
+                  color: Colors.grey.shade400,
+                  size: 16,
                 ),
               ],
             ),
@@ -413,7 +399,6 @@ class _IpTypeCard extends StatelessWidget {
   }
 }
 
-/// Grid simples sem depender de package.
 class _ResponsiveGrid extends StatelessWidget {
   final int columns;
   final double gap;

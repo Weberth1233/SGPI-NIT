@@ -104,7 +104,7 @@ class _ProcessExternalAuthorFormPageState
     final colors = theme.colorScheme;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF1F5F9), // Cor original mantida
+      backgroundColor: const Color(0xFFCBD5E1), // Cor original mantida
       appBar: _buildAppBar(colors, theme),
       body: Stack(
         fit: StackFit.expand,
@@ -132,17 +132,17 @@ class _ProcessExternalAuthorFormPageState
   AppBar _buildAppBar(ColorScheme colors, ThemeData theme) {
     return AppBar(
       elevation: 0,
-      backgroundColor: colors.primary, // Cor original mantida
+      backgroundColor: colors.primary,
       automaticallyImplyLeading: false,
       toolbarHeight: 80,
       title: Row(
         children: [
           IconButton(
             onPressed: () => Get.back(),
-            icon: const Icon(Icons.arrow_back_ios_new, size: 20),
+            icon: const Icon(Icons.arrow_back,),
             style: IconButton.styleFrom(
-              backgroundColor: colors.onPrimary.withOpacity(0.2), // Cor original mantida
-              foregroundColor: colors.onPrimary, // Cor original mantida
+              backgroundColor: Colors.white,
+              foregroundColor: colors.primary,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
