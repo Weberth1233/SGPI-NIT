@@ -14,9 +14,11 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   final TextEditingController _emailController = TextEditingController();
   final forgotPasswordController = Get.find<ForgotPasswordController>();
 
+
+  static const Color _primaryColor = Color(0xFF004294);
+
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     _emailController.dispose();
   }
@@ -24,128 +26,244 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final textTheme = theme.textTheme;
 
     return Scaffold(
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 30, left: 30),
-            child: Row(
-              children: [
-                Container(
-                  width: 48,
-                  height: 48,
-                  decoration: BoxDecoration(
-                    color: theme.colorScheme.surface,
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: IconButton(
-                    onPressed: () => Get.back(),
-                    icon: Icon(
-                      Icons.arrow_back,
-                      size: 26,
-                      color: theme.colorScheme.primary,
-                    ),
-                  ),
+      backgroundColor: const Color(0xFFCBD5E1),
+
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: _primaryColor,
+        automaticallyImplyLeading: false,
+        toolbarHeight: 74,
+        titleSpacing: 12,
+        title: Row(
+          children: [
+            SizedBox(
+              height: 46,
+              width: 46,
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(14),
                 ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Text(
-                    "Esqueci a senha",
-                    style: theme.textTheme.headlineSmall?.copyWith(
-                      color: theme.colorScheme.surface,
-                      fontWeight: FontWeight.w900,
-                      letterSpacing: -0.5,
-                    ),
-                  ),
+                child: IconButton(
+                  padding: EdgeInsets.zero,
+                  icon: Icon(Icons.arrow_back, color: Colors.grey.shade900),
+                  onPressed: () => Get.back(),
+                  tooltip: "Voltar",
                 ),
-              ],
-            ),
-          ),
-          SizedBox(height: 50),
-          Center(
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 30, vertical: 50),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: Colors.white,
               ),
-              height: 500,
-              width: 500,
+            ),
+            const SizedBox(width: 16),
+            Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    "Digite seu email cadastrado no sistema!",
-                    style: theme.textTheme.bodyLarge,
-                  ),
-                  SizedBox(height: 5),
-                  Text("Enviaremos um codigo para seu e-mail!"),
-                  SizedBox(height: 50),
-
-                  CustomTextField(
-                    controller: _emailController,
-                    label: "E-mail",
-                  ),
-                  SizedBox(height: 10),
-
-                  Obx(
-                    () => SizedBox(
-                      width: 447,
-                      height: 44,
-                      child: ElevatedButton(
-                        onPressed: forgotPasswordController.loading.value
-                            ? null
-                            : () {
-                                forgotPasswordController.forgotPassword(
-                                  _emailController.text,
-                                );
-                                _emailController.clear();
-                              },
-                        child: forgotPasswordController.loading.value
-                            ? const SizedBox(
-                                width: 20,
-                                height: 20,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                  color: Colors.amber,
-                                ),
-                              )
-                            : Text(
-                                "Enviar",
-                                style: theme.textTheme.bodySmall!.copyWith(
-                                  color: theme.colorScheme.onSecondary,
-                                ),
-                              ),
-                      ),
+                    "Esqueci a senha",
+                    style: textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w700,
+                      color: Colors.white,
+                      fontSize: 22,
                     ),
                   ),
-                  SizedBox(height: 20),
-                  Obx(() {
-                    final message = forgotPasswordController.message.value;
-                    if (message.isEmpty) return const SizedBox(height: 20);
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 12),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            message,
-                            style: const TextStyle(color: Colors.black),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              Get.toNamed("/password-reset");
-                            },
-                            child: Text("Clique aqui para mudar sua senha!"),
-                          ),
-                        ],
-                      ),
-                    );
-                  }),
+                  const SizedBox(height: 2),
+                  Text(
+                    "Recupere o acesso à sua conta",
+                    style: textTheme.bodySmall?.copyWith(
+                      color: Colors.white.withOpacity(0.8),
+                    ),
+                  ),
                 ],
+              ),
+            ),
+          ],
+        ),
+      ),
+
+
+      body: Stack(
+        children: [
+          // 1. Textura de fundo (Diagonal Lines)
+          Positioned.fill(
+            child: CustomPaint(
+              painter: _DiagonalLinesPainter(
+                color: Colors.black.withOpacity(0.04), // Textura sutil
+              ),
+            ),
+          ),
+
+
+          Center(
+            child: SingleChildScrollView(
+              child: Container(
+                constraints: const BoxConstraints(maxWidth: 500),
+                margin: const EdgeInsets.symmetric(horizontal: 24),
+                padding: const EdgeInsets.all(40),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.06),
+                      blurRadius: 20,
+                      offset: const Offset(0, 10),
+                    ),
+                  ],
+                  border: Border.all(color: Colors.grey.shade200, width: 1),
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+
+                    Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: _primaryColor.withOpacity(0.08),
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(
+                        Icons.lock_reset_rounded,
+                        size: 36,
+                        color: _primaryColor,
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+
+                    Text(
+                      "Esqueceu sua senha?",
+                      style: textTheme.headlineSmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      "Digite o seu e-mail cadastrado no sistema. Nós enviaremos um código para você recuperar o acesso.",
+                      style: textTheme.bodyMedium?.copyWith(
+                        color: Colors.grey.shade600,
+                        height: 1.4,
+                      ),
+                    ),
+                    const SizedBox(height: 32),
+
+                    CustomTextField(
+                      controller: _emailController,
+                      label: "E-mail",
+                      prefixIcon: const Icon(Icons.mail_outline),
+                    ),
+                    const SizedBox(height: 24),
+
+                    // Botão Enviar
+                    Obx(
+                          () => SizedBox(
+                        width: double.infinity,
+                        height: 52,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: _primaryColor,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                          onPressed: forgotPasswordController.loading.value
+                              ? null
+                              : () {
+                            forgotPasswordController.forgotPassword(
+                              _emailController.text,
+                            );
+                            _emailController.clear();
+                          },
+                          child: forgotPasswordController.loading.value
+                              ? const SizedBox(
+                            width: 24,
+                            height: 24,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: Colors.white, // Melhor contraste com o botão azul
+                            ),
+                          )
+                              : const Text(
+                            "Enviar Código",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    // Mensagem de retorno dinâmico
+                    Obx(() {
+                      final message = forgotPasswordController.message.value;
+                      if (message.isEmpty) return const SizedBox.shrink();
+
+                      return Padding(
+                        padding: const EdgeInsets.only(top: 24),
+                        child: Container(
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: Colors.green.shade50,
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: Colors.green.shade200),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              Row(
+                                children: [
+                                  Icon(Icons.check_circle_outline, color: Colors.green.shade700, size: 20),
+                                  const SizedBox(width: 8),
+                                  Expanded(
+                                    child: Text(
+                                      message,
+                                      style: TextStyle(
+                                        color: Colors.green.shade800,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 12),
+                              SizedBox(
+                                width: double.infinity,
+                                child: ElevatedButton.icon(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: _primaryColor,
+                                    foregroundColor: Colors.white,
+                                    elevation: 0,
+                                    padding: const EdgeInsets.symmetric(vertical: 14),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    Get.toNamed("/password-reset");
+                                  },
+                                  icon: const Icon(Icons.password_rounded, size: 20),
+                                  label: const Text(
+                                    "Clique aqui para criar nova senha",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 15,
+                                      letterSpacing: 0.5,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    }),
+                  ],
+                ),
               ),
             ),
           ),
@@ -153,4 +271,28 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
       ),
     );
   }
+}
+
+class _DiagonalLinesPainter extends CustomPainter {
+  final Color color;
+
+  _DiagonalLinesPainter({required this.color});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = color
+      ..strokeWidth = 1;
+    const spacing = 80.0;
+    for (double i = -size.height; i < size.width; i += spacing) {
+      canvas.drawLine(
+        Offset(i, 0),
+        Offset(i + size.height, size.height),
+        paint,
+      );
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

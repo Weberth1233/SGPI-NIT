@@ -6,9 +6,11 @@
   <component name="ChangeListManager">
     <list default="true" id="f8257618-1329-4d8d-a065-e148448811e8" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/softwarehub_frontend/lib/presentation/pages/ip_types/ip_types_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/softwarehub_frontend/lib/presentation/pages/ip_types/ip_types_page.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/softwarehub_frontend/lib/presentation/pages/process/process_external_author_form_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/softwarehub_frontend/lib/presentation/pages/process/process_external_author_form_page.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/softwarehub_frontend/lib/presentation/pages/process/process_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/softwarehub_frontend/lib/presentation/pages/process/process_page.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/softwarehub_frontend/lib/presentation/pages/auth/password_reset/forgot_password_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/softwarehub_frontend/lib/presentation/pages/auth/password_reset/forgot_password_page.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/softwarehub_frontend/lib/presentation/pages/auth/password_reset/password_reset_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/softwarehub_frontend/lib/presentation/pages/auth/password_reset/password_reset_page.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/softwarehub_frontend/lib/presentation/pages/auth/register/register_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/softwarehub_frontend/lib/presentation/pages/auth/register/register_page.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/softwarehub_frontend/lib/presentation/pages/home/home_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/softwarehub_frontend/lib/presentation/pages/home/home_page.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/softwarehub_frontend/lib/presentation/pages/process/process_external_author_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/softwarehub_frontend/lib/presentation/pages/process/process_external_author_page.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -116,7 +118,7 @@
       <workItem from="1775594315730" duration="332000" />
       <workItem from="1775594755967" duration="1551000" />
       <workItem from="1775752679333" duration="13347000" />
-      <workItem from="1775843164536" duration="4776000" />
+      <workItem from="1775843164536" duration="9942000" />
     </task>
     <servers />
   </component>
@@ -128,13 +130,18 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="Dart">
           <url>file://$PROJECT_DIR$/softwarehub_frontend/lib/presentation/pages/home/home_page.dart</url>
-          <line>22</line>
+          <line>21</line>
           <option name="timeStamp" value="8" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="Dart">
           <url>file://$PROJECT_DIR$/softwarehub_frontend/lib/presentation/pages/home/home_page.dart</url>
-          <line>236</line>
+          <line>235</line>
           <option name="timeStamp" value="9" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="Dart">
+          <url>file://$PROJECT_DIR$/softwarehub_frontend/lib/presentation/pages/process/process_external_author_page.dart</url>
+          <line>143</line>
+          <option name="timeStamp" value="12" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

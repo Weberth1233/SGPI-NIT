@@ -1,7 +1,6 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/gestures.dart'; // Importação adicionada para os eventos do mouse
+import 'package:flutter/gestures.dart';
 import 'package:get/get.dart';
 import 'package:nit_sgpi_frontend/presentation/pages/home/widgets/process%20card.dart';
 import 'package:nit_sgpi_frontend/presentation/shared/theme/theme_color.dart';

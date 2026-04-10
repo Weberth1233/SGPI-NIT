@@ -141,7 +141,7 @@ class _ProcessExternalAuthorPageState extends State<ProcessExternalAuthorPage> {
                 child: Container(
                   padding: const EdgeInsets.all(24),
                   decoration: BoxDecoration(
-                    color: colors.onSecondary,
+                    color: Colors.white,
                     borderRadius: BorderRadius.circular(16),
                     boxShadow: [
                       BoxShadow(
