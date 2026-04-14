@@ -1,6 +1,5 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:flutter/gestures.dart';
 import 'package:get/get.dart';
 import 'package:nit_sgpi_frontend/presentation/pages/home/widgets/process%20card.dart';
 import 'package:nit_sgpi_frontend/presentation/shared/theme/theme_color.dart';
@@ -9,6 +8,7 @@ import 'package:nit_sgpi_frontend/infra/datasources/auth_local_datasource.dart';
 import 'controllers/home_controller.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'dart:math' as math;
+import 'package:nit_sgpi_frontend/presentation/shared/widgets/shared_background.dart';
 
 class HomePage extends StatelessWidget {
   HomePage({super.key});
@@ -663,117 +663,5 @@ class _FilterHeaderState extends State<FilterHeader> {
       textInputAction: TextInputAction.search,
       onFieldSubmitted: (value) => processController.searchByTitle(value),
     );
-  }
-}
-
-
-class UnifiedBackgroundPainter extends CustomPainter {
-  final Color color;
-  final IconData icon;
-
-  UnifiedBackgroundPainter({
-    required this.color,
-    required this.icon,
-  });
-
-  // Função geradora de dispersão (pseudo-aleatória).
-  // Garante que o padrão pareça caótico, mas não fique tremendo ou mudando de lugar na tela.
-  double _randomNoise(int x, int y) {
-    double noise = math.sin(x * 12.9898 + y * 78.233) * 43758.5453;
-    return noise - noise.floor();
-  }
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    // 1. Configuração do Pincel das Linhas
-    final linePaint = Paint()
-      ..color = color.withOpacity(0.05)
-      ..strokeWidth = 1;
-
-    // 2. Configuração do Pincel dos Foguetes (Texto/Ícone)
-    final textPainter = TextPainter(textDirection: TextDirection.ltr);
-    textPainter.text = TextSpan(
-      text: String.fromCharCode(icon.codePoint),
-      style: TextStyle(
-        fontSize: 45.0, // Tamanho ideal que definimos
-        fontFamily: icon.fontFamily,
-        package: icon.fontPackage,
-        color: color.withOpacity(0.05), // Opacidade de marca d'água
-      ),
-    );
-    textPainter.layout();
-
-
-    const double spacing = 129.700;
-    const double rocketGap = 160.0;
-    const double angle = -math.pi / 2;
-
-    // === CONTROLES DE DISPERSÃO VETORIAL ===
-    // Limite máximo que o ícone pode "sambar" para os lados sem encostar na linha
-    const double maxJitterLateral = 12.0;
-
-
-    const double maxJitterLinha = 150.0;
-
-    int corridorIndex = 0;
-
-    // Loop das Linhas (Corredores)
-    for (double i = -size.height; i < size.width + spacing; i += spacing) {
-      corridorIndex++;
-
-      // Desenha a linha diagonal na tela
-      canvas.drawLine(
-        Offset(i, 0),
-        Offset(i + size.height, size.height),
-        linePaint,
-      );
-
-      final double midX = i + spacing / 2;
-      int iconIndex = 0;
-
-      // Loop dos Ícones dentro daquele corredor
-      for (double t = 0.0; t < size.width + size.height; t += rocketGap) {
-        iconIndex++;
-
-        // A. Geramos ruídos matemáticos (valores entre 0.0 e 1.0) para as duas direções
-        double randomLateral = _randomNoise(corridorIndex, iconIndex);
-        double randomLinha = _randomNoise(corridorIndex + 10, iconIndex + 10);
-
-        // B. Convertemos o ruído para o nosso deslocamento (ex: de -12.0 até +12.0)
-        double deslocamentoLateral = (randomLateral * 2 - 1) * maxJitterLateral;
-        double deslocamentoLinha = (randomLinha * 2 - 1) * maxJitterLinha;
-
-        // C. O "Pulo do Gato": Aplicamos o vetor para seguir a inclinação da diagonal
-        // Ao somar nos dois eixos, ele anda na linha. Ao subtrair em um, ele anda para o lado.
-        double jitterX = deslocamentoLinha + deslocamentoLateral;
-        double jitterY = deslocamentoLinha - deslocamentoLateral;
-
-        // D. Calculamos a posição final (Posição Base + Deslocamento)
-        final double px = midX + t + jitterX;
-        final double py = t + jitterY;
-
-        // E. Otimização: Pula o desenho se o foguete caiu fora dos limites da tela
-        if (px < -80 || px > size.width + 80) continue;
-        if (py < -80 || py > size.height + 80) continue;
-
-        // F. Desenha o foguete
-        canvas.save();
-        canvas.translate(px, py);
-        canvas.rotate(angle);
-
-        textPainter.paint(
-          canvas,
-          Offset(-textPainter.width / 2, -textPainter.height / 2),
-        );
-
-        canvas.restore();
-      }
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant UnifiedBackgroundPainter oldDelegate) {
-    // Só redesenha se a cor ou o ícone mudarem
-    return oldDelegate.color != color || oldDelegate.icon != icon;
   }
 }
