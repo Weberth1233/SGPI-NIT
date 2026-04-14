@@ -5,8 +5,8 @@ import 'package:nit_sgpi_frontend/presentation/pages/process/controllers/process
 import 'dart:math' as math;
 import '../../shared/utils/responsive.dart';
 import '../../shared/widgets/custom_text_field.dart';
-import 'package:nit_sgpi_frontend/presentation/pages/home/home_page.dart';
 import 'widgets/search_field_high_light.dart';
+import 'package:nit_sgpi_frontend/presentation/shared/widgets/shared_background.dart';
 
 class ProcessExternalAuthorPage extends StatefulWidget {
   final bool isEditMode;

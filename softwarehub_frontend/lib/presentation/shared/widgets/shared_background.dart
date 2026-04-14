@@ -18,7 +18,7 @@ class SharedBackground extends StatelessWidget {
         Positioned.fill(
           child: CustomPaint(
             painter: UnifiedBackgroundPainter(
-              color: theme.colorScheme.primary.withOpacity(0.08),
+              color: theme.colorScheme.primary.withOpacity(0.05),
               icon: Icons.rocket_launch_outlined,
             ),
           ),
@@ -31,7 +31,6 @@ class SharedBackground extends StatelessWidget {
   }
 }
 
-// 2. O PINTOR QUE VOCÊ RECORTOU DA HOME E TROUXE PARA CÁ
 class UnifiedBackgroundPainter extends CustomPainter {
   final Color color;
   final IconData icon;
@@ -61,7 +60,7 @@ class UnifiedBackgroundPainter extends CustomPainter {
         fontSize: iconSize,
         fontFamily: icon.fontFamily,
         package: icon.fontPackage,
-        color: color.withOpacity(0.08),
+        color: color.withOpacity(0.05),
       ),
     );
     textPainter.layout();
