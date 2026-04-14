@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nit_sgpi_frontend/domain/entities/external_author/external_author_entity.dart';
 import 'package:nit_sgpi_frontend/presentation/pages/process/controllers/process_external_author_controller.dart';
-
+import 'dart:math' as math;
 import '../../shared/utils/responsive.dart';
 import '../../shared/widgets/custom_text_field.dart';
-import '../home/home_page.dart';
+import 'package:nit_sgpi_frontend/presentation/pages/home/home_page.dart';
 import 'widgets/search_field_high_light.dart';
 
 class ProcessExternalAuthorPage extends StatefulWidget {
@@ -123,8 +123,9 @@ class _ProcessExternalAuthorPageState extends State<ProcessExternalAuthorPage> {
         children: [
           Positioned.fill(
             child: CustomPaint(
-              painter: DiagonalLinesPainter(
+              painter: UnifiedBackgroundPainter( // Trocamos o nome do Pintor
                 color: theme.colorScheme.primary.withOpacity(0.08),
+                icon: Icons.rocket_launch_outlined, // Adicionamos o ícone exigido
               ),
             ),
           ),
