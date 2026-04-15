@@ -18,24 +18,33 @@ class AuthRemoteDataSource implements IAuthRemoteDataSource {
 
   @override
   Future<AuthUserEntity> login(String email, String password) async {
-    final response = await client.post(
-      Uri.parse('${BaseUrl.urlWithHttp}/auth/login'),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({"email": email, "password": password}),
-    );
-
-    print('STATUS: ${response.statusCode}');
-    print('BODY: ${response.body}');
-
-    if (response.statusCode == 200) {
-      final json = jsonDecode(response.body);
-      AuthUserEntity userEntity = AuthUserEntity(
-        token: json['token'],
-        role: json['role'],
+    try {
+      final response = await client.post(
+        Uri.parse('${BaseUrl.urlWithHttp}/auth/login'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({"email": email, "password": password}),
       );
-      return userEntity;
-    } else {
-      throw Exception('Erro ao fazer login: ${response.body}');
+
+      print('STATUS: ${response.statusCode}');
+      print('BODY: ${response.body}');
+
+      if (response.statusCode == 200) {
+        final json = jsonDecode(response.body);
+        AuthUserEntity userEntity = AuthUserEntity(
+          token: json['token'],
+          role: json['role'],
+        );
+        return userEntity;
+      } else{
+       throw ServerException(
+           'Detalhes: ${response.body}',
+        );
+      }
+    } on ServerException {
+      rethrow; // 👈 mantém a exception original
+    } catch (e) {
+      print(e);
+      throw NetworkException('Erro de conexão com o servidor!$e');
     }
   }
 
@@ -62,16 +71,15 @@ class AuthRemoteDataSource implements IAuthRemoteDataSource {
       }
     } on ServerException {
       rethrow; // 👈 mantém a exception original
-    }
-    catch (e) {
+    } catch (e) {
       print(e);
       throw NetworkException('Erro de conexão com o servidor!$e');
     }
   }
-  
+
   @override
-  Future<String> passwordReset(String token, String newPassword) async{
-     try {
+  Future<String> passwordReset(String token, String newPassword) async {
+    try {
       final response = await client.post(
         Uri.parse('${BaseUrl.urlWithHttp}/api/auth/reset-password'),
         headers: {'Content-Type': 'application/json'},
@@ -92,8 +100,7 @@ class AuthRemoteDataSource implements IAuthRemoteDataSource {
       }
     } on ServerException {
       rethrow; // 👈 mantém a exception original
-    }
-    catch (e) {
+    } catch (e) {
       print(e);
       throw NetworkException('Erro de conexão com o servidor!$e');
     }

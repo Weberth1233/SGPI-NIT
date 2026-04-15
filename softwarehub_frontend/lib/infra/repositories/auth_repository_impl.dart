@@ -14,8 +14,20 @@ class AuthRepositoryImpl implements AuthRepository {
   AuthRepositoryImpl(this.remote, this.local);
 
   @override
-  Future<AuthUserEntity> login(String email, String password) {
-    return remote.login(email, password);
+  Future<Either<Failure, AuthUserEntity>> login(
+    String email,
+    String password,
+  ) async {
+    try {
+      final result = await remote.login(email, password);
+      return Right(result);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(e.message));
+    } on NetworkException catch (e) {
+      return Left(NetworkFailure(e.message));
+    } catch (e) {
+      return Left(ServerFailure("Erro inesperado!"));
+    }
   }
 
   @override
@@ -32,19 +44,19 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<void> logout() {
     return local.clear();
   }
-  
+
   @override
   Future<String?> getRole() {
     return local.getRole();
   }
-  
+
   @override
   Future<void> saveRole(String role) {
     return local.saveRole(role);
   }
 
   @override
-  Future<Either<Failure, String>> forgotPassword(String email) async{
+  Future<Either<Failure, String>> forgotPassword(String email) async {
     try {
       final result = await remote.forgotPassword(email);
       return Right(result);
@@ -56,10 +68,13 @@ class AuthRepositoryImpl implements AuthRepository {
       return Left(ServerFailure("Erro inesperado!"));
     }
   }
-  
+
   @override
-  Future<Either<Failure, String>> passwordReset(String token, String newPassword)async {
-     try {
+  Future<Either<Failure, String>> passwordReset(
+    String token,
+    String newPassword,
+  ) async {
+    try {
       final result = await remote.passwordReset(token, newPassword);
       return Right(result);
     } on ServerException catch (e) {

@@ -15,8 +15,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -45,15 +47,23 @@ public class AuthenticationController implements GenericController{
     @Operation(summary = "Logar", description = "login passando o email e senha")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Login realizada com sucesso!"),
-
+            @ApiResponse(responseCode = "401", description = "Credenciais inválidas!")
     })
-    public ResponseEntity login(@RequestBody @Valid AuthenticationDTO data){
-        var userNamePassword = new UsernamePasswordAuthenticationToken(data.email(), data.password());
-        var auth = this.authenticationManager.authenticate(userNamePassword);
+    public ResponseEntity<?> login(@RequestBody @Valid AuthenticationDTO data) {
+        try {
+            var userNamePassword = new UsernamePasswordAuthenticationToken(data.email(), data.password());
+            var auth = this.authenticationManager.authenticate(userNamePassword);
 
-        var token = tokenService.generateToken((User) auth.getPrincipal());
-        System.out.println(((User) auth.getPrincipal()).getRole());
-        return ResponseEntity.ok(new LoginResponseDTO(token, ((User) auth.getPrincipal()).getRole()));
+            var token = tokenService.generateToken((User) auth.getPrincipal());
+            System.out.println(((User) auth.getPrincipal()).getRole());
+            return ResponseEntity.ok(new LoginResponseDTO(token, ((User) auth.getPrincipal()).getRole()));
+        } catch (BadCredentialsException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("Credenciais inválidas!");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Ocorreu um erro durante a autenticação.");
+        }
     }
 
     @PostMapping("/register")
