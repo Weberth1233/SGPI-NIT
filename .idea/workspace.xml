@@ -4,14 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f8257618-1329-4d8d-a065-e148448811e8" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/softwarehub_frontend/lib/presentation/pages/auth/password_reset/forgot_password_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/softwarehub_frontend/lib/presentation/pages/auth/password_reset/forgot_password_page.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/softwarehub_frontend/lib/presentation/pages/auth/password_reset/password_reset_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/softwarehub_frontend/lib/presentation/pages/auth/password_reset/password_reset_page.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/softwarehub_frontend/lib/presentation/pages/auth/register/register_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/softwarehub_frontend/lib/presentation/pages/auth/register/register_page.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/softwarehub_frontend/lib/presentation/pages/home/home_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/softwarehub_frontend/lib/presentation/pages/home/home_page.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/softwarehub_frontend/lib/presentation/pages/process/process_external_author_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/softwarehub_frontend/lib/presentation/pages/process/process_external_author_page.dart" afterDir="false" />
-    </list>
+    <list default="true" id="f8257618-1329-4d8d-a065-e148448811e8" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -53,28 +46,28 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Flutter.main.dart.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "SHELLCHECK.PATH": "C:\\Users\\leticia.em\\AppData\\Roaming\\JetBrains\\IntelliJIdea2025.3\\plugins\\Shell Script\\shellcheck.exe",
-    "dart.analysis.tool.window.visible": "false",
-    "git-widget-placeholder": "develop",
-    "io.flutter.reload.alreadyRun": "true",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/weberth.ea/Documents/projetos-java/libraryapi",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "dart.settings",
-    "show.migrate.to.gradle.popup": "false",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Flutter.main.dart.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;SHELLCHECK.PATH&quot;: &quot;C:\\Users\\leticia.em\\AppData\\Roaming\\JetBrains\\IntelliJIdea2025.3\\plugins\\Shell Script\\shellcheck.exe&quot;,
+    &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;develop&quot;,
+    &quot;io.flutter.reload.alreadyRun&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/weberth.ea/Documents/projetos-java/libraryapi&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;dart.settings&quot;,
+    &quot;show.migrate.to.gradle.popup&quot;: &quot;false&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration name="main.dart" type="FlutterRunConfigurationType" factoryName="Flutter" temporary="true" nameIsGenerated="true">
       <option name="filePath" value="$PROJECT_DIR$/softwarehub_frontend/lib/main.dart" />
@@ -118,33 +111,13 @@
       <workItem from="1775594315730" duration="332000" />
       <workItem from="1775594755967" duration="1551000" />
       <workItem from="1775752679333" duration="13347000" />
-      <workItem from="1775843164536" duration="9942000" />
+      <workItem from="1775843164536" duration="10169000" />
+      <workItem from="1776184807454" duration="7078000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="Dart">
-          <url>file://$PROJECT_DIR$/softwarehub_frontend/lib/presentation/pages/home/home_page.dart</url>
-          <line>21</line>
-          <option name="timeStamp" value="8" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="Dart">
-          <url>file://$PROJECT_DIR$/softwarehub_frontend/lib/presentation/pages/home/home_page.dart</url>
-          <line>235</line>
-          <option name="timeStamp" value="9" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="Dart">
-          <url>file://$PROJECT_DIR$/softwarehub_frontend/lib/presentation/pages/process/process_external_author_page.dart</url>
-          <line>143</line>
-          <option name="timeStamp" value="12" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

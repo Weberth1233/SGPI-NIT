@@ -1,6 +1,5 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:flutter/gestures.dart';
 import 'package:get/get.dart';
 import 'package:nit_sgpi_frontend/presentation/pages/home/widgets/process%20card.dart';
 import 'package:nit_sgpi_frontend/presentation/shared/theme/theme_color.dart';
@@ -8,6 +7,8 @@ import 'package:nit_sgpi_frontend/presentation/shared/utils/responsive.dart';
 import 'package:nit_sgpi_frontend/infra/datasources/auth_local_datasource.dart';
 import 'controllers/home_controller.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'dart:math' as math;
+import 'package:nit_sgpi_frontend/presentation/shared/widgets/shared_background.dart';
 
 class HomePage extends StatelessWidget {
   HomePage({super.key});
@@ -203,10 +204,12 @@ class HomePage extends StatelessWidget {
 
       body: Stack(
         children: [
+
           Positioned.fill(
             child: CustomPaint(
-              painter: DiagonalLinesPainter(
+              painter: UnifiedBackgroundPainter(
                 color: theme.colorScheme.primary.withOpacity(0.08),
+                icon: Icons.rocket_launch_outlined,
               ),
             ),
           ),
@@ -661,28 +664,4 @@ class _FilterHeaderState extends State<FilterHeader> {
       onFieldSubmitted: (value) => processController.searchByTitle(value),
     );
   }
-}
-
-class DiagonalLinesPainter extends CustomPainter {
-  final Color color;
-
-  DiagonalLinesPainter({required this.color});
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = color
-      ..strokeWidth = 1;
-    const spacing = 80.0;
-    for (double i = -size.height; i < size.width; i += spacing) {
-      canvas.drawLine(
-        Offset(i, 0),
-        Offset(i + size.height, size.height),
-        paint,
-      );
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
