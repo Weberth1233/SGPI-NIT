@@ -1,8 +1,8 @@
 import 'package:nit_sgpi_frontend/domain/entities/external_author/external_author_entity.dart';
 import 'package:nit_sgpi_frontend/domain/entities/process/process_justification_entity.dart';
-import 'package:nit_sgpi_frontend/domain/entities/process/process_ip_type_entity.dart';
 
 import '../attachment_entity.dart';
+import '../ip_types/ip_type_entity.dart';
 import 'process_user_entity.dart';
 
 class ProcessResponseEntity {
@@ -12,7 +12,7 @@ class ProcessResponseEntity {
   final bool isFeatured;
   final DateTime createdAt;
   final Map<String, dynamic> formData;
-  final ProcessIpTypeEntity ipType;
+  final IpTypeEntity ipType;
   final List<ProcessUserEntity> authors;
   final List<AttachmentEntity> attachments;
   final List<ProcessJustificationEntity> justifications;

@@ -1,10 +1,10 @@
 import 'package:nit_sgpi_frontend/infra/models/base_model.dart';
 import 'package:nit_sgpi_frontend/infra/models/external_author/external_author_model.dart';
+import 'package:nit_sgpi_frontend/infra/models/ip_types/ip_types_model.dart';
 import 'package:nit_sgpi_frontend/infra/models/process/process_justification_model.dart';
 
 import '../../../domain/entities/process/process_response_entity.dart';
 import '../attachment_model.dart';
-import 'process_ip_type_model.dart';
 import 'process_user_model.dart';
 
 class ProcessResponseModel implements BaseModel{
@@ -15,7 +15,7 @@ class ProcessResponseModel implements BaseModel{
   final bool isFeatured;
   final DateTime createdAt;
   final Map<String, dynamic> formData;
-  final ProcessIpTypeModel ipType;
+  final IpTypeModel ipType;
   final List<ProcessUserModel> authors;
   final List<AttachmentModel> attachments;
   final List<ProcessJustificationModel> justifications;
@@ -45,7 +45,7 @@ class ProcessResponseModel implements BaseModel{
       isFeatured: json['isFeatured'],
       createdAt: DateTime.parse(json['createdAt']),
       formData: Map<String, dynamic>.from(json['formData'] ?? {}),
-      ipType: ProcessIpTypeModel.fromJson(json['ipType']),
+      ipType: IpTypeModel.fromJson(json['ipType']),
       authors: (json['authors'] as List)
           .map((e) => ProcessUserModel.fromJson(e))
           .toList(),
