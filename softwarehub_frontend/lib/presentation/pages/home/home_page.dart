@@ -204,7 +204,6 @@ class HomePage extends StatelessWidget {
 
       body: Stack(
         children: [
-
           Positioned.fill(
             child: CustomPaint(
               painter: UnifiedBackgroundPainter(
@@ -230,7 +229,7 @@ class HomePage extends StatelessWidget {
                           color: Colors.black.withOpacity(0.40),
                           blurRadius: 8,
                           offset: const Offset(0, 9),
-                        )
+                        ),
                       ],
                       border: Border.all(
                         color: Colors.grey.withOpacity(0.2),
@@ -301,7 +300,6 @@ class HomePage extends StatelessWidget {
                                 ],
                               ),
                             ),
-
                           ],
                         ),
 
@@ -415,7 +413,6 @@ class HomePage extends StatelessWidget {
                               ),
                             );
                           }
-
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
@@ -431,41 +428,87 @@ class HomePage extends StatelessWidget {
                               ),
                               const SizedBox(height: 20),
                               Obx(() {
-                                final isLoadingMore =
-                                    processController.isLoadingMore.value;
+                                final current =
+                                    processController.currentPage.value;
+                                final total =
+                                    processController.totalPages.value;
 
-                                return ElevatedButton(
-                                  onPressed: isLoadingMore
-                                      ? null
-                                      : () => processController.fetchProcesses(
-                                          loadMore: true,
-                                        ),
-                                  style: ElevatedButton.styleFrom(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 24,
-                                      vertical: 12,
+                                if (total <= 1) return const SizedBox();
+
+                                return Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    ElevatedButton(
+                                      onPressed: current > 0
+                                          ? processController.previousPage
+                                          : null,
+                                      child:  Text("Anterior", style: theme.textTheme.bodyMedium
+                                          ?.copyWith(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                          ),),
                                     ),
-                                  ),
-                                  child: isLoadingMore
-                                      ? const SizedBox(
-                                          height: 20,
-                                          width: 20,
-                                          child: CircularProgressIndicator(
-                                            strokeWidth: 2,
+
+                                    const SizedBox(width: 16),
+
+                                    Text(
+                                      "Página ${current + 1} de $total",
+                                      style: theme.textTheme.bodyMedium
+                                          ?.copyWith(
+                                            fontWeight: FontWeight.bold,
                                           ),
-                                        )
-                                      : Text(
-                                          "Ver mais",
-                                          style: theme.textTheme.bodyMedium
-                                              ?.copyWith(
-                                                color: theme
-                                                    .colorScheme
-                                                    .onSecondary,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                        ),
+                                    ),
+
+                                    const SizedBox(width: 16),
+
+                                    ElevatedButton(
+                                      onPressed: current < total - 1
+                                          ? processController.nextPage
+                                          : null,
+                                      child:  Text("Próxima", style: theme.textTheme.bodyMedium
+                                          ?.copyWith(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,)),
+                                    ),
+                                  ],
                                 );
                               }),
+                              // Obx(() {
+                              //   final isLoadingMore =
+                              //       processController.isLoadingMore.value;
+
+                              //   return ElevatedButton(
+                              //     onPressed: isLoadingMore
+                              //         ? null
+                              //         : () => processController.fetchProcesses(
+                              //             loadMore: true,
+                              //           ),
+                              //     style: ElevatedButton.styleFrom(
+                              //       padding: const EdgeInsets.symmetric(
+                              //         horizontal: 24,
+                              //         vertical: 12,
+                              //       ),
+                              //     ),
+                              //     child: isLoadingMore
+                              //         ? const SizedBox(
+                              //             height: 20,
+                              //             width: 20,
+                              //             child: CircularProgressIndicator(
+                              //               strokeWidth: 2,
+                              //             ),
+                              //           )
+                              //         : Text(
+                              //             "Ver mais",
+                              //             style: theme.textTheme.bodyMedium
+                              //                 ?.copyWith(
+                              //                   color: theme
+                              //                       .colorScheme
+                              //                       .onSecondary,
+                              //                   fontWeight: FontWeight.bold,
+                              //                 ),
+                              //           ),
+                              //   );
+                              // }),
                             ],
                           );
                         }),

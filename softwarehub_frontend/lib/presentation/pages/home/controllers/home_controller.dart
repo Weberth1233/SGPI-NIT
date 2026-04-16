@@ -5,7 +5,6 @@ import 'package:nit_sgpi_frontend/domain/usecases/get_process_status_count.dart'
 import '../../../../domain/core/errors/failures.dart';
 import '../../../../domain/entities/process/process_response_entity.dart';
 import '../../../../domain/usecases/get_process.dart';
-
 class ProcessController extends GetxController {
   final GetProcesses _getProcesses;
   final GetProcessStatusCount _getProcessStatusCount;
@@ -20,21 +19,21 @@ class ProcessController extends GetxController {
   // ===================== STATES =====================
 
   final RxBool isLoadingList = false.obs;
-  final RxBool isLoadingMore = false.obs;
   final RxBool isDeleting = false.obs;
   final RxBool isLoadingProcessCount = false.obs;
 
   final RxString errorMessage = ''.obs;
 
   final RxList<ProcessResponseEntity> processes = <ProcessResponseEntity>[].obs;
-
   final RxList<ProcessStatusCountEntity> processesStatus =
       <ProcessStatusCountEntity>[].obs;
 
   final RxString title = ''.obs;
   final RxString status = ''.obs;
 
-  final RxInt page = 0.obs;
+  final RxInt currentPage = 0.obs;
+  final RxInt totalPages = 0.obs;
+
   final int size = 10;
 
   // ===================== INIT =====================
@@ -48,50 +47,61 @@ class ProcessController extends GetxController {
 
   // ===================== FETCH =====================
 
-  Future<void> fetchProcesses({bool loadMore = false}) async {
-    if (loadMore) {
-      if (isLoadingMore.value) return;
-      isLoadingMore.value = true;
-      page.value++;
-    } else {
-      if (isLoadingList.value) return;
-      isLoadingList.value = true;
-      page.value = 0;
-      processes.clear();
-    }
+  Future<void> fetchProcesses({int page = 0}) async {
+    if (isLoadingList.value) return;
+
+    isLoadingList.value = true;
 
     final result = await _getProcesses(
       title: title.value,
       statusGenero: status.value,
-      page: page.value,
+      page: page,
       size: size,
     );
 
     result.fold(
       (Failure failure) {
         errorMessage.value = failure.message;
-        if (loadMore) page.value--;
       },
       (pagedResult) {
-        processes.addAll(pagedResult.content);
+        processes.assignAll(pagedResult.content);
+
+        currentPage.value = pagedResult.number;
+        totalPages.value = pagedResult.totalPages;
       },
     );
 
-    if (loadMore) {
-      isLoadingMore.value = false;
-    } else {
-      isLoadingList.value = false;
+    isLoadingList.value = false;
+  }
+
+  // ===================== PAGINAÇÃO =====================
+
+  void nextPage() {
+    if (currentPage.value < totalPages.value - 1) {
+      fetchProcesses(page: currentPage.value + 1);
     }
   }
 
+  void previousPage() {
+    if (currentPage.value > 0) {
+      fetchProcesses(page: currentPage.value - 1);
+    }
+  }
+
+  void goToPage(int page) {
+    fetchProcesses(page: page);
+  }
+
+  // ===================== FILTROS =====================
+
   void searchByTitle(String value) {
     title.value = value;
-    fetchProcesses();
+    fetchProcesses(page: 0);
   }
 
   void filterByStatus(String newStatus) {
     status.value = newStatus;
-    fetchProcesses();
+    fetchProcesses(page: 0);
   }
 
   // ===================== STATUS COUNT =====================
@@ -115,6 +125,8 @@ class ProcessController extends GetxController {
     isLoadingProcessCount.value = false;
   }
 
+  // ===================== DELETE =====================
+
   Future<void> deleteProcessById(int id) async {
     if (isDeleting.value) return;
 
@@ -127,9 +139,7 @@ class ProcessController extends GetxController {
         Get.snackbar("Erro", failure.message);
       },
       (message) async {
-        page.value = 0;
-        processes.clear();
-        await fetchProcesses(loadMore: false);
+        await fetchProcesses(page: 0);
         await processStatusCount();
         Get.snackbar("Sucesso", message);
       },
