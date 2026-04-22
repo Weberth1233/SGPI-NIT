@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nit_sgpi_frontend/presentation/pages/home/widgets/process%20card.dart';
@@ -7,7 +6,6 @@ import 'package:nit_sgpi_frontend/presentation/shared/utils/responsive.dart';
 import 'package:nit_sgpi_frontend/infra/datasources/auth_local_datasource.dart';
 import 'controllers/home_controller.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'dart:math' as math;
 import 'package:nit_sgpi_frontend/presentation/shared/widgets/shared_background.dart';
 
 class HomePage extends StatelessWidget {

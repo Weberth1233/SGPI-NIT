@@ -1,12 +1,11 @@
 import 'dart:convert';
-
 import 'package:nit_sgpi_frontend/domain/entities/paged_result_entity.dart';
 import 'package:nit_sgpi_frontend/domain/entities/user/user_entity.dart';
 import 'package:nit_sgpi_frontend/infra/models/user/user_model.dart';
 import '../../domain/core/errors/exceptions.dart';
 import '../core/network/api_client.dart';
 import '../core/network/base_url.dart';
-import '../models/user/peged_user_result_model.dart';
+import '../models/paged_result_model.dart';
 
 abstract class IUserRemoteDataSource {
   Future<PagedResultEntity<UserEntity>> getUsers({
@@ -50,7 +49,12 @@ class UserRemoteDatasourcesImpl implements IUserRemoteDataSource {
 
       if (response.statusCode == 200) {
         final jsonMap = json.decode(response.body);
-        return PagedUserResultModel.fromJson(jsonMap).toEntity();
+        final pagedModel = PagedResultModel<UserModel>.fromJson(
+          jsonMap,
+          (e) => UserModel.fromJson(e),
+        );
+        final pagedEntity = pagedModel.toEntity((model) => model.toEntity());
+        return pagedEntity;
       } else {
         throw ServerException(
           'Erro ${response.statusCode} ao buscar usuarios! - Detalhes: ${response.body}',

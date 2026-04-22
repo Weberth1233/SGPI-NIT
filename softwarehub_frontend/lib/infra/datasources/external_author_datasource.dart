@@ -1,12 +1,11 @@
 import 'dart:convert';
 import 'package:nit_sgpi_frontend/infra/models/external_author/external_author_model.dart';
-
 import '../../domain/core/errors/exceptions.dart';
 import '../../domain/entities/external_author/external_author_entity.dart';
 import '../../domain/entities/paged_result_entity.dart';
 import '../core/network/api_client.dart';
 import '../core/network/base_url.dart';
-import '../models/external_author/paged_external_author_result_model.dart';
+import '../models/paged_result_model.dart';
 
 abstract class IExternalAuthorRemoteDataSource {
   Future<PagedResultEntity<ExternalAuthorEntity>> getExternalAuthors({
@@ -48,7 +47,13 @@ class ExternalAuthorDatasource implements IExternalAuthorRemoteDataSource{
 
       if (response.statusCode == 200) {
         final jsonMap = json.decode(response.body);
-        return PagedExternalAuthorResultModel.fromJson(jsonMap).toEntity();
+        final pagedModel = PagedResultModel<ExternalAuthorModel>.fromJson(
+          jsonMap,
+          (e) => ExternalAuthorModel.fromJson(e),
+        );
+        final pagedEntity = pagedModel.toEntity((model) => model.toEntity());
+
+        return pagedEntity;
       } else {
         throw ServerException(
           'Erro ${response.statusCode} ao buscar usuarios! - Detalhes: ${response.body}',

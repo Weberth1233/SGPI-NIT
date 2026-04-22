@@ -9,7 +9,7 @@ import 'package:nit_sgpi_frontend/infra/models/process/proces_status_count_model
 import 'package:nit_sgpi_frontend/infra/models/process/process_request_model.dart';
 
 import '../../domain/core/errors/exceptions.dart';
-import '../models/process/paged_result_model.dart';
+import '../models/paged_result_model.dart';
 import '../models/process/process_response_model.dart';
 
 abstract class IProcessRemoteDataSource {
@@ -65,7 +65,13 @@ class ProcessRemoteDataSourceImpl implements IProcessRemoteDataSource {
 
       if (response.statusCode == 200) {
         final jsonMap = json.decode(response.body);
-        return PagedProcessResultModel.fromJson(jsonMap).toEntity();
+        final pagedModel = PagedResultModel<ProcessResponseModel>.fromJson(
+          jsonMap,
+          (e) => ProcessResponseModel.fromJson(e),
+        );
+        final pagedEntity = pagedModel.toEntity((model) => model.toEntity());
+        
+        return pagedEntity;
       } else {
         throw ServerException(
           'Erro ${response.statusCode} ao buscar processos! - Detalhes: ${response.body}',
@@ -73,7 +79,7 @@ class ProcessRemoteDataSourceImpl implements IProcessRemoteDataSource {
       }
     } on ServerException {
       rethrow; // 👈 mantém a exception original
-    }catch (e) {
+    } catch (e) {
       print(e);
       throw NetworkException('Erro de conexão com o servidor!');
     }
@@ -130,7 +136,7 @@ class ProcessRemoteDataSourceImpl implements IProcessRemoteDataSource {
           'Erro ${response.statusCode} erro no cadastro! - Detalhes: ${response.body}',
         );
       }
-    }on ServerException {
+    } on ServerException {
       rethrow; // 👈 mantém a exception original
     } catch (e) {
       print(e);
@@ -157,8 +163,7 @@ class ProcessRemoteDataSourceImpl implements IProcessRemoteDataSource {
       }
     } on ServerException {
       rethrow; // 👈 mantém a exception original
-    }
-    catch (e) {
+    } catch (e) {
       print(e);
       throw NetworkException('Erro de conexão com o servidor!');
     }
@@ -181,8 +186,7 @@ class ProcessRemoteDataSourceImpl implements IProcessRemoteDataSource {
       }
     } on ServerException {
       rethrow; // 👈 mantém a exception original
-    }
-    catch (e) {
+    } catch (e) {
       print(e);
       throw NetworkException("Erro de conexão com o servidor!");
     }
@@ -232,8 +236,7 @@ class ProcessRemoteDataSourceImpl implements IProcessRemoteDataSource {
       }
     } on ServerException {
       rethrow; // 👈 mantém a exception original
-    }
-    catch (e) {
+    } catch (e) {
       throw NetworkException('Erro de conexão com o servidor!');
     }
   }
