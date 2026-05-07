@@ -1,17 +1,20 @@
 import 'package:get/get.dart';
-import 'package:nit_sgpi_frontend/domain/entities/user/user_entity.dart';
-import 'package:nit_sgpi_frontend/domain/usecases/post_user.dart';
-
 import '../../../../../domain/core/errors/failures.dart';
+import '../../../../../domain/entities/address_api_entity.dart';
+import '../../../../../domain/entities/user/user_entity.dart';
+import '../../../../../domain/usecases/get_by_zipcode.dart';
+import '../../../../../domain/usecases/post_user.dart';
 import '../../../../../domain/usecases/put_user.dart';
 
 class RegisterController extends GetxController{
   final PostUser _postUser;
   final PutUser _putUser;
+  final GetByZipcode _getByZipcode;
 
-  RegisterController(this._postUser, this._putUser);
+  RegisterController(this._postUser, this._putUser,this._getByZipcode);
   RxBool isLoading = false.obs;
   RxString message = "".obs;
+  var addressApiEntity = Rxn<AddressApiEntity>();
 
   Future<void> post(UserEntity user) async {
     if (isLoading.value) return;
@@ -32,7 +35,6 @@ class RegisterController extends GetxController{
     isLoading.value = false;
   }
 
-
   Future<void> updateUserLogged(int idUser, UserEntity user) async {
     isLoading.value = true;
     message.value = "";
@@ -52,4 +54,27 @@ class RegisterController extends GetxController{
 
     isLoading.value = false;
   }
+
+   Future<AddressApiEntity?> getByZipCode(String cep) async {
+  try {
+    isLoading.value = true;
+
+    final result = await _getByZipcode(cep);
+
+    return result.fold(
+      (failure) {
+        Get.snackbar(
+          "Erro",
+          "Não foi possível buscar o CEP",
+        );
+        return null;
+      },
+      (address) {
+        return address;
+      },
+    );
+  } finally {
+    isLoading.value = false;
+  }
+}
 }

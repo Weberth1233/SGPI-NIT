@@ -246,11 +246,13 @@ class _RegisterPageState extends State<RegisterPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      widget.isEditMode ? "Edite seu perfil" : "Cadastro de usuários",
+                      widget.isEditMode
+                          ? "Edite seu perfil"
+                          : "Cadastro de usuários",
                       style: textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.w700,
                         color: Colors.white,
-                        fontSize: 23
+                        fontSize: 23,
                       ),
                     ),
                     const SizedBox(height: 2),
@@ -281,7 +283,6 @@ class _RegisterPageState extends State<RegisterPage> {
               ),
             ),
 
-
             Positioned.fill(
               child: SingleChildScrollView(
                 child: Container(
@@ -293,7 +294,6 @@ class _RegisterPageState extends State<RegisterPage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-
                           _cardSection(
                             context,
                             child: Column(
@@ -321,7 +321,9 @@ class _RegisterPageState extends State<RegisterPage> {
                                           v,
                                           message: "Informe o nome completo",
                                         ),
-                                        prefixIcon: const Icon(Icons.badge_outlined),
+                                        prefixIcon: const Icon(
+                                          Icons.badge_outlined,
+                                        ),
                                       ),
                                     ),
 
@@ -336,7 +338,9 @@ class _RegisterPageState extends State<RegisterPage> {
                                           v,
                                           message: "Informe o nome de usuário",
                                         ),
-                                        prefixIcon: const Icon(Icons.alternate_email),
+                                        prefixIcon: const Icon(
+                                          Icons.alternate_email,
+                                        ),
                                       ),
                                     ),
                                   ],
@@ -374,7 +378,9 @@ class _RegisterPageState extends State<RegisterPage> {
                                         label: "Profissão",
                                         size: 724,
                                         validator: Validators.required,
-                                        prefixIcon: const Icon(Icons.work_outline),
+                                        prefixIcon: const Icon(
+                                          Icons.work_outline,
+                                        ),
                                       ),
                                     ),
                                     const SizedBox(width: 10),
@@ -386,7 +392,9 @@ class _RegisterPageState extends State<RegisterPage> {
                                         hintText: "(dd) 0 0000 0000",
                                         keyboardType: TextInputType.phone,
                                         validator: Validators.phone,
-                                        prefixIcon: const Icon(Icons.phone_outlined),
+                                        prefixIcon: const Icon(
+                                          Icons.phone_outlined,
+                                        ),
                                       ),
                                     ),
                                   ],
@@ -399,9 +407,9 @@ class _RegisterPageState extends State<RegisterPage> {
                                   "Data de nascimento :",
                                   style: Theme.of(context).textTheme.bodyMedium
                                       ?.copyWith(
-                                    fontWeight: FontWeight.w600,
-                                    color: theme.colorScheme.tertiary,
-                                  ),
+                                        fontWeight: FontWeight.w600,
+                                        color: theme.colorScheme.tertiary,
+                                      ),
                                 ),
                                 Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -414,7 +422,8 @@ class _RegisterPageState extends State<RegisterPage> {
                                         hintText: "Dia",
                                         keyboardType: TextInputType.number,
                                         inputFormatters: [
-                                          FilteringTextInputFormatter.digitsOnly,
+                                          FilteringTextInputFormatter
+                                              .digitsOnly,
                                           LengthLimitingTextInputFormatter(2),
                                         ],
                                         validator: (v) {
@@ -439,7 +448,8 @@ class _RegisterPageState extends State<RegisterPage> {
                                         hintText: "Mês",
                                         keyboardType: TextInputType.number,
                                         inputFormatters: [
-                                          FilteringTextInputFormatter.digitsOnly,
+                                          FilteringTextInputFormatter
+                                              .digitsOnly,
                                           LengthLimitingTextInputFormatter(2),
                                         ],
                                         validator: (v) {
@@ -460,7 +470,8 @@ class _RegisterPageState extends State<RegisterPage> {
                                         hintText: "Ano",
                                         keyboardType: TextInputType.number,
                                         inputFormatters: [
-                                          FilteringTextInputFormatter.digitsOnly,
+                                          FilteringTextInputFormatter
+                                              .digitsOnly,
                                           LengthLimitingTextInputFormatter(4),
                                         ],
                                         validator: (v) {
@@ -498,7 +509,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                       v,
                                       6,
                                       message:
-                                      "Senha deve ter no mínimo 6 caracteres",
+                                          "Senha deve ter no mínimo 6 caracteres",
                                     );
                                   },
                                   prefixIcon: const Icon(Icons.lock_outline),
@@ -536,36 +547,54 @@ class _RegisterPageState extends State<RegisterPage> {
                                 const SizedBox(height: 14),
 
                                 Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    Expanded(
-                                      child: CustomTextField(
-                                        controller: cepController,
-                                        label: "CEP",
-                                        hintText: "00000-000",
-                                        size: 500,
-                                        keyboardType: TextInputType.number,
-                                        validator: Validators.cep,
-                                        prefixIcon: const Icon(
-                                          Icons.pin_drop_outlined,
-                                        ),
+                                    CustomTextField(
+                                      controller: cepController,
+                                      label: "CEP",
+                                      hintText: "00000-000",
+                                      size: 500,
+                                      keyboardType: TextInputType.number,
+                                      validator: Validators.cep,
+                                      prefixIcon: const Icon(
+                                        Icons.pin_drop_outlined,
                                       ),
                                     ),
+                                    SizedBox(width: 20),
 
-                                    const SizedBox(width: 10),
-                                    Expanded(
-                                      child: CustomTextField(
-                                        controller: streetController,
-                                        label: "Rua",
-                                        size: 500,
-                                        validator: Validators.required,
-                                        prefixIcon: const Icon(
-                                          Icons.signpost_outlined,
+                                    ElevatedButton(
+                                      onPressed: () async {
+                                        final address = await registerController
+                                            .getByZipCode(cepController.text);
+
+                                        if (address != null) {
+                                          streetController.text =
+                                              address.street;
+                                          neighborhoodController.text =
+                                              address.neighborhood;
+                                          cityController.text = address.city;
+                                          stateController.text = address.state;
+                                        }
+                                      },
+                                      child: Text(
+                                        "Buscar por CEP",
+                                        style: textTheme.bodySmall?.copyWith(
+                                          fontWeight: FontWeight.w700,
+                                          color: Colors.white,
                                         ),
                                       ),
                                     ),
                                   ],
                                 ),
-
+                                CustomTextField(
+                                  controller: streetController,
+                                  label: "Rua",
+                                  size: 500,
+                                  validator: Validators.required,
+                                  prefixIcon: const Icon(
+                                    Icons.signpost_outlined,
+                                  ),
+                                ),
                                 _gap(),
 
                                 Row(
@@ -633,7 +662,9 @@ class _RegisterPageState extends State<RegisterPage> {
                                         label: "Estado",
                                         size: 500,
                                         validator: Validators.required,
-                                        prefixIcon: const Icon(Icons.flag_outlined),
+                                        prefixIcon: const Icon(
+                                          Icons.flag_outlined,
+                                        ),
                                       ),
                                     ),
                                   ],
@@ -657,78 +688,87 @@ class _RegisterPageState extends State<RegisterPage> {
                                   shadowColor: Colors.black.withOpacity(0.2),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(12),
-                                    side: BorderSide(color: theme.colorScheme.primary.withOpacity(0.1)),
+                                    side: BorderSide(
+                                      color: theme.colorScheme.primary
+                                          .withOpacity(0.1),
+                                    ),
                                   ),
                                 ),
                                 icon: registerController.isLoading.value
                                     ? SizedBox(
-                                  width: 18,
-                                  height: 18,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                    color: theme.colorScheme.primary,
-                                  ),
-                                )
+                                        width: 18,
+                                        height: 18,
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 2,
+                                          color: theme.colorScheme.primary,
+                                        ),
+                                      )
                                     : const Icon(Icons.save_outlined),
                                 onPressed: registerController.isLoading.value
                                     ? null
                                     : () {
-                                  if (_formKey.currentState!.validate()) {
-                                    final userEntityToSave = UserEntity(
-                                      userName: userController.text,
-                                      email: emailController.text,
-                                      cpf: cpfController.text,
-                                      password: passwordController.text,
-                                      phoneNumber: phoneController.text,
-                                      birthDate:
-                                      "${birthYearController.text}-"
-                                          "${birthMonthController.text.padLeft(2, '0')}-"
-                                          "${birthDayController.text.padLeft(2, '0')}",
-                                      profession: professionController.text,
-                                      fullName: nameController.text,
-                                      role:
-                                      userControllerGet.user.value != null
-                                          ? userControllerGet.user.value!.role
-                                          : 'USER',
-                                      isEnabled: true,
-                                      address: AddressEntity(
-                                        zipCode: cepController.text,
-                                        street: streetController.text,
-                                        number: numberController.text,
-                                        complement: complementController.text,
-                                        neighborhood:
-                                        neighborhoodController.text,
-                                        city: cityController.text,
-                                        state: stateController.text,
-                                      ),
-                                    );
-                                    print(userEntityToSave.role);
-                                    if (widget.isEditMode) {
-                                      print(
-                                        userControllerGet.user.value!.id!,
-                                      );
-                                      // Chamar método de Update (certifique-se de que ele existe no seu RegisterController)
-                                      registerController.updateUserLogged(
-                                        userControllerGet.user.value!.id!,
-                                        userEntityToSave,
-                                      );
-                                    } else {
-                                      registerController.post(
-                                        userEntityToSave,
-                                      );
-                                      clearForm();
-                                    }
-                                  }
-                                },
+                                        if (_formKey.currentState!.validate()) {
+                                          final userEntityToSave = UserEntity(
+                                            userName: userController.text,
+                                            email: emailController.text,
+                                            cpf: cpfController.text,
+                                            password: passwordController.text,
+                                            phoneNumber: phoneController.text,
+                                            birthDate:
+                                                "${birthYearController.text}-"
+                                                "${birthMonthController.text.padLeft(2, '0')}-"
+                                                "${birthDayController.text.padLeft(2, '0')}",
+                                            profession:
+                                                professionController.text,
+                                            fullName: nameController.text,
+                                            role:
+                                                userControllerGet.user.value !=
+                                                    null
+                                                ? userControllerGet
+                                                      .user
+                                                      .value!
+                                                      .role
+                                                : 'USER',
+                                            isEnabled: true,
+                                            address: AddressEntity(
+                                              zipCode: cepController.text,
+                                              street: streetController.text,
+                                              number: numberController.text,
+                                              complement:
+                                                  complementController.text,
+                                              neighborhood:
+                                                  neighborhoodController.text,
+                                              city: cityController.text,
+                                              state: stateController.text,
+                                            ),
+                                          );
+                                          print(userEntityToSave.role);
+                                          if (widget.isEditMode) {
+                                            print(
+                                              userControllerGet.user.value!.id!,
+                                            );
+                                            // Chamar método de Update (certifique-se de que ele existe no seu RegisterController)
+                                            registerController.updateUserLogged(
+                                              userControllerGet.user.value!.id!,
+                                              userEntityToSave,
+                                            );
+                                          } else {
+                                            registerController.post(
+                                              userEntityToSave,
+                                            );
+                                            clearForm();
+                                          }
+                                        }
+                                      },
 
                                 label: Text(
                                   registerController.isLoading.value
                                       ? (widget.isEditMode
-                                      ? "Atualizando..."
-                                      : "Salvando...")
+                                            ? "Atualizando..."
+                                            : "Salvando...")
                                       : (widget.isEditMode
-                                      ? "Atualizar Perfil"
-                                      : "Salvar cadastro"),
+                                            ? "Atualizar Perfil"
+                                            : "Salvar cadastro"),
                                   style: theme.textTheme.bodyMedium?.copyWith(
                                     color: theme.colorScheme.primary,
                                     fontWeight: FontWeight.w700,
