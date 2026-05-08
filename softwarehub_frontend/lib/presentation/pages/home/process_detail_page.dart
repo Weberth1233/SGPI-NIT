@@ -123,7 +123,6 @@ class _ProcessDetailPageState extends State<ProcessDetailPage> {
               ),
             ),
 
-          
             LayoutBuilder(
               builder: (context, constraints) {
                 final isDesktop = constraints.maxWidth >= 900;
@@ -172,7 +171,7 @@ class _ProcessDetailPageState extends State<ProcessDetailPage> {
           ],
         );
       }),
-    );  
+    );
   }
 
   Widget _buildWideMasterDetail(
@@ -228,24 +227,22 @@ class _ProcessDetailPageState extends State<ProcessDetailPage> {
     ProcessResponseEntity entity,
     ProcessDetailController controller,
   ) {
-
-       // DIALOG DE CONFIRMAÇÃO
-  void _showDialog(BuildContext context, ProcessResponseEntity entity) {
-    Get.defaultDialog(
-      title: "Confirmar finalização do processo",
-      middleText:
-          "Tem certeza que deseja finalizar o processo \"${entity.title}\"?",
-      textConfirm: "Confirmar",
-      textCancel: "Cancelar",
-      confirmTextColor: Colors.white,
-      buttonColor: Colors.red,
-      onConfirm: () async {
-        Get.back(); // fecha o diálogo
-        await controller.uploadStatusProcess(entity.id, "FINALIZADO");
-      },
-    );
-  }
-
+    // DIALOG DE CONFIRMAÇÃO
+    void _showDialog(BuildContext context, ProcessResponseEntity entity) {
+      Get.defaultDialog(
+        title: "Confirmar finalização do processo",
+        middleText:
+            "Tem certeza que deseja finalizar o processo \"${entity.title}\"?",
+        textConfirm: "Confirmar",
+        textCancel: "Cancelar",
+        confirmTextColor: Colors.white,
+        buttonColor: Colors.red,
+        onConfirm: () async {
+          Get.back(); // fecha o diálogo
+          await controller.uploadStatusProcess(entity.id, "FINALIZADO");
+        },
+      );
+    }
 
     final theme = Theme.of(context);
     final colors = theme.colorScheme;
@@ -406,35 +403,27 @@ class _ProcessDetailPageState extends State<ProcessDetailPage> {
     );
   }
 
- 
-  
-  
   Widget _buildDesktopSideMenu(
     BuildContext context,
     ProcessResponseEntity entity,
     ProcessDetailController controller,
   ) {
-
-
-   // DIALOG DE CONFIRMAÇÃO
-  void _showDialog(BuildContext context, ProcessResponseEntity entity) {
-    Get.defaultDialog(
-      title: "Confirmar finalização do processo",
-      middleText:
-          "Tem certeza que deseja finalizar o processo \"${entity.title}\"?",
-      textConfirm: "Confirmar",
-      textCancel: "Cancelar",
-      confirmTextColor: Colors.white,
-      buttonColor: Colors.red,
-      onConfirm: () async {
-        Get.back(); // fecha o diálogo
-        await controller.uploadStatusProcess(entity.id, "FINALIZADO");
-      },
-    );
-  }
-
-
-
+    // DIALOG DE CONFIRMAÇÃO
+    void _showDialog(BuildContext context, ProcessResponseEntity entity) {
+      Get.defaultDialog(
+        title: "Confirmar finalização do processo",
+        middleText:
+            "Tem certeza que deseja finalizar o processo \"${entity.title}\"?",
+        textConfirm: "Confirmar",
+        textCancel: "Cancelar",
+        confirmTextColor: Colors.white,
+        buttonColor: Colors.red,
+        onConfirm: () async {
+          Get.back(); // fecha o diálogo
+          await controller.uploadStatusProcess(entity.id, "FINALIZADO");
+        },
+      );
+    }
 
     final theme = Theme.of(context);
     final colors = theme.colorScheme;
@@ -739,7 +728,8 @@ class _ProcessDetailPageState extends State<ProcessDetailPage> {
         break;
       case 4:
         title = "ANEXOS";
-        subtitle = "Arquivos relacionados ao processo. Clique no processo para enviá-lo assinado";
+        subtitle =
+            "Arquivos relacionados ao processo. Clique no processo para enviá-lo assinado";
         content = _buildAttachmentsList(context, entity);
         break;
       case 5:
@@ -790,13 +780,19 @@ class _ProcessDetailPageState extends State<ProcessDetailPage> {
           context,
           name: author.fullName,
           email: author.email,
+          birthDate: author.birthDate,
+          phoneNumber: author.phoneNumber,
+          profession: author.profession,
           trailingIcon: Icons.person_outline,
         );
       },
     );
   }
 
-  Widget _buildExternalMembersList(BuildContext context, ProcessResponseEntity entity) {
+  Widget _buildExternalMembersList(
+    BuildContext context,
+    ProcessResponseEntity entity,
+  ) {
     return ListView.separated(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
@@ -808,6 +804,9 @@ class _ProcessDetailPageState extends State<ProcessDetailPage> {
           context,
           name: author.fullName,
           email: author.email,
+          birthDate: "",
+          phoneNumber: "",
+          profession: "",
           trailingIcon: Icons.person_outline,
         );
       },
@@ -1142,57 +1141,120 @@ class _ProcessDetailPageState extends State<ProcessDetailPage> {
       context,
       name: entity.creator.fullName,
       email: entity.creator.email,
+      birthDate: entity.creator.birthDate,
+      phoneNumber: entity.creator.phoneNumber,
+      profession: entity.creator.profession,
       trailingIcon: Icons.star_border,
     );
+  }
+
+  String _formatPhone(String phone) {
+    final numbers = phone.replaceAll(RegExp(r'\D'), '');
+
+    if (numbers.length == 11) {
+      return '(${numbers.substring(0, 2)}) '
+          '${numbers.substring(2, 7)}-'
+          '${numbers.substring(7)}';
+    }
+
+    if (numbers.length == 10) {
+      return '(${numbers.substring(0, 2)}) '
+          '${numbers.substring(2, 6)}-'
+          '${numbers.substring(6)}';
+    }
+
+    return phone;
+  }
+
+  String _formatBirthDate(String date) {
+    try {
+      final parsedDate = DateTime.parse(date);
+
+      return '${parsedDate.day.toString().padLeft(2, '0')}/'
+          '${parsedDate.month.toString().padLeft(2, '0')}/'
+          '${parsedDate.year}';
+    } catch (_) {
+      return date;
+    }
   }
 
   Widget _buildPersonRowCard(
     BuildContext context, {
     required String name,
     required String email,
+    required String phoneNumber,
+    required String birthDate,
+    required String profession,
     required IconData trailingIcon,
   }) {
     final colors = Theme.of(context).colorScheme;
+
     return _buildSimpleCard(
       context,
-      child: Row(
-        children: [
-          CircleAvatar(
-            backgroundColor: colors.primary,
-            child: Text(
-              name.substring(0, 1).toUpperCase(),
-              style: TextStyle(
-                color: colors.onSecondary,
-                fontWeight: FontWeight.w800,
-              ),
+      child: ExpansionTile(
+        tilePadding: EdgeInsets.zero,
+        childrenPadding: const EdgeInsets.only(left: 56, right: 12, bottom: 12),
+
+        leading: CircleAvatar(
+          backgroundColor: colors.primary,
+          child: Text(
+            name.substring(0, 1).toUpperCase(),
+            style: TextStyle(
+              color: colors.onSecondary,
+              fontWeight: FontWeight.w800,
             ),
           ),
-          const SizedBox(width: 12),
-          Expanded(
+        ),
+
+        title: Text(
+          name,
+          style: TextStyle(fontWeight: FontWeight.w800, color: colors.tertiary),
+        ),
+
+        trailing: Icon(trailingIcon, color: colors.secondary),
+
+        children: [
+          Align(
+            alignment: Alignment.centerLeft,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  name,
-                  style: TextStyle(
-                    fontWeight: FontWeight.w800,
-                    color: colors.tertiary,
-                  ),
-                ),
-                Text(
                   email,
-                  style: TextStyle(color: colors.secondary, fontSize: 12),
+                  textAlign: TextAlign.start,
+                  style: TextStyle(color: colors.secondary,),
+                ),
+
+                const SizedBox(height: 4),
+
+                Text(
+                  _formatPhone(phoneNumber),
+                  textAlign: TextAlign.start,
+                  style: TextStyle(color: colors.secondary, ),
+                ),
+
+                const SizedBox(height: 4),
+
+                Text(
+                  _formatBirthDate(birthDate),
+                  textAlign: TextAlign.start,
+                  style: TextStyle(color: colors.secondary,),
+                ),
+
+                const SizedBox(height: 4),
+
+                Text(
+                  profession,
+                  textAlign: TextAlign.start,
+                  style: TextStyle(color: colors.secondary,),
                 ),
               ],
             ),
           ),
-          Icon(trailingIcon, color: colors.secondary),
         ],
       ),
     );
   }
-
-  
 
   Widget _buildDynamicForm(BuildContext context, ProcessResponseEntity entity) {
     final fieldsStructure = entity.ipType.formStructure.fields;
@@ -1256,12 +1318,8 @@ class _ProcessDetailPageState extends State<ProcessDetailPage> {
         ],
       ),
     );
-    
   }
-  
-  
 }
- 
 
 class _StatusUi {
   final Color color;
