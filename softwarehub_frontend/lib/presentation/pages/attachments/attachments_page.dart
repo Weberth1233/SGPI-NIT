@@ -186,25 +186,54 @@ class _AttachmentsPageState extends State<AttachmentsPage> {
                 // Ações
                 Row(
                   children: [
-                    IconButton(
-                      tooltip: "Baixar Modelo",
-                      icon: const Icon(Icons.download_rounded, color: textColor),
+                    // IconButton(
+                    //   tooltip: "Baixar Modelo",
+                    //   icon: const Icon(Icons.download_rounded, color: textColor),
+                    //   onPressed: () {
+                    //     controller.open(entity.id);
+                    //      // Ação para baixar modelo
+                    //      // controller.downloadTemplate(entity.id);
+                    //   },
+                    // ),
+                    OutlinedButton.icon(
                       onPressed: () {
                         controller.open(entity.id);
-                         // Ação para baixar modelo
-                         // controller.downloadTemplate(entity.id);
                       },
+                      icon: Icon(Icons.download, color: textColor),
+                      label: Text("Baixar Modelo", style: const TextStyle(color: textColor)),
+                      style: OutlinedButton.styleFrom(
+                        side: const BorderSide(color: textColor), // Borda branca
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
                     ),
                     const SizedBox(width: 8),
-                     entity.status == "SIGNED" ? IconButton(
-                      tooltip: "Baixar Documento assinado",
-                      icon: const Icon(Icons.download_rounded, color: textColor),
+                     entity.status == "SIGNED" ? OutlinedButton.icon(
                       onPressed: () {
                         controller.open(entity.id,signed: true);
-                         // Ação para baixar modelo
-                         // controller.downloadTemplate(entity.id);
                       },
+                      icon: Icon(Icons.download, color: textColor),
+                      label: Text("Baixar Documento assinado", style: const TextStyle(color: textColor)),
+                      style: OutlinedButton.styleFrom(
+                        side: const BorderSide(color: textColor), // Borda branca
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
                     ): SizedBox(),
+                    // const SizedBox(width: 8),
+                    //  entity.status == "SIGNED" ? IconButton(
+                    //   tooltip: "Baixar Documento assinado",
+                    //   icon: const Icon(Icons.download_rounded, color: textColor),
+                    //   onPressed: () {
+                    //     controller.open(entity.id,signed: true);
+                    //      // Ação para baixar modelo
+                    //      // controller.downloadTemplate(entity.id);
+                    //   },
+                    // ): SizedBox(),
                     const SizedBox(width: 8),
                     OutlinedButton.icon(
                       onPressed: () {

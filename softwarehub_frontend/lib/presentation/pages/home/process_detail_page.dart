@@ -7,6 +7,7 @@ import 'controllers/process_detail_controller.dart';
 class ProcessDetailPage extends StatefulWidget {
   const ProcessDetailPage({super.key});
 
+
   @override
   State<ProcessDetailPage> createState() => _ProcessDetailPageState();
 }
