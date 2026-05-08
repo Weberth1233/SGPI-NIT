@@ -16,6 +16,13 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    String status = "";
+    
+    Color color = Colors.green;
+
+
+
     final theme = Theme.of(context);
     return Scaffold(
       backgroundColor: const Color(0xFFCBD5E1),
@@ -314,12 +321,26 @@ class HomePage extends StatelessWidget {
                               return const Text("Nenhum dado encontrado");
                             }
 
+                          
+
                             return Wrap(
                               spacing: 16,
                               runSpacing: 16,
                               children: processController.processesStatus.map((
                                 item,
                               ) {
+                                if(item.status == "CORRECAO"){
+                                    status = "CORREÇÃO";
+                                    color = Colors.red;
+                                }
+                                else if(item.status == "EM_ANDAMENTO"){
+                                  status = " EM ANDAMENTO";
+                                  color = const Color.fromARGB(255, 228, 206, 11);
+                                }else{
+                                  status = item.status; 
+                                  color = Colors.green;
+                                }
+                                
                                 return Container(
                                   height: 55,
                                   width: 260,
@@ -349,7 +370,7 @@ class HomePage extends StatelessWidget {
                                     children: [
                                       Expanded(
                                         child: Text(
-                                          item.status,
+                                         status,
                                           style: const TextStyle(
                                             decorationColor:
                                                 ThemeColor.greyColor,
@@ -362,8 +383,8 @@ class HomePage extends StatelessWidget {
                                       Container(
                                         width: 42,
                                         height: 42,
-                                        decoration: const BoxDecoration(
-                                          color: Color(0xFFFDAA51),
+                                        decoration:  BoxDecoration(
+                                          color: color,
                                           shape: BoxShape.circle,
                                         ),
                                         alignment: Alignment.center,
