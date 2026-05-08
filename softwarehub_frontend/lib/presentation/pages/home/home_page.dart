@@ -261,7 +261,7 @@ class HomePage extends StatelessWidget {
                                   ),
                                   const SizedBox(height: 2),
                                   Text(
-                                    "Sistema de gestão de propriedade intelectual",
+                                    "Sistema de Gestão de Propriedade Intelectual",
                                     style: theme.textTheme.bodyMedium?.copyWith(
                                       fontSize: 17,
                                       color: theme.colorScheme.primary,
