@@ -8,6 +8,8 @@ import 'controllers/home_controller.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:nit_sgpi_frontend/presentation/shared/widgets/shared_background.dart';
 
+import 'widgets/footer.dart';
+
 class HomePage extends StatelessWidget {
   HomePage({super.key});
 
@@ -17,7 +19,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String status = "";
-    
+
     Color color = Colors.green;
 
     final theme = Theme.of(context);
@@ -323,15 +325,20 @@ class HomePage extends StatelessWidget {
                               runSpacing: 16,
                               children: processController.processesStatus.map((
                                 item,
-                              ) { if(item.status == "CORRECAO"){
-                                    status = "CORREÇÃO";
-                                    color = Colors.red;
-                                }
-                                else if(item.status == "EM_ANDAMENTO"){
+                              ) {
+                                if (item.status == "CORRECAO") {
+                                  status = "CORREÇÃO";
+                                  color = Colors.red;
+                                } else if (item.status == "EM_ANDAMENTO") {
                                   status = " EM ANDAMENTO";
-                                  color = const Color.fromARGB(255, 228, 206, 11);
-                                }else{
-                                  status = item.status; 
+                                  color = const Color.fromARGB(
+                                    255,
+                                    228,
+                                    206,
+                                    11,
+                                  );
+                                } else {
+                                  status = item.status;
                                   color = Colors.green;
                                 }
                                 return Container(
@@ -376,7 +383,7 @@ class HomePage extends StatelessWidget {
                                       Container(
                                         width: 42,
                                         height: 42,
-                                        decoration:  BoxDecoration(
+                                        decoration: BoxDecoration(
                                           color: color,
                                           shape: BoxShape.circle,
                                         ),
@@ -454,11 +461,14 @@ class HomePage extends StatelessWidget {
                                       onPressed: current > 0
                                           ? processController.previousPage
                                           : null,
-                                      child:  Text("Anterior", style: theme.textTheme.bodyMedium
-                                          ?.copyWith(
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white,
-                                          ),),
+                                      child: Text(
+                                        "Anterior",
+                                        style: theme.textTheme.bodyMedium
+                                            ?.copyWith(
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.white,
+                                            ),
+                                      ),
                                     ),
 
                                     const SizedBox(width: 16),
@@ -477,10 +487,14 @@ class HomePage extends StatelessWidget {
                                       onPressed: current < total - 1
                                           ? processController.nextPage
                                           : null,
-                                      child:  Text("Próxima", style: theme.textTheme.bodyMedium
-                                          ?.copyWith(
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white,)),
+                                      child: Text(
+                                        "Próxima",
+                                        style: theme.textTheme.bodyMedium
+                                            ?.copyWith(
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.white,
+                                            ),
+                                      ),
                                     ),
                                   ],
                                 );
@@ -527,9 +541,8 @@ class HomePage extends StatelessWidget {
                       ],
                     ),
                   ),
-
                   const SizedBox(height: 32),
-                  const SizedBox(height: 20),
+                  const Footer(),
                   const SizedBox(height: 24),
                 ],
               ),
