@@ -16,12 +16,9 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     String status = "";
     
     Color color = Colors.green;
-
-
 
     final theme = Theme.of(context);
     return Scaffold(
@@ -321,15 +318,12 @@ class HomePage extends StatelessWidget {
                               return const Text("Nenhum dado encontrado");
                             }
 
-                          
-
                             return Wrap(
                               spacing: 16,
                               runSpacing: 16,
                               children: processController.processesStatus.map((
                                 item,
-                              ) {
-                                if(item.status == "CORRECAO"){
+                              ) { if(item.status == "CORRECAO"){
                                     status = "CORREÇÃO";
                                     color = Colors.red;
                                 }
@@ -340,7 +334,6 @@ class HomePage extends StatelessWidget {
                                   status = item.status; 
                                   color = Colors.green;
                                 }
-                                
                                 return Container(
                                   height: 55,
                                   width: 260,
@@ -370,7 +363,7 @@ class HomePage extends StatelessWidget {
                                     children: [
                                       Expanded(
                                         child: Text(
-                                         status,
+                                          status,
                                           style: const TextStyle(
                                             decorationColor:
                                                 ThemeColor.greyColor,

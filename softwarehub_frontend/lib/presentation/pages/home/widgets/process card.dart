@@ -22,6 +22,17 @@ class ProcessCard extends StatelessWidget {
         "${date.month.toString().padLeft(2, '0')}/"
         "${date.year}";
 
+    
+    String textCorrect(){
+      if(item.status == "CORRECAO"){
+        return "CORREÇÃO";
+      }else if(item.status == "EM_ANDAMENTO"){
+        return "EM ANDAMENTO";
+      }
+      return item.status;
+
+    }
+
     return SizedBox(
       width: 400,
       height: 190,
@@ -158,7 +169,7 @@ class ProcessCard extends StatelessWidget {
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: Text(
-                            item.status.toUpperCase(),
+                            textCorrect(),
                             style: context.textTheme.bodySmall!.copyWith(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
