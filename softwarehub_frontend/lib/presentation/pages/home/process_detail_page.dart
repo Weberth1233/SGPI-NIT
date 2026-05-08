@@ -391,7 +391,7 @@ class _ProcessDetailPageState extends State<ProcessDetailPage> {
                     padding: const EdgeInsets.symmetric(vertical: 16),
                   ),
                   child: Text(
-                    "Correção",
+                    "Devolver",
                     style: TextStyle(
                       color: colors.onSecondary,
                       fontWeight: FontWeight.bold,
@@ -570,7 +570,7 @@ class _ProcessDetailPageState extends State<ProcessDetailPage> {
                     backgroundColor: Colors.orange,
                   ),
                   child: Text(
-                    "Correção",
+                    "Devolver",
                     style: TextStyle(color: colors.onSecondary),
                   ),
                 ),
